@@ -25,7 +25,7 @@ class ProductsController @Inject()(cc: MessagesControllerComponents)
   // Agregar al carrito
   def addToCart(id: Long) = Action { implicit req =>
     val updated = addOne(parseCart(req.session.get(CartSessionKey)), id)
-    Redirect(routes.ProductsController.viewCart())
+    Redirect(routes.ProductsController.viewCart)
       .addingToSession(CartSessionKey -> serializeCart(updated))
       .flashing("success" -> "Agregado al carrito")
   }
@@ -38,7 +38,7 @@ class ProductsController @Inject()(cc: MessagesControllerComponents)
 
   // Checkout demo
   def checkout = Action { implicit req =>
-    Redirect(routes.ProductsController.list())
+    Redirect(routes.ProductsController.list)
       .withNewSession
       .flashing("success" -> "¡Gracias! Pedido registrado (demo)")
   }
