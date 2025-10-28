@@ -1,0 +1,8 @@
+@(user: models.User)(implicit req: play.api.mvc.MessagesRequestHeader)
+@main("Mi cuenta") {
+  <h3>Mi cuenta</h3>
+  <p><strong>Nombre:</strong> @user.name</p>
+  <p><strong>Correo:</strong> @user.email</p>
+  <p><strong>Teléfono:</strong> @user.phone</p>
+  <a href="@routes.AuthController.logout" class="btn btn-danger">Cerrar sesión</a>
+}
