@@ -1,5 +1,5 @@
 # Home
-GET     /                       controllers.HomeController.index
+GET     /           controllers.HomeController.index
 
 # Productos
 GET     /products               controllers.ProductsController.list
@@ -12,3 +12,12 @@ POST    /checkout               controllers.ProductsController.checkout
 
 # Assets (imágenes y CSS)
 GET     /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+
+
+# Autenticación
+GET     /login              controllers.AuthController.loginForm
+POST    /login              controllers.AuthController.login
+GET     /register           controllers.AuthController.registerForm
+POST    /register           controllers.AuthController.register
+GET     /account            controllers.AuthController.account
+GET     /logout             controllers.AuthController.logout

@@ -1,0 +1,87 @@
+/* Tipografía (Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap');
+
+:root{
+  --bg: #000;         /* fondo negro */
+  --fg: #fff;         /* texto blanco */
+  --muted: #d9d9d9;   /* gris suave para hover */
+}
+
+*{ box-sizing: border-box; }
+html, body{
+  height: 100%;
+}
+body{
+  margin: 0;
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* HERO FULLSCREEN */
+.hero{
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: url("/assets/images/hero-bg.jpg") center/cover no-repeat fixed;
+  /* si quieres sin parallax, quita "fixed" */
+}
+
+/* OSCURECER imagen para legibilidad */
+.hero .overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+/* CONTENIDO */
+.hero-content{
+  position: relative;
+  padding: 2rem;
+  animation: fadeUp .9s ease-out both;
+}
+
+.display-3{
+  letter-spacing: 0.25em;  /* look premium */
+  text-transform: uppercase;
+}
+
+/* BOTÓN PRIMARY (blanco) */
+.btn-light{
+  border: none;
+  background: var(--fg);
+  color: var(--bg);
+  letter-spacing: .06em;
+  transition: transform .2s ease, background .25s ease;
+}
+.btn-light:hover{
+  background: var(--muted);
+  transform: translateY(-1px);
+}
+
+/* NAVBAR minimal */
+.navbar{
+  background: rgba(0,0,0,.6) !important;
+  backdrop-filter: saturate(120%) blur(4px);
+}
+.navbar .btn{
+  border-radius: 0;
+}
+
+/* ANIMACIONES */
+@keyframes fadeUp{
+  0%   { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* UTILIDADES */
+.lead{
+  color: #f0f0f0;
+  opacity: .9;
+}
+
+/* RESPONSIVE TWEAKS */
+@media (max-width: 576px){
+  .display-3{ font-size: 2rem; letter-spacing: .15em; }
+}

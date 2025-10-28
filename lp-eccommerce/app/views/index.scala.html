@@ -1,5 +1,15 @@
-@()(implicit req: play.api.mvc.MessagesRequestHeader)
+@()(implicit request: play.api.mvc.RequestHeader)
 
-@main("Inicio") {
-  <p>Redirigiendo...</p>
+@main("LP Studios – Fearless Design") {
+  <section class="hero d-flex flex-column justify-content-center align-items-center text-center text-light">
+    <div class="overlay"></div>
+
+    <div class="hero-content position-relative">
+      <h1 class="display-3 fw-bold mb-3">LP STUDIOS</h1>
+      <p class="lead mb-4">Fearless Design. Timeless Sound.</p>
+      <a href="@routes.ProductsController.list.url" class="btn btn-light btn-lg rounded-0 px-5 py-2">
+        Explore Collection
+      </a>
+    </div>
+  </section>
 }
