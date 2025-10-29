@@ -35,3 +35,29 @@ A nivel académico, el proyecto refuerza conceptos de:
 
 La aplicación está organizada de forma modular, respetando la estructura típica de un proyecto Play Framework:
 
+
+
+## ⚙️ Tecnologías y Herramientas
+
+| Componente | Descripción |
+|-------------|-------------|
+| **Lenguaje** | Scala 2.13 |
+| **Framework** | Play Framework |
+| **Gestor de dependencias** | SBT |
+| **Motor de plantillas** | Twirl |
+| **Base de datos** | Repositorios en memoria (estructuras mutables en Scala) |
+| **Seguridad** | BCrypt (hash de contraseñas) y protección CSRF |
+| **Frontend** | HTML5, CSS3 (Bootstrap 5), JavaScript |
+
+---
+
+## 🚀 Ejecución del Proyecto
+
+### 1. Requisitos
+- **Java 11+**
+- **SBT 1.8+**
+
+### 2. Clonar el repositorio
+```bash
+git clone https://github.com/tuusuario/lp-ecommerce.git
+cd lp-ecommerce
