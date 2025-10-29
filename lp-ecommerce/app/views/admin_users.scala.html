@@ -1,0 +1,83 @@
+@(users: Vector[models.User], admin: models.User)(implicit req: RequestHeader, flash: Flash)
+
+@main("Gestión de Usuarios") {
+  <div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="text-white">👥 Gestión de Usuarios</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@routes.AdminController.dashboard" class="text-white">Dashboard</a></li>
+            <li class="breadcrumb-item active text-light">Usuarios</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    @* Mensajes flash *@
+    @flash.get("success").map { msg =>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    }
+
+    <div class="card">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Total de usuarios: @users.size</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-dark table-hover mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(user <- users) {
+                <tr>
+                  <td>@user.id</td>
+                  <td>@user.name</td>
+                  <td>@user.email</td>
+                  <td>@user.phone</td>
+                  <td>
+                    @if(user.isAdmin) {
+                      <span class="badge bg-danger">👨‍💼 Admin</span>
+                    } else {
+                      <span class="badge bg-secondary">👤 Usuario</span>
+                    }
+                  </td>
+                  <td>
+                    @if(user.isActive) {
+                      <span class="badge bg-success">✅ Activo</span>
+                    } else {
+                      <span class="badge bg-warning">⚠️ Inactivo</span>
+                    }
+                  </td>
+                  <td>
+                    @if(user.id != admin.id) {
+                      <form method="POST" action="@routes.AdminController.toggleUserActive(user.id)" style="display:inline;">
+                        <button type="submit" class="btn btn-sm @if(user.isActive) {btn-warning} else {btn-success}">
+                          @if(user.isActive) {🚫 Desactivar} else {✅ Activar}
+                        </button>
+                      </form>
+                    } else {
+                      <span class="text-muted">Tú</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+}

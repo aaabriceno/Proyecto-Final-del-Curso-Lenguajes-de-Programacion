@@ -12,4 +12,16 @@ GET   /logout      controllers.AuthController.logout
 GET   /shop        controllers.ShopController.list
 GET   /shop/:id    controllers.ShopController.detail(id: Long)
 
+# Panel de Administración
+GET   /admin                    controllers.AdminController.dashboard
+GET   /admin/stats              controllers.AdminController.statistics
+GET   /admin/users              controllers.AdminController.userList
+GET   /admin/media              controllers.AdminController.mediaList
+GET   /admin/media/new          controllers.AdminController.newMediaForm
+POST  /admin/media/new          controllers.AdminController.createMedia
+GET   /admin/media/:id/edit     controllers.AdminController.editMediaForm(id: Long)
+POST  /admin/media/:id/edit     controllers.AdminController.updateMedia(id: Long)
+POST  /admin/media/:id/delete   controllers.AdminController.deleteMedia(id: Long)
+POST  /admin/users/:id/toggle   controllers.AdminController.toggleUserActive(id: Long)
+
 GET   /assets/*file  controllers.Assets.versioned(path="/public", file: Asset)
