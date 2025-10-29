@@ -61,3 +61,10 @@ La aplicación está organizada de forma modular, respetando la estructura típi
 ```bash
 git clone https://github.com/tuusuario/lp-ecommerce.git
 cd lp-ecommerce
+
+
+## Proyecto Final desarrollado como parte del curso:
+📚 Lenguajes de Programación – CCOMP7-1
+Universidad Católica San Pablo (UCSP) – 2025
+
+## Docente responsable: MSc. Yesenia Deysi Yari Ramos
