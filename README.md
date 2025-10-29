@@ -5,7 +5,7 @@
 
 ## 👨‍💻 Integrantes
 - **Anthony Briceño**
-- **Alexander Ccahuana**
+- **Alexander Carpio**
 - **Paolo Mostajo**
 
 ---
