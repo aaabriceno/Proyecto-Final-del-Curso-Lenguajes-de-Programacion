@@ -1,0 +1,113 @@
+/* Estilo general del layout de búsqueda */
+.container .search-layout {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.container .search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container .search-form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 600px;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.container .search-form input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+}
+
+.container .search-form button {
+    border-radius: 5px;
+    padding: 8px 16px;
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.container .search-form button:hover {
+    background-color: #03995d;
+}
+
+.container .filter-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: #000000;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.container .filter-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #000000;
+}
+
+/* Resultados de búsqueda */
+#search-results-admi {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Fila de encabezado y de datos */
+.result-header,
+.result-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    width: 100%;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+/* Encabezado */
+.result-header {
+    font-weight: bold;
+    background-color: #e0e0e0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Filas de datos */
+.result-row {
+    border-bottom: 1px solid #ccc;
+}
+
+.result-row:hover {
+    background-color: #f5f5f5;
+}
+
+/* Celdas de encabezado y datos alineadas a la izquierda */
+.result-header span,
+.result-row span {
+    padding: 8px 12px;
+    border-right: 1px solid #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aquí cambia la alineación a la izquierda */
+}
+
+/* Quitar borde derecho de la última celda */
+.result-header span:last-child,
+.result-row span:last-child {
+    border-right: none;
+}
