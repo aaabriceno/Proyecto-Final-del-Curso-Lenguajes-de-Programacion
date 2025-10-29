@@ -6,6 +6,11 @@
     <div class="ms-auto d-flex gap-2">
       <a class="btn btn-outline-light" href="@routes.ShopController.list">Tienda</a>
       @if(request.session.get("userEmail").isDefined) {
+        @defining(request.session.get("userEmail").flatMap(models.UserRepo.findByEmail)) { userOpt =>
+          @if(userOpt.exists(_.isAdmin)) {
+            <a class="btn btn-outline-danger" href="@routes.AdminController.dashboard">👨‍💼 Admin</a>
+          }
+        }
         <a class="btn btn-outline-light" href="@routes.AuthController.account">Mi cuenta</a>
         <a class="btn btn-outline-light" href="@routes.AuthController.logout">Salir</a>
       } else {

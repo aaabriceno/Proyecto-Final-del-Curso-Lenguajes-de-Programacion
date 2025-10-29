@@ -37,4 +37,12 @@ object UserRepo {
     users = users :+ u
     u
   }
+  
+  def toggleActive(id: Long): Boolean = {
+    users.find(_.id == id).foreach { user =>
+      val updated = user.copy(isActive = !user.isActive)
+      users = users.filterNot(_.id == id) :+ updated
+    }
+    true
+  }
 }

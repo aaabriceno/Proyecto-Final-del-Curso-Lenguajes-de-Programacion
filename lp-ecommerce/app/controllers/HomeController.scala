@@ -8,6 +8,6 @@ class HomeController @Inject()(cc: ControllerComponents)
   extends AbstractController(cc) {
 
   def index = Action { implicit req: Request[AnyContent] =>
-    Ok(views.html.main_view())   // ← tu landing convertida
+    Ok(views.html.index())   // ← Página bonita con hero banner
   }
 }
