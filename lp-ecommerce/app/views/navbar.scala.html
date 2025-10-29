@@ -1,0 +1,17 @@
+@()(implicit request: play.api.mvc.RequestHeader)
+
+<nav class="navbar navbar-dark bg-dark border-bottom">
+  <div class="container">
+    <a class="navbar-brand fw-semibold" href="@routes.HomeController.index">LP Studios</a>
+    <div class="ms-auto d-flex gap-2">
+      <a class="btn btn-outline-light" href="@routes.ShopController.list">Tienda</a>
+      @if(request.session.get("userEmail").isDefined) {
+        <a class="btn btn-outline-light" href="@routes.AuthController.account">Mi cuenta</a>
+        <a class="btn btn-outline-light" href="@routes.AuthController.logout">Salir</a>
+      } else {
+        <a class="btn btn-outline-light" href="@routes.AuthController.loginForm">Login</a>
+        <a class="btn btn-warning text-dark" href="@routes.AuthController.registerForm">Registro</a>
+      }
+    </div>
+  </div>
+</nav>

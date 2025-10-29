@@ -1,0 +1,37 @@
+@()(implicit request: play.api.mvc.RequestHeader)
+@main("YouEz-Register") {
+<div id="search-results"></div>
+    <div id="recargas-container" style="display: none;"></div>
+    <u><h1>DownEz</h1></u>
+
+    <div class="container">
+        <div class="search-layout">
+            <div class="search-container">
+                <form class="search-form" id="form-busqueda">
+                    <input type="text" id="search-input" placeholder="Buscar por ID o autor...">
+                    <button type="submit">Buscar</button>
+
+                    <div class="search-actions">
+                        <select id="content-filter">
+                            <option value="">-- Acciones --</option>
+                            <option value="ranking">Top clientes</option>
+                            <!-- Futuras opciones -->
+                        </select>
+                        <button type="button" id="option-action">Ejecutar</button>
+                    </div>
+                    
+                </form>
+                <div class="filter-checkboxes">
+                    <label class="filter-label"><input type="checkbox" class="filtro-tipo" value="imagen"> Imagen</label>
+                    <label class="filter-label"><input type="checkbox" class="filtro-tipo" value="video"> Video</label>
+                    <label class="filter-label"><input type="checkbox" class="filtro-tipo" value="audio"> Audio</label>
+                    <label class="filter-label"><input type="checkbox" class="filtro-tipo" value="author"> Author</label>
+                    <label class="filter-label"><input type="checkbox" class="filtro-tipo" value="cliente"> Usuario</label>
+                    <label class="filter-label"><input type="checkbox" class="filtro-tipo" value="id"> Id</label>
+                </div>
+            </div>
+            <div id="search-results-admi"></div>
+        </div>
+
+    </div>
+}

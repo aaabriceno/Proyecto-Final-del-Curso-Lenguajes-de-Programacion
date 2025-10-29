@@ -1,0 +1,36 @@
+@(m: models.Media)(implicit request: play.api.mvc.RequestHeader)
+@main(m.title) {
+  <div class="container py-4">
+    <a href='@routes.ShopController.list' class="btn btn-link">&larr; Volver a la tienda</a>
+    <div class="row g-4 mt-1">
+      <div class="col-12 col-lg-7">
+        <div class="ratio ratio-16x9">
+          @m.mtype match {
+            case models.MediaType.Image => {
+              <img alt="@m.title" src='@routes.Assets.versioned(m.assetPath)' class="img-fluid rounded">
+            }
+            case models.MediaType.Audio => {
+              <audio controls class="w-100">
+                <source src='@routes.Assets.versioned(m.assetPath)' type="audio/mpeg">
+              </audio>
+            }
+            case models.MediaType.Video => {
+              <video controls class="w-100">
+                <source src='@routes.Assets.versioned(m.assetPath)' type="video/mp4">
+              </video>
+            }
+          }
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <h2 class="mb-2">@m.title</h2>
+        <p class="text-muted">@m.description</p>
+        <p class="mb-2">Descargas: <strong>@m.downloads</strong> &middot; Rating: <strong>@("%.1f".format(m.rating))</strong></p>
+        <h3 class="mb-3">S/ @m.price</h3>
+        <form action="#" method="post" onsubmit="alert('Demo: pronto carrito'); return false;">
+          <button class="btn btn-success">Añadir al carrito</button>
+        </form>
+      </div>
+    </div>
+  </div>
+}

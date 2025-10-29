@@ -1,0 +1,39 @@
+@(items: Seq[models.Media])(implicit request: play.api.mvc.RequestHeader)
+@main("Tienda — LP Studios") {
+  <div class="container py-4">
+    <h2 class="mb-3">Catálogo</h2>
+    <div class="row g-3">
+      @for(m <- items) {
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="card h-100">
+            <div class="ratio ratio-16x9">
+              @m.mtype match {
+                case models.MediaType.Image => {
+                  <img class="card-img-top" alt="@m.title" src='@routes.Assets.versioned(m.assetPath)'>
+                }
+                case models.MediaType.Audio => {
+                  <audio controls class="w-100">
+                    <source src='@routes.Assets.versioned(m.assetPath)' type="audio/mpeg">
+                  </audio>
+                }
+                case models.MediaType.Video => {
+                  <video controls class="w-100">
+                    <source src='@routes.Assets.versioned(m.assetPath)' type="video/mp4">
+                  </video>
+                }
+              }
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">@m.title</h5>
+              <p class="card-text small text-muted">@m.description</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold">S/ @m.price</span>
+                <a class="btn btn-primary btn-sm" href='@routes.ShopController.detail(m.id)'>Ver</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

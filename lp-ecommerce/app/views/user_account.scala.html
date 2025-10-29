@@ -1,0 +1,71 @@
+@()(implicit request: play.api.mvc.RequestHeader)
+@main("DownEz-Cuenta") {
+<div id="search-results"></div>
+        <div class="user-account-container">
+    
+            <!-- Información del usuario -->
+            <div id="user-info">
+                <h2 id="username">Cargando...</h2>
+                <p id="email">Email: cargando...</p>
+            </div>
+            
+            <div id="downloads-section">
+                <h3>Contenidos Comprados</h3>
+                <ul id="downloads-list">
+                    <li>Cargando contenidos...</li>
+                </ul>
+            </div>
+            <!-- Lista de opciones -->
+            <ul id="user-list">
+                <li class="clickable-item">Perfil</li>
+                <li class="clickable-item">Historial</li>
+                <li class="clickable-item">Configuración</li>
+            </ul>
+    
+            <!-- Acciones -->
+            <div class="actions">
+                <button id="request-balance-btn">Solicitar saldo</button>
+                <button id="close-account-btn">Cerrar cuenta</button>
+            </div>
+
+             <!-- Formulario oculto para retirar saldo -->
+            <form id="withdraw-form" style="display: none;">
+                <h3>Retirar saldo antes de cerrar cuenta</h3>
+
+                <label for="withdraw_card_type">Método de retiro:</label>
+                <select name="withdraw_card_type" id="withdraw_card_type">
+                    <option value="visa">Visa</option>
+                    <option value="bcp">BCP</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="mastercard">Mastercard</option>
+                </select><br>
+
+                <label for="withdraw_card">Número de tarjeta:</label>
+                <input type="text" name="withdraw_card" id="withdraw_card" required><br>
+
+                <button type="button" id="submit-withdraw">Retirar y cerrar cuenta</button>
+            </form>
+
+            <!-- Formulario oculto para solicitar saldo -->
+            <form id="balance-form" style="display: none;">
+                <h3>Solicitar saldo</h3>
+    
+                <label for="card_type">Método de pago:</label>
+                <select name="card_type" id="card_type">
+                    <option value="visa">Visa</option>
+                    <option value="bcp">BCP</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="mastercard">Mastercard</option>
+                </select><br>
+    
+                <label for="tarjeta">Número de tarjeta:</label>
+                <input type="text" name="tarjeta" id="tarjeta" required><br>
+    
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" name="cantidad" id="cantidad" min="1" required><br>
+    
+                <button type="button" id="submit-balance">Solicitar saldo</button>
+            </form>
+    
+        </div>
+}

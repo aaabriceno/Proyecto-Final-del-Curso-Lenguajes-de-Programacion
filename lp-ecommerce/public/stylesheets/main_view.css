@@ -1,0 +1,83 @@
+.content-buttons, .buy-button {
+    margin-bottom: 20px;
+}
+
+.content-buttons button, .buy-button, .gift-button, .send-gift, .rate-button {
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.content-buttons button:hover, .buy-button:hover,.gift-button:hover, .send-gift:hover, .rate-button:hover  {
+    background-color: #555;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cada elemento tendrá un ancho mínimo de 300px y se ajustará automáticamente */
+    grid-gap: 20px; /* Espacio entre cada elemento */
+}
+
+
+.media-item img, .media-item.linked img,
+.media-item video, .media-item.linked video,
+.media-item audio, .media-item.linked audio {
+    max-width: 100%; /* Asegura que las imágenes y videos no sobrepasen su contenedor */
+}
+
+.info {
+    margin-top: 10px; /* Espacio entre la información y el contenido multimedia */
+}
+
+.media-item, .media-item.linked {
+    border: 1px solid #ccc; /* Borde alrededor de cada elemento */
+    padding: 10px; /* Espacio interno */    
+  transition: box-shadow 0.3s; 
+  margin-top: 10px; /* Espacio entre la información y el contenido multimedia */
+  transition: opacity 0.3s ease;
+  opacity: 1;
+}
+
+.media-item.linked:hover {
+  box-shadow: 0 0 10px 3px limegreen;
+  display: block;
+}
+
+
+
+/* Estilo para el contenedor del filtro */
+label[for="content-filter"] {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #000000;
+    margin-right: 10px;
+}
+
+/* Estilo del select */
+#content-filter {
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#content-filter:hover {
+    border-color: #555;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.search-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 30px;
+}
