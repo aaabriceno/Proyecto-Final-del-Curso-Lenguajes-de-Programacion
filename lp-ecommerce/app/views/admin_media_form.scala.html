@@ -1,4 +1,4 @@
-@(media: Option[models.Media], admin: models.User)(implicit req: RequestHeader, flash: Flash)
+@(media: Option[models.Media], admin: models.User)(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
 
 @main(if(media.isDefined) "Editar Producto" else "Nuevo Producto") {
   <div class="container mt-4">
@@ -26,6 +26,7 @@
     <div class="card">
       <div class="card-body">
         <form method="POST" action="@if(media.isDefined) {@routes.AdminController.updateMedia(media.get.id)} else {@routes.AdminController.createMedia}">
+          @helper.CSRF.formField
           
           <div class="mb-3">
             <label for="title" class="form-label">Título del producto *</label>

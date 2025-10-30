@@ -8,11 +8,26 @@
       @if(request.session.get("userEmail").isDefined) {
         @defining(request.session.get("userEmail").flatMap(models.UserRepo.findByEmail)) { userOpt =>
           @if(userOpt.exists(_.isAdmin)) {
+            @defining(models.BalanceRequestRepo.countPending) { pendingCount =>
+              <a class="btn btn-outline-warning position-relative" href="@routes.AdminController.balanceRequests">
+                <i class="bi bi-bell-fill"></i> Solicitudes
+                @if(pendingCount > 0) {
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @pendingCount
+                  </span>
+                }
+              </a>
+            }
             <a class="btn btn-outline-danger" href="@routes.AdminController.dashboard">👨‍💼 Admin</a>
+            <a class="btn btn-outline-light" href="@routes.AuthController.logout">Salir</a>
+          } else {
+            <a class="btn btn-outline-success" href="@routes.PurchaseController.showDownloads">
+              <i class="bi bi-download"></i> Mis Descargas
+            </a>
+            <a class="btn btn-outline-light" href="@routes.AuthController.account">Mi cuenta</a>
+            <a class="btn btn-outline-light" href="@routes.AuthController.logout">Salir</a>
           }
         }
-        <a class="btn btn-outline-light" href="@routes.AuthController.account">Mi cuenta</a>
-        <a class="btn btn-outline-light" href="@routes.AuthController.logout">Salir</a>
       } else {
         <a class="btn btn-outline-light" href="@routes.AuthController.loginForm">Login</a>
         <a class="btn btn-warning text-dark" href="@routes.AuthController.registerForm">Registro</a>

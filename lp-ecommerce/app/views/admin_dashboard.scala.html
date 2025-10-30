@@ -1,4 +1,4 @@
-@(users: Vector[models.User], media: Vector[models.Media], admin: models.User)(implicit req: RequestHeader, flash: Flash)
+@(users: Vector[models.User], media: Vector[models.Media], admin: models.User)(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
 
 @main("Panel de Administración") {
   <div class="container mt-4">

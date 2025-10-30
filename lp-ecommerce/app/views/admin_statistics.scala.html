@@ -1,4 +1,4 @@
-@(admin: models.User)(implicit req: RequestHeader, flash: Flash)
+@(admin: models.User)(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
 
 @main("Estadísticas Avanzadas") {
   <div class="container mt-4">
@@ -28,16 +28,17 @@
         <div class="card text-center">
           <div class="card-body">
             <h6 class="text-muted">💰 Ingresos Totales</h6>
-            <h2 class="text-success">$@{f"${models.MediaRepo.totalRevenue}%.2f"}</h2>
-            <small class="text-muted">Basado en descargas</small>
+            <h2 class="text-success">$@{f"${models.DownloadRepo.totalRevenue}%.2f"}</h2>
+            <small class="text-muted">Ventas reales</small>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h6 class="text-muted">📥 Total Descargas</h6>
-            <h2 class="text-info">@models.MediaRepo.totalDownloads</h2>
+            <h6 class="text-muted">📥 Items Vendidos</h6>
+            <h2 class="text-info">@models.DownloadRepo.totalDownloads</h2>
+            <small class="text-muted">@models.DownloadRepo.totalPurchases transacciones</small>
           </div>
         </div>
       </div>
@@ -192,7 +193,7 @@
                       <td>⭐ @product.rating</td>
                       <td><strong>@product.downloads</strong></td>
                       <td class="text-success">
-                        <strong>$@{f"${product.price * product.downloads}%.2f"}</strong>
+                        <strong>$@{f"${product.revenue}%.2f"}</strong>
                       </td>
                     </tr>
                   }

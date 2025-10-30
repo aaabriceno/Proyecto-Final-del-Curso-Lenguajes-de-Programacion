@@ -7,21 +7,32 @@ GET   /register    controllers.AuthController.registerForm
 POST  /register    controllers.AuthController.register
 
 GET   /account     controllers.AuthController.account
+POST  /request-balance controllers.AuthController.requestBalance
 GET   /logout      controllers.AuthController.logout
 
 GET   /shop        controllers.ShopController.list
 GET   /shop/:id    controllers.ShopController.detail(id: Long)
 
 # Panel de Administración
-GET   /admin                    controllers.AdminController.dashboard
-GET   /admin/stats              controllers.AdminController.statistics
-GET   /admin/users              controllers.AdminController.userList
-GET   /admin/media              controllers.AdminController.mediaList
-GET   /admin/media/new          controllers.AdminController.newMediaForm
-POST  /admin/media/new          controllers.AdminController.createMedia
-GET   /admin/media/:id/edit     controllers.AdminController.editMediaForm(id: Long)
-POST  /admin/media/:id/edit     controllers.AdminController.updateMedia(id: Long)
-POST  /admin/media/:id/delete   controllers.AdminController.deleteMedia(id: Long)
-POST  /admin/users/:id/toggle   controllers.AdminController.toggleUserActive(id: Long)
+GET   /admin                          controllers.AdminController.dashboard
+GET   /admin/stats                    controllers.AdminController.statistics
+GET   /admin/users                    controllers.AdminController.userList
+GET   /admin/balance-requests         controllers.AdminController.balanceRequests
+POST  /admin/balance-requests/:id/approve controllers.AdminController.approveBalanceRequest(id: Long)
+POST  /admin/balance-requests/:id/reject  controllers.AdminController.rejectBalanceRequest(id: Long)
+GET   /admin/media                    controllers.AdminController.mediaList
+GET   /admin/media/new                controllers.AdminController.newMediaForm
+POST  /admin/media/new                controllers.AdminController.createMedia
+GET   /admin/media/:id/edit           controllers.AdminController.editMediaForm(id: Long)
+POST  /admin/media/:id/edit           controllers.AdminController.updateMedia(id: Long)
+POST  /admin/media/:id/delete         controllers.AdminController.deleteMedia(id: Long)
+POST  /admin/users/:id/toggle         controllers.AdminController.toggleUserActive(id: Long)
+POST  /admin/users/:id/add-balance    controllers.AdminController.addBalance(id: Long)
+
+# Sistema de Compras
+GET   /purchase/:id               controllers.PurchaseController.showPurchasePage(id: Long)
+POST  /purchase/:id               controllers.PurchaseController.processPurchase(id: Long)
+GET   /downloads                  controllers.PurchaseController.showDownloads
+GET   /download/:id               controllers.PurchaseController.downloadFile(id: Long)
 
 GET   /assets/*file  controllers.Assets.versioned(path="/public", file: Asset)
