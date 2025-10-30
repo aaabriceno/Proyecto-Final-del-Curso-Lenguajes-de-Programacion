@@ -1,4 +1,4 @@
-@(media: Vector[models.Media], admin: models.User, searchQuery: Option[String], typeFilter: Option[String])(implicit req: RequestHeader, flash: Flash)
+@(media: Vector[models.Media], admin: models.User, searchQuery: Option[String], typeFilter: Option[String])(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
 
 @main("Gestión de Productos") {
   <div class="container mt-4">
@@ -110,6 +110,7 @@
                       </a>
                       <form method="POST" action="@routes.AdminController.deleteMedia(m.id)" style="display:inline;" 
                             onsubmit="return confirm('¿Estás seguro de eliminar @m.title?');">
+                        @helper.CSRF.formField
                         <button type="submit" class="btn btn-sm btn-danger">
                           🗑️ Eliminar
                         </button>

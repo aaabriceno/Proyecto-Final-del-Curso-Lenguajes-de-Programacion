@@ -9,7 +9,9 @@ case class User(
   phone: String,
   passwordHash: String,
   isAdmin: Boolean = false,
-  isActive: Boolean = true
+  isActive: Boolean = true,
+  balance: BigDecimal = 0,           // Saldo disponible
+  totalSpent: BigDecimal = 0         // Total gastado (para descuento 20%)
 )
 
 object UserRepo {
@@ -45,4 +47,32 @@ object UserRepo {
     }
     true
   }
+  
+  // Funciones para manejar saldo
+  def addBalance(id: Long, amount: BigDecimal): Option[User] = {
+    users.find(_.id == id).map { user =>
+      val updated = user.copy(balance = user.balance + amount)
+      users = users.filterNot(_.id == id) :+ updated
+      updated
+    }
+  }
+  
+  def deductBalance(id: Long, amount: BigDecimal): Option[User] = {
+    users.find(_.id == id).flatMap { user =>
+      if (user.balance >= amount) {
+        val updated = user.copy(
+          balance = user.balance - amount,
+          totalSpent = user.totalSpent + amount
+        )
+        users = users.filterNot(_.id == id) :+ updated
+        Some(updated)
+      } else None
+    }
+  }
+  
+  def getBalance(id: Long): Option[BigDecimal] = 
+    users.find(_.id == id).map(_.balance)
+    
+  def getTotalSpent(id: Long): Option[BigDecimal] = 
+    users.find(_.id == id).map(_.totalSpent)
 }

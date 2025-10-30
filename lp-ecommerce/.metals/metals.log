@@ -860,3 +860,592 @@ ADVERTENCIA: Unmatched cancel notification for request id 666
 2025.10.29 11:27:45 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
 2025.10.29 11:27:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
 2025.10.29 11:28:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:30:02 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:30:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:30:03 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala
+2025.10.29 11:31:06 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala
+2025.10.29 11:31:06 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:06 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:31:18 INFO  Created report: Optional[file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/controllers/PagesController.scala]
+2025.10.29 11:31:18 INFO  empty definition using pc, found symbol in pc: `<none>`. (full report at: "C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\.metals\.reports\metals-full\2025-10-29\r_empty-definition_11-31-18-300.md")
+oct. 29, 2025 11:31:52 A. M. org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFORMACIÓN: Unsupported notification method: $/setTrace
+oct. 29, 2025 11:31:56 A. M. org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFORMACIÓN: Unsupported notification method: $/setTrace
+2025.10.29 11:31:56 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:32:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:32:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:32:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:32:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:32:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:32:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:03 INFO  no build target found for c:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PagesController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:43 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:33:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:43 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:33:47 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:33:47 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:47 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:49 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:33:51 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:55 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:59 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:33:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+Exception in thread "pool-100-thread-1" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:244)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:153)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2025.10.29 11:33:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:33:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:00 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:34:07 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:07 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.29 11:34:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+oct. 29, 2025 11:34:16 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "chat-editing-snapshot-text-model:/c%3A/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/models/Media.scala?%7B%22sessionId%22%3A%22aab46bc4-d026-4f97-8e16-5ef1d288cedf%22%2C%22requestId%22%3A%22request_77b7a3d8-2fff-4d36-9293-2e45d0ff3b1c%22%2C%22undoStop%22%3A%22696bc6f7-ffca-46f4-bd69-37a32186d7b0%22%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "chat-editing-snapshot-text-model" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+2025.10.29 11:34:19 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.29 11:34:19 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:19 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:22 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:34:22 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:34:22 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.29 11:34:23 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:36:31 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:36:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:34 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:34 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:54 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:54 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:56 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:56 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:56 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:36:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:05 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:13 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:20 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:44 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:37:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:37:49 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:40:41 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:40:41 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:40:41 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:40:41 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:40:42 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:40:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:40:55 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:40:55 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:40:55 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:01 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:41:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:41:02 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:04 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:41:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:09 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:09 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:11 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:41:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:16 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:41:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+oct. 29, 2025 11:41:18 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 409
+2025.10.29 11:41:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:41:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+oct. 29, 2025 11:41:18 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 411
+oct. 29, 2025 11:41:18 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 417
+oct. 29, 2025 11:41:18 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 418
+oct. 29, 2025 11:41:18 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 419
+2025.10.29 11:41:21 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:42:57 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:42:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:42:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.29 11:42:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:42:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:42:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:43:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:43:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:43:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:43:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.29 11:43:59 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 11:44:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/0#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/1#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/5#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/6#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/8#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/9#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/0#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/1#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/8#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_9cdf7490-be9e-4737-9068-cca0fa7c5fb8/9#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_b335c11d-b564-4d3f-87b8-d45b5fe57fcd/1#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+oct. 29, 2025 11:44:35 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+ADVERTENCIA: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "metals/didFocusTextDocument",
+  "params": [
+    "vscode-chat-code-block://aab46bc4-d026-4f97-8e16-5ef1d288cedf/response_ed5d777d-d903-4428-ac2d-4383827d1a9b/1#%7B%22references%22%3A%5B%5D%7D"
+  ]
+}
+java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not installed
+	at java.base/java.nio.file.Path.of(Path.java:210)
+	at java.base/java.nio.file.Paths.get(Paths.java:95)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionURIMtags.toAbsolutePath(MtagsEnrichments.scala:149)
+	at scala.meta.internal.mtags.MtagsEnrichments$XtensionStringMtags.toAbsolutePath(MtagsEnrichments.scala:209)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:796)
+	at scala.meta.internal.metals.MetalsEnrichments$XtensionString.toAbsolutePath(MetalsEnrichments.scala:793)
+	at scala.meta.internal.metals.WorkspaceLspService.didFocus(WorkspaceLspService.scala:786)
+	at scala.meta.metals.lsp.DelegatingScalaService.didFocus(DelegatingScalaService.scala:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$recursiveFindRpcMethods$0(GenericEndpoint.java:65)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:160)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:231)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+2025.10.29 11:44:51 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.29 12:01:55 INFO  Shutting down server
+2025.10.29 12:01:55 INFO  shutting down Metals
+2025.10.29 12:01:55 INFO  Exiting server

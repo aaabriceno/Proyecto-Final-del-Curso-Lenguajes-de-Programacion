@@ -21,21 +21,24 @@ case class Media(
   mtype: MediaType,
   price: BigDecimal,
   rating: Double,
-  downloads: Int,
   assetPath: String          // ruta en /public (p.ej. "images/hero.jpg" o "media/video/clip.mp4")
-)
+) {
+  // Estadísticas dinámicas basadas en DownloadRepo
+  def downloads: Int = DownloadRepo.downloadsByMedia(id)
+  def revenue: BigDecimal = DownloadRepo.revenueByMedia(id)
+}
 
 object MediaRepo {
   private var seq: Long = 0L
   private def nextId(): Long = { seq += 1; seq }
 
-  // Dummy seed
+  // Dummy seed (sin campo downloads hardcodeado)
   private var data: Vector[Media] = Vector(
-    Media(nextId(), "Poster Aurora", "Póster en alta resolución", MediaType.Image, 7.50, 4.6, 132,
+    Media(nextId(), "Poster Aurora", "Póster en alta resolución", MediaType.Image, 7.50, 4.6,
       "images/poster_aurora.jpg"),
-    Media(nextId(), "Beat LoFi #12", "Pista LoFi 48kHz", MediaType.Audio, 4.00, 4.8, 245,
+    Media(nextId(), "Beat LoFi #12", "Pista LoFi 48kHz", MediaType.Audio, 4.00, 4.8,
       "media/audio/lofi12.mp3"),
-    Media(nextId(), "Corto City Rush", "Clip FullHD 30s", MediaType.Video, 11.99, 4.4, 89,
+    Media(nextId(), "Corto City Rush", "Clip FullHD 30s", MediaType.Video, 11.99, 4.4,
       "media/video/city_rush.mp4")
   )
 
@@ -57,18 +60,18 @@ object MediaRepo {
   def filterByType(mtype: MediaType): Vector[Media] = 
     data.filter(_.mtype == mtype).sortBy(-_.downloads)
   
-  // Estadísticas
+  // Estadísticas REALES basadas en DownloadRepo
   def totalProducts: Int = data.size
-  def totalRevenue: BigDecimal = data.map(m => m.price * m.downloads).sum
+  def totalRevenue: BigDecimal = DownloadRepo.totalRevenue
   def averagePrice: BigDecimal = if (data.nonEmpty) data.map(_.price).sum / data.size else BigDecimal(0)
   def averageRating: Double = if (data.nonEmpty) data.map(_.rating).sum / data.size else 0.0
-  def totalDownloads: Int = data.map(_.downloads).sum
+  def totalDownloads: Int = DownloadRepo.totalDownloads
   def countByType(mtype: MediaType): Int = data.count(_.mtype == mtype)
   def topProducts(limit: Int = 5): Vector[Media] = data.sortBy(-_.downloads).take(limit)
   
   // CRUD operations for admin
   def add(title: String, description: String, mtype: MediaType, price: BigDecimal, assetPath: String): Media = {
-    val media = Media(nextId(), title, description, mtype, price, 0.0, 0, assetPath)
+    val media = Media(nextId(), title, description, mtype, price, 0.0, assetPath)
     data = data :+ media
     media
   }

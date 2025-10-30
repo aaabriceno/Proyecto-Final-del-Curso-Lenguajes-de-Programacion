@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 import play.api.mvc._
+import play.api.i18n._
 import models._
 
 @Singleton
@@ -18,29 +19,35 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
   }
 
   // Helper: Obtener usuario actual
-  private def currentUser(implicit req: RequestHeader): Option[User] = {
-    req.session.get(SessionKey).flatMap(UserRepo.findByEmail)
+  private def currentUser(implicit req: RequestHeader): User = {
+    req.session.get(SessionKey)
+      .flatMap(UserRepo.findByEmail)
+      .get // Asumimos que siempre existe porque AdminAction ya verificó
   }
 
   // Action helper que requiere admin
-  private def AdminAction(f: Request[AnyContent] => Result): Action[AnyContent] = 
-    Action { implicit req =>
-      if (isAdmin) f(req)
-      else Redirect(routes.HomeController.index)
-        .flashing("error" -> "Acceso denegado. Solo administradores.")
+  private def AdminAction(f: MessagesRequest[AnyContent] => Result): Action[AnyContent] = 
+    Action { implicit request: Request[AnyContent] =>
+      if (isAdmin(request)) {
+        val messagesRequest = new MessagesRequest(request, messagesApi)
+        f(messagesRequest)
+      } else {
+        Redirect(routes.HomeController.index)
+          .flashing("error" -> "Acceso denegado. Solo administradores.")
+      }
     }
 
   // GET /admin - Panel principal
   def dashboard = AdminAction { implicit req =>
     val users = UserRepo.all
     val media = MediaRepo.all
-    Ok(views.html.admin_dashboard(users, media, currentUser.get))
+    Ok(views.html.admin_dashboard(users, media, currentUser))
   }
 
   // GET /admin/users - Lista de usuarios
   def userList = AdminAction { implicit req =>
     val users = UserRepo.all
-    Ok(views.html.admin_users(users, currentUser.get))
+    Ok(views.html.admin_users(users, currentUser))
   }
 
   // GET /admin/media - Lista de productos (para editar)
@@ -54,17 +61,17 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
       case _ => MediaRepo.all
     }
     
-    Ok(views.html.admin_media(media, currentUser.get, query, typeFilter))
+    Ok(views.html.admin_media(media, currentUser, query, typeFilter))
   }
 
   // GET /admin/stats - Estadísticas avanzadas
   def statistics = AdminAction { implicit req =>
-    Ok(views.html.admin_statistics(currentUser.get))
+    Ok(views.html.admin_statistics(currentUser))
   }
 
   // GET /admin/media/new - Formulario para crear producto
   def newMediaForm = AdminAction { implicit req =>
-    Ok(views.html.admin_media_form(None, currentUser.get))
+    Ok(views.html.admin_media_form(None, currentUser))
   }
 
   // POST /admin/media/new - Crear nuevo producto
@@ -85,7 +92,7 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
   // GET /admin/media/:id/edit - Formulario para editar producto
   def editMediaForm(id: Long) = AdminAction { implicit req =>
     MediaRepo.find(id) match {
-      case Some(media) => Ok(views.html.admin_media_form(Some(media), currentUser.get))
+      case Some(media) => Ok(views.html.admin_media_form(Some(media), currentUser))
       case None => Redirect(routes.AdminController.mediaList)
         .flashing("error" -> "Producto no encontrado")
     }
@@ -130,6 +137,109 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
       case None =>
         Redirect(routes.AdminController.userList)
           .flashing("error" -> "Usuario no encontrado")
+    }
+  }
+  
+  // POST /admin/users/:id/add-balance - Agregar saldo a usuario
+  def addBalance(id: Long) = Action { implicit req =>
+    // Verificar que sea admin
+    if (!isAdmin) {
+      Redirect(routes.HomeController.index)
+        .flashing("error" -> "Acceso denegado. Solo administradores.")
+    } else {
+      req.body.asFormUrlEncoded match {
+        case Some(formData) =>
+          formData.get("amount").flatMap(_.headOption) match {
+            case Some(amountStr) =>
+              try {
+                val amount = BigDecimal(amountStr)
+                if (amount > 0) {
+                  UserRepo.addBalance(id, amount) match {
+                    case Some(user) =>
+                      Redirect(routes.AdminController.userList)
+                        .flashing("success" -> s"$$${amount} agregados a ${user.name}. Nuevo saldo: $$${user.balance}")
+                    case None =>
+                      Redirect(routes.AdminController.userList)
+                        .flashing("error" -> "Usuario no encontrado")
+                  }
+                } else {
+                  Redirect(routes.AdminController.userList)
+                    .flashing("error" -> "El monto debe ser mayor a 0")
+                }
+              } catch {
+                case _: NumberFormatException =>
+                  Redirect(routes.AdminController.userList)
+                    .flashing("error" -> "Monto inválido")
+              }
+            case None =>
+              Redirect(routes.AdminController.userList)
+                .flashing("error" -> "Debes especificar un monto")
+          }
+        case None =>
+          Redirect(routes.AdminController.userList)
+            .flashing("error" -> "Datos de formulario inválidos")
+      }
+    }
+  }
+  
+  // GET /admin/balance-requests - Ver solicitudes de saldo pendientes
+  def balanceRequests = AdminAction { implicit req =>
+    val pendingRequests = BalanceRequestRepo.findPending
+    val requestsWithUsers = pendingRequests.flatMap { request =>
+      UserRepo.findById(request.userId).map(user => (request, user))
+    }
+    Ok(views.html.admin_balance_requests(requestsWithUsers, currentUser))
+  }
+  
+  // POST /admin/balance-requests/:id/approve - Aprobar solicitud
+  def approveBalanceRequest(id: Long) = Action { implicit req =>
+    if (!isAdmin) {
+      Redirect(routes.HomeController.index)
+        .flashing("error" -> "Acceso denegado. Solo administradores.")
+    } else {
+      currentUser(req).id match {
+        case adminId =>
+          BalanceRequestRepo.approve(id, adminId) match {
+            case Some(request) =>
+              UserRepo.findById(request.userId) match {
+                case Some(user) =>
+                  Redirect(routes.AdminController.balanceRequests)
+                    .flashing("success" -> s"Solicitud aprobada. $$${request.amount} agregados a ${user.name}")
+                case None =>
+                  Redirect(routes.AdminController.balanceRequests)
+                    .flashing("error" -> "Usuario no encontrado")
+              }
+            case None =>
+              Redirect(routes.AdminController.balanceRequests)
+                .flashing("error" -> "Solicitud no encontrada o ya procesada")
+          }
+      }
+    }
+  }
+  
+  // POST /admin/balance-requests/:id/reject - Rechazar solicitud
+  def rejectBalanceRequest(id: Long) = Action { implicit req =>
+    if (!isAdmin) {
+      Redirect(routes.HomeController.index)
+        .flashing("error" -> "Acceso denegado. Solo administradores.")
+    } else {
+      currentUser(req).id match {
+        case adminId =>
+          BalanceRequestRepo.reject(id, adminId) match {
+            case Some(request) =>
+              UserRepo.findById(request.userId) match {
+                case Some(user) =>
+                  Redirect(routes.AdminController.balanceRequests)
+                    .flashing("success" -> s"Solicitud de ${user.name} rechazada")
+                case None =>
+                  Redirect(routes.AdminController.balanceRequests)
+                    .flashing("error" -> "Usuario no encontrado")
+              }
+            case None =>
+              Redirect(routes.AdminController.balanceRequests)
+                .flashing("error" -> "Solicitud no encontrada o ya procesada")
+          }
+      }
     }
   }
 }

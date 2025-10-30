@@ -73,6 +73,46 @@ class AuthController @Inject()(cc: MessagesControllerComponents, userSvc: UserSe
         Redirect(routes.AuthController.loginForm).flashing("error" -> "Primero inicia sesión")
     }
   }
+  
+  // POST /request-balance - Solicitar saldo al administrador
+  def requestBalance = Action { implicit req =>
+    req.session.get(SessionKey) match {
+      case Some(email) =>
+        UserRepo.findByEmail(email) match {
+          case Some(user) =>
+            req.body.asFormUrlEncoded.flatMap(_.get("amount")).flatMap(_.headOption) match {
+              case Some(amountStr) =>
+                try {
+                  val amount = BigDecimal(amountStr)
+                  val paymentMethod = req.body.asFormUrlEncoded
+                    .flatMap(_.get("payment_method")).flatMap(_.headOption).getOrElse("N/A")
+                  
+                  if (amount > 0) {
+                    // Crear solicitud de saldo
+                    BalanceRequestRepo.add(user.id, amount, paymentMethod)
+                    
+                    Redirect(routes.AuthController.account)
+                      .flashing("success" -> s"Solicitud de $$${amount} enviada. El administrador la revisará pronto.")
+                  } else {
+                    Redirect(routes.AuthController.account)
+                      .flashing("error" -> "El monto debe ser mayor a 0")
+                  }
+                } catch {
+                  case _: NumberFormatException =>
+                    Redirect(routes.AuthController.account)
+                      .flashing("error" -> "Monto inválido")
+                }
+              case None =>
+                Redirect(routes.AuthController.account)
+                  .flashing("error" -> "Debes especificar un monto")
+            }
+          case None =>
+            Redirect(routes.AuthController.loginForm)
+        }
+      case None =>
+        Redirect(routes.AuthController.loginForm).flashing("error" -> "Primero inicia sesión")
+    }
+  }
 
   // GET /logout
   def logout = Action { implicit req =>
