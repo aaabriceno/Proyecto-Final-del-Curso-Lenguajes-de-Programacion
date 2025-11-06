@@ -1,25 +1,29 @@
-name := """lp-ecommerce"""
+name := "lp-ecommerce-manual"
+
 organization := "pe.ucsp.lp"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
 scalaVersion := "2.13.17"
 
-libraryDependencies += guice
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test
-libraryDependencies ++= Seq(
-  "org.xerial" % "sqlite-jdbc" % "3.45.3.0",
-  "org.playframework.anorm" %% "anorm" % "2.7.0",
-  "org.mindrot" % "jbcrypt" % "0.4" // passwords
+// SIN FRAMEWORKS - Solo Scala stdlib
+// NO Play, NO http4s, NO Akka HTTP
+// Solo java.net.* para HTTP
+
+scalacOptions ++= Seq(
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-Xlint"
 )
 
-libraryDependencies += "org.mindrot" % "jbcrypt" % "0.4"
+// Configuración de directorios
+Compile / scalaSource := baseDirectory.value / "app"
+Compile / mainClass := Some("Main")
 
+// Excluir carpetas viejas de la compilación
+Compile / unmanagedSourceDirectories := Seq(
+  baseDirectory.value / "app"
+)
 
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "pe.ucsp.lp.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "pe.ucsp.lp.binders._"
+Compile / excludeFilter := HiddenFileFilter || "controllers_old" || "*.old"

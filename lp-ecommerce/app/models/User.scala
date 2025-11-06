@@ -1,6 +1,7 @@
 package models
-import org.mindrot.jbcrypt.BCrypt
 
+import java.security.MessageDigest
+import java.util.Base64
 
 case class User(
   id: Long,
@@ -15,15 +16,24 @@ case class User(
 )
 
 object UserRepo {
+  
+  // Funciones de hash (sin BCrypt - solo SHA-256)
+  private def hashPassword(password: String): String = {
+    val digest = MessageDigest.getInstance("SHA-256")
+    val hash = digest.digest(password.getBytes("UTF-8"))
+    Base64.getEncoder.encodeToString(hash)
+  }
+  
+  private def verifyPassword(password: String, hash: String): Boolean = {
+    hashPassword(password) == hash
+  }
+  
   // memoria: arranca con un admin demo
   private var seq: Long = 0L
   private def nextId(): Long = { seq += 1; seq }
 
   private var users = Vector[User](
-    {
-      val hash = BCrypt.hashpw("admin123", BCrypt.gensalt(10))
-      User(nextId(), "Admin", "admin@lpstudios.com", "999999999", hash, isAdmin = true)
-    }
+    User(nextId(), "Admin", "admin@lpstudios.com", "999999999", hashPassword("admin123"), isAdmin = true)
   )
 
   def all: Vector[User] = users
@@ -35,9 +45,16 @@ object UserRepo {
     users.find(_.id == id)
 
   def add(name: String, email: String, phone: String, passwordHash: String, isAdmin: Boolean = false): User = {
-    val u = User(nextId(), name.trim, email.trim, phone.trim, passwordHash, isAdmin = isAdmin)
+    val u = User(nextId(), name.trim, email.trim, phone.trim, hashPassword(passwordHash), isAdmin = isAdmin)
     users = users :+ u
     u
+  }
+  
+  // Autenticar usuario
+  def authenticate(email: String, password: String): Option[User] = {
+    findByEmail(email).filter { user =>
+      user.isActive && verifyPassword(password, user.passwordHash)
+    }
   }
   
   def toggleActive(id: Long): Boolean = {
