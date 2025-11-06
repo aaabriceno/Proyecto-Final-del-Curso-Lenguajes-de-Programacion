@@ -2106,3 +2106,5 @@ ADVERTENCIA: Unmatched cancel notification for request id 264
 2025.11.06 04:20:17 INFO  Shutting down server
 2025.11.06 04:20:17 INFO  shutting down Metals
 2025.11.06 04:20:17 INFO  Exiting server
+2025.11.06 04:24:25 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.105.1.
+2025.11.06 04:24:25 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
