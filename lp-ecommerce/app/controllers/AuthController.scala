@@ -119,4 +119,65 @@ class AuthController @Inject()(cc: MessagesControllerComponents, userSvc: UserSe
     Redirect(routes.HomeController.index).withNewSession
       .flashing("success" -> "Sesión cerrada")
   }
+
+  // GET /notifications (JSON) - Obtener notificaciones no leídas
+  def getNotifications = Action { implicit req =>
+    req.session.get("userEmail").flatMap(UserRepo.findByEmail) match {
+      case Some(user) =>
+        val notifications = NotificationRepo.getUnread(user.id)
+        val json = play.api.libs.json.Json.obj(
+          "count" -> notifications.size,
+          "notifications" -> notifications.map { n =>
+            play.api.libs.json.Json.obj(
+              "id" -> n.id,
+              "message" -> n.message,
+              "type" -> n.notificationType.asString,
+              "createdAt" -> n.createdAt.toString
+            )
+          }
+        )
+        Ok(json)
+      case None =>
+        Unauthorized(play.api.libs.json.Json.obj("error" -> "No autenticado"))
+    }
+  }
+
+  // POST /notifications/:id/read - Marcar notificación como leída
+  def markNotificationAsRead(id: Long) = Action { implicit req =>
+    req.session.get("userEmail").flatMap(UserRepo.findByEmail) match {
+      case Some(user) =>
+        if (NotificationRepo.markAsRead(id, user.id)) {
+          Ok(play.api.libs.json.Json.obj("success" -> true))
+        } else {
+          NotFound(play.api.libs.json.Json.obj("error" -> "Notificación no encontrada"))
+        }
+      case None =>
+        Unauthorized(play.api.libs.json.Json.obj("error" -> "No autenticado"))
+    }
+  }
+
+  // POST /notifications/mark-all-read - Marcar todas como leídas
+  def markAllNotificationsAsRead = Action { implicit req =>
+    req.session.get("userEmail").flatMap(UserRepo.findByEmail) match {
+      case Some(user) =>
+        val count = NotificationRepo.markAllAsRead(user.id)
+        Ok(play.api.libs.json.Json.obj("success" -> true, "count" -> count))
+      case None =>
+        Unauthorized(play.api.libs.json.Json.obj("error" -> "No autenticado"))
+    }
+  }
+
+  // GET /user/balance (JSON) - Obtener saldo actual del usuario
+  def getUserBalance = Action { implicit req =>
+    req.session.get("userEmail").flatMap(UserRepo.findByEmail) match {
+      case Some(user) =>
+        Ok(play.api.libs.json.Json.obj(
+          "balance" -> user.balance,
+          "totalSpent" -> user.totalSpent,
+          "isVip" -> (user.totalSpent >= 100)
+        ))
+      case None =>
+        Unauthorized(play.api.libs.json.Json.obj("error" -> "No autenticado"))
+    }
+  }
 }

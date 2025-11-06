@@ -71,6 +71,40 @@
       <div class="col-md-6 mb-3">
         <div class="card">
           <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">📁 Gestión de Categorías</h5>
+          </div>
+          <div class="card-body">
+            <p>Organizar productos en categorías jerárquicas</p>
+            <a href="@routes.AdminController.listCategories" class="btn btn-primary">
+              <i class="bi bi-folder-fill me-2"></i>Ver categorías
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">🔥 Gestión de Promociones</h5>
+          </div>
+          <div class="card-body">
+            <p>Crear y administrar descuentos temporales</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small class="text-muted">
+                  Activas: <strong>@models.PromotionRepo.countActive</strong> |
+                  Próximas: <strong>@models.PromotionRepo.countUpcoming</strong>
+                </small>
+              </div>
+              <a href="@routes.AdminController.listPromotions" class="btn btn-danger">
+                <i class="bi bi-percent me-2"></i>Ver promociones
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
             <h5 class="mb-0">👥 Gestión de Usuarios</h5>
           </div>
           <div class="card-body">

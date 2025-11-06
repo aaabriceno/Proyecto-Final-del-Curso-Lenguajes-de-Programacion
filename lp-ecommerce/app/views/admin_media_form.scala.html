@@ -40,7 +40,7 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
               <label for="type" class="form-label">Tipo de producto *</label>
               <select class="form-select" id="type" name="type" required>
                 <option value="image" @if(media.exists(_.mtype == models.MediaType.Image)){selected}>🖼️ Imagen</option>
@@ -49,10 +49,29 @@
               </select>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
+              <label for="category_id" class="form-label">Categoría</label>
+              <select class="form-select" id="category_id" name="category_id">
+                <option value="">Sin categoría</option>
+                @for((cat, depth) <- models.CategoryRepo.getTree) {
+                  <option value="@cat.id" @if(media.flatMap(_.categoryId).contains(cat.id)){selected}>
+                    @{("  " * depth) + cat.name}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
               <label for="price" class="form-label">Precio (USD) *</label>
               <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" 
                      value="@media.map(_.price).getOrElse(0)" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label for="stock" class="form-label">Stock disponible *</label>
+              <input type="number" class="form-control" id="stock" name="stock" min="0" 
+                     value="@media.map(_.stock).getOrElse(0)" required>
+              <small class="form-text text-muted">Unidades disponibles</small>
             </div>
           </div>
 

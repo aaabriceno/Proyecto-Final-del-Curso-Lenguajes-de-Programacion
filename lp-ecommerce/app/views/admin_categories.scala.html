@@ -1,0 +1,242 @@
+@(categories: Vector[(models.Category, Int)], admin: models.User)(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
+
+@main("Gestión de Categorías") {
+  <div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="text-white">📁 Gestión de Categorías</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@routes.AdminController.dashboard" class="text-white">Dashboard</a></li>
+            <li class="breadcrumb-item active text-light">Categorías</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    @* Mensajes flash *@
+    @flash.get("success").map { msg =>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    }
+    
+    @flash.get("error").map { msg =>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        ❌ @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    }
+
+    <div class="row">
+      @* Panel izquierdo: Formulario crear/editar *@
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">➕ Nueva Categoría</h5>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="@routes.AdminController.createCategory" id="categoryForm">
+              @helper.CSRF.formField
+              
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre *</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       placeholder="ej: LoFi" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="parent_id" class="form-label">Categoría Padre</label>
+                <select class="form-select" id="parent_id" name="parent_id">
+                  <option value="">Sin padre (categoría raíz)</option>
+                  @for((cat, depth) <- categories) {
+                    <option value="@cat.id">
+                      @{("  " * depth) + cat.name}
+                    </option>
+                  }
+                </select>
+                <small class="text-muted">Deja vacío para crear una categoría principal</small>
+              </div>
+              
+              <div class="mb-3">
+                <label for="description" class="form-label">Descripción</label>
+                <textarea class="form-control" id="description" name="description" 
+                          rows="3" placeholder="Descripción de la categoría"></textarea>
+              </div>
+              
+              <input type="hidden" id="category_id" name="category_id" value="">
+              
+              <button type="submit" class="btn btn-success w-100" id="submitBtn">
+                <i class="bi bi-plus-circle me-2"></i>Crear Categoría
+              </button>
+              
+              <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="cancelBtn"
+                      onclick="resetForm()">
+                <i class="bi bi-x-circle me-2"></i>Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+        
+        <div class="card mt-3">
+          <div class="card-header bg-info text-white">
+            <h6 class="mb-0">📊 Estadísticas</h6>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Total categorías:</span>
+                <strong>@categories.size</strong>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Categorías raíz:</span>
+                <strong>@models.CategoryRepo.getRoots.size</strong>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Total productos:</span>
+                <strong>@models.MediaRepo.totalProducts</strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      @* Panel derecho: Árbol de categorías *@
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🌲 Árbol de Categorías</h5>
+          </div>
+          <div class="card-body">
+            @if(categories.isEmpty) {
+              <div class="text-center p-5">
+                <i class="bi bi-folder-x display-1 text-muted"></i>
+                <h4 class="mt-3">No hay categorías</h4>
+                <p class="text-muted">Crea tu primera categoría usando el formulario</p>
+              </div>
+            } else {
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Categoría</th>
+                      <th>Descripción</th>
+                      <th class="text-center">Productos</th>
+                      <th class="text-end">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for((cat, depth) <- categories) {
+                      <tr>
+                        <td>
+                          @for(i <- 0 until depth) {
+                            <span class="text-muted">│&nbsp;&nbsp;</span>
+                          }
+                          @if(depth > 0) {
+                            <span class="text-muted">└─&nbsp;</span>
+                          }
+                          <strong>@cat.name</strong>
+                          @if(cat.parentId.isEmpty) {
+                            <span class="badge bg-primary ms-2">Raíz</span>
+                          }
+                        </td>
+                        <td>
+                          <small class="text-muted">@cat.description</small>
+                        </td>
+                        <td class="text-center">
+                          <span class="badge bg-info">
+                            @models.CategoryRepo.countProducts(cat.id)
+                          </span>
+                        </td>
+                        <td class="text-end">
+                          <button class="btn btn-sm btn-warning edit-btn" 
+                                  data-id="@cat.id"
+                                  data-name="@cat.name"
+                                  data-parent="@cat.parentId.getOrElse("")"
+                                  data-desc="@cat.description">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          
+                          <form method="POST" action="@routes.AdminController.deleteCategory(cat.id)" 
+                                style="display:inline;" class="delete-form">
+                            @helper.CSRF.formField
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    data-cat-name="@cat.name">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-3">
+      <a href="@routes.AdminController.dashboard" class="btn btn-outline-light">
+        <i class="bi bi-arrow-left me-2"></i>Volver al Dashboard
+      </a>
+      <a href="@routes.AdminController.mediaList" class="btn btn-outline-light">
+        <i class="bi bi-box me-2"></i>Gestionar Productos
+      </a>
+    </div>
+  </div>
+  
+  <script>
+    // Editar categoría
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.dataset.id;
+        const name = this.dataset.name;
+        const parentId = this.dataset.parent;
+        const description = this.dataset.desc;
+        
+        editCategory(id, name, parentId, description);
+      });
+    });
+    
+    // Confirmar eliminación
+    document.querySelectorAll('.delete-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        const catName = this.querySelector('button').dataset.catName;
+        if (!confirm('¿Eliminar categoría ' + catName + '?')) {
+          e.preventDefault();
+        }
+      });
+    });
+    
+    function editCategory(id, name, parentId, description) {
+      // Cambiar título y acción del formulario
+      document.querySelector('.card-header h5').textContent = '✏️ Editar Categoría';
+      document.getElementById('categoryForm').action = '/admin/categories/' + id + '/update';
+      
+      // Llenar campos
+      document.getElementById('name').value = name;
+      document.getElementById('parent_id').value = parentId;
+      document.getElementById('description').value = description;
+      document.getElementById('category_id').value = id;
+      
+      // Cambiar botón
+      document.getElementById('submitBtn').innerHTML = '<i class="bi bi-save me-2"></i>Actualizar';
+      document.getElementById('cancelBtn').classList.remove('d-none');
+      
+      // Scroll al formulario
+      document.getElementById('categoryForm').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function resetForm() {
+      document.querySelector('.card-header h5').textContent = '➕ Nueva Categoría';
+      document.getElementById('categoryForm').action = '/admin/categories/create';
+      document.getElementById('categoryForm').reset();
+      document.getElementById('category_id').value = '';
+      document.getElementById('submitBtn').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Crear Categoría';
+      document.getElementById('cancelBtn').classList.add('d-none');
+    }
+  </script>
+}

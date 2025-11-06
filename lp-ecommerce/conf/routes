@@ -10,8 +10,23 @@ GET   /account     controllers.AuthController.account
 POST  /request-balance controllers.AuthController.requestBalance
 GET   /logout      controllers.AuthController.logout
 
+# Sistema de Notificaciones
+GET   /notifications                  controllers.AuthController.getNotifications
+POST  /notifications/:id/read         controllers.AuthController.markNotificationAsRead(id: Long)
+POST  /notifications/mark-all-read    controllers.AuthController.markAllNotificationsAsRead
+
+# API de Usuario
+GET   /user/balance                   controllers.AuthController.getUserBalance
+
 GET   /shop        controllers.ShopController.list
 GET   /shop/:id    controllers.ShopController.detail(id: Long)
+
+# Sistema de Carrito
+POST  /cart/add                   controllers.ShopController.addToCart
+GET   /cart                       controllers.ShopController.viewCart
+POST  /cart/update/:id            controllers.ShopController.updateCartItem(id: Long)
+POST  /cart/remove/:id            controllers.ShopController.removeFromCart(id: Long)
+POST  /cart/checkout              controllers.ShopController.checkout
 
 # Panel de Administración
 GET   /admin                          controllers.AdminController.dashboard
@@ -20,6 +35,17 @@ GET   /admin/users                    controllers.AdminController.userList
 GET   /admin/balance-requests         controllers.AdminController.balanceRequests
 POST  /admin/balance-requests/:id/approve controllers.AdminController.approveBalanceRequest(id: Long)
 POST  /admin/balance-requests/:id/reject  controllers.AdminController.rejectBalanceRequest(id: Long)
+GET   /admin/categories               controllers.AdminController.listCategories
+POST  /admin/categories/create        controllers.AdminController.createCategory
+POST  /admin/categories/:id/update    controllers.AdminController.updateCategory(id: Long)
+POST  /admin/categories/:id/delete    controllers.AdminController.deleteCategory(id: Long)
+GET   /admin/promotions               controllers.AdminController.listPromotions
+GET   /admin/promotions/new           controllers.AdminController.newPromotionForm
+POST  /admin/promotions/create        controllers.AdminController.createPromotion
+GET   /admin/promotions/:id/edit      controllers.AdminController.editPromotionForm(id: Long)
+POST  /admin/promotions/:id/edit      controllers.AdminController.updatePromotion(id: Long)
+POST  /admin/promotions/:id/delete    controllers.AdminController.deletePromotion(id: Long)
+POST  /admin/promotions/:id/toggle    controllers.AdminController.togglePromotion(id: Long)
 GET   /admin/media                    controllers.AdminController.mediaList
 GET   /admin/media/new                controllers.AdminController.newMediaForm
 POST  /admin/media/new                controllers.AdminController.createMedia

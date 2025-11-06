@@ -82,8 +82,12 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
     val mtype = data.get("type").flatMap(_.headOption).getOrElse("image")
     val price = data.get("price").flatMap(_.headOption).flatMap(p => scala.util.Try(BigDecimal(p)).toOption).getOrElse(BigDecimal(0))
     val assetPath = data.get("assetPath").flatMap(_.headOption).getOrElse("")
+    val stock = data.get("stock").flatMap(_.headOption).flatMap(s => scala.util.Try(s.toInt).toOption).getOrElse(0)
+    val categoryId = data.get("category_id").flatMap(_.headOption).flatMap(c => 
+      if (c.isEmpty) None else scala.util.Try(c.toLong).toOption
+    )
 
-    MediaRepo.add(title, description, MediaType.from(mtype), price, assetPath)
+    MediaRepo.add(title, description, MediaType.from(mtype), price, categoryId, assetPath, stock)
     
     Redirect(routes.AdminController.mediaList)
       .flashing("success" -> s"Producto '$title' creado exitosamente")
@@ -106,8 +110,12 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
     val mtype = data.get("type").flatMap(_.headOption).getOrElse("image")
     val price = data.get("price").flatMap(_.headOption).flatMap(p => scala.util.Try(BigDecimal(p)).toOption).getOrElse(BigDecimal(0))
     val assetPath = data.get("assetPath").flatMap(_.headOption).getOrElse("")
+    val stock = data.get("stock").flatMap(_.headOption).flatMap(s => scala.util.Try(s.toInt).toOption).getOrElse(0)
+    val categoryId = data.get("category_id").flatMap(_.headOption).flatMap(c => 
+      if (c.isEmpty) None else scala.util.Try(c.toLong).toOption
+    )
 
-    MediaRepo.update(id, title, description, MediaType.from(mtype), price, assetPath)
+    MediaRepo.update(id, title, description, MediaType.from(mtype), price, categoryId, assetPath, stock)
     
     Redirect(routes.AdminController.mediaList)
       .flashing("success" -> s"Producto actualizado exitosamente")
@@ -242,4 +250,211 @@ class AdminController @Inject()(cc: MessagesControllerComponents)
       }
     }
   }
+  
+  // ============ GESTIÓN DE CATEGORÍAS ============
+  
+  // GET /admin/categories - Lista de categorías
+  def listCategories = AdminAction { implicit request =>
+    val admin = currentUser
+    val categories = CategoryRepo.getTree
+    Ok(views.html.admin_categories(categories, admin))
+  }
+  
+  // POST /admin/categories/create - Crear categoría
+  def createCategory = AdminAction { implicit request =>
+    request.body.asFormUrlEncoded match {
+      case Some(form) =>
+        val name = form.get("name").flatMap(_.headOption).getOrElse("")
+        val description = form.get("description").flatMap(_.headOption).getOrElse("")
+        val parentId = form.get("parent_id").flatMap(_.headOption).flatMap(id => 
+          if (id.isEmpty) None else Some(id.toLong)
+        )
+        
+        if (name.trim.isEmpty) {
+          Redirect(routes.AdminController.listCategories)
+            .flashing("error" -> "El nombre de la categoría no puede estar vacío")
+        } else {
+          try {
+            val category = CategoryRepo.add(name.trim, parentId, description.trim)
+            Redirect(routes.AdminController.listCategories)
+              .flashing("success" -> s"Categoría '${category.name}' creada exitosamente")
+          } catch {
+            case e: IllegalArgumentException =>
+              Redirect(routes.AdminController.listCategories)
+                .flashing("error" -> e.getMessage)
+          }
+        }
+      case None =>
+        Redirect(routes.AdminController.listCategories)
+          .flashing("error" -> "Datos del formulario inválidos")
+    }
+  }
+  
+  // POST /admin/categories/:id/update - Actualizar categoría
+  def updateCategory(id: Long) = AdminAction { implicit request =>
+    request.body.asFormUrlEncoded match {
+      case Some(form) =>
+        val name = form.get("name").flatMap(_.headOption).getOrElse("")
+        val description = form.get("description").flatMap(_.headOption).getOrElse("")
+        val parentId = form.get("parent_id").flatMap(_.headOption).flatMap(pid => 
+          if (pid.isEmpty) None else Some(pid.toLong)
+        )
+        
+        if (name.trim.isEmpty) {
+          Redirect(routes.AdminController.listCategories)
+            .flashing("error" -> "El nombre de la categoría no puede estar vacío")
+        } else {
+          try {
+            CategoryRepo.update(id, name.trim, parentId, description.trim) match {
+              case Some(category) =>
+                Redirect(routes.AdminController.listCategories)
+                  .flashing("success" -> s"Categoría '${category.name}' actualizada")
+              case None =>
+                Redirect(routes.AdminController.listCategories)
+                  .flashing("error" -> "Categoría no encontrada")
+            }
+          } catch {
+            case e: IllegalArgumentException =>
+              Redirect(routes.AdminController.listCategories)
+                .flashing("error" -> e.getMessage)
+          }
+        }
+      case None =>
+        Redirect(routes.AdminController.listCategories)
+          .flashing("error" -> "Datos del formulario inválidos")
+    }
+  }
+  
+  // POST /admin/categories/:id/delete - Eliminar categoría
+  def deleteCategory(id: Long) = AdminAction { implicit request =>
+    try {
+      CategoryRepo.find(id) match {
+        case Some(category) =>
+          if (CategoryRepo.delete(id)) {
+            Redirect(routes.AdminController.listCategories)
+              .flashing("success" -> s"Categoría '${category.name}' eliminada")
+          } else {
+            Redirect(routes.AdminController.listCategories)
+              .flashing("error" -> "No se pudo eliminar la categoría")
+          }
+        case None =>
+          Redirect(routes.AdminController.listCategories)
+            .flashing("error" -> "Categoría no encontrada")
+      }
+    } catch {
+      case e: IllegalArgumentException =>
+        Redirect(routes.AdminController.listCategories)
+          .flashing("error" -> e.getMessage)
+    }
+  }
+
+  // ========== GESTIÓN DE PROMOCIONES ==========
+
+  // GET /admin/promotions - Lista de promociones
+  def listPromotions = AdminAction { implicit request =>
+    val promotions = PromotionRepo.all
+    Ok(views.html.admin_promotions(promotions))
+  }
+
+  // GET /admin/promotions/new - Formulario nueva promoción
+  def newPromotionForm = AdminAction { implicit request =>
+    val categories = CategoryRepo.all
+    val mediaList = MediaRepo.all
+    Ok(views.html.admin_promotion_form(None, categories, mediaList))
+  }
+
+  // POST /admin/promotions/create - Crear promoción
+  def createPromotion = AdminAction { implicit request =>
+    val data = request.body.asFormUrlEncoded.getOrElse(Map.empty)
+    val name = data.get("name").flatMap(_.headOption).getOrElse("")
+    val description = data.get("description").flatMap(_.headOption).getOrElse("")
+    val discountPercent = data.get("discountPercent").flatMap(_.headOption).flatMap(d => scala.util.Try(d.toInt).toOption).getOrElse(0)
+    
+    val startDate = data.get("startDate").flatMap(_.headOption).flatMap { d =>
+      scala.util.Try(java.time.LocalDateTime.parse(d)).toOption
+    }.getOrElse(java.time.LocalDateTime.now())
+    
+    val endDate = data.get("endDate").flatMap(_.headOption).flatMap { d =>
+      scala.util.Try(java.time.LocalDateTime.parse(d)).toOption
+    }.getOrElse(java.time.LocalDateTime.now().plusDays(7))
+    
+    val targetType = data.get("targetType").flatMap(_.headOption).map(PromotionTarget.from).getOrElse(PromotionTarget.All)
+    
+    val targetIds = data.get("targetIds").flatMap(_.headOption).map { ids =>
+      ids.split(",").flatMap(id => scala.util.Try(id.trim.toLong).toOption).toVector
+    }.getOrElse(Vector.empty)
+
+    PromotionRepo.create(name, description, discountPercent, startDate, endDate, targetType, targetIds)
+    
+    Redirect(routes.AdminController.listPromotions)
+      .flashing("success" -> s"Promoción '$name' creada exitosamente")
+  }
+
+  // GET /admin/promotions/:id/edit - Formulario editar promoción
+  def editPromotionForm(id: Long) = AdminAction { implicit request =>
+    PromotionRepo.find(id) match {
+      case Some(promo) =>
+        val categories = CategoryRepo.all
+        val mediaList = MediaRepo.all
+        Ok(views.html.admin_promotion_form(Some(promo), categories, mediaList))
+      case None => Redirect(routes.AdminController.listPromotions)
+        .flashing("error" -> "Promoción no encontrada")
+    }
+  }
+
+  // POST /admin/promotions/:id/edit - Actualizar promoción
+  def updatePromotion(id: Long) = AdminAction { implicit request =>
+    val data = request.body.asFormUrlEncoded.getOrElse(Map.empty)
+    val name = data.get("name").flatMap(_.headOption).getOrElse("")
+    val description = data.get("description").flatMap(_.headOption).getOrElse("")
+    val discountPercent = data.get("discountPercent").flatMap(_.headOption).flatMap(d => scala.util.Try(d.toInt).toOption).getOrElse(0)
+    
+    val startDate = data.get("startDate").flatMap(_.headOption).flatMap { d =>
+      scala.util.Try(java.time.LocalDateTime.parse(d)).toOption
+    }.getOrElse(java.time.LocalDateTime.now())
+    
+    val endDate = data.get("endDate").flatMap(_.headOption).flatMap { d =>
+      scala.util.Try(java.time.LocalDateTime.parse(d)).toOption
+    }.getOrElse(java.time.LocalDateTime.now().plusDays(7))
+    
+    val targetType = data.get("targetType").flatMap(_.headOption).map(PromotionTarget.from).getOrElse(PromotionTarget.All)
+    
+    val targetIds = data.get("targetIds").flatMap(_.headOption).map { ids =>
+      ids.split(",").flatMap(id => scala.util.Try(id.trim.toLong).toOption).toVector
+    }.getOrElse(Vector.empty)
+    
+    val isActive = data.get("isActive").flatMap(_.headOption).contains("true")
+
+    PromotionRepo.update(id, name, description, discountPercent, startDate, endDate, targetType, targetIds, isActive)
+    
+    Redirect(routes.AdminController.listPromotions)
+      .flashing("success" -> "Promoción actualizada exitosamente")
+  }
+
+  // POST /admin/promotions/:id/delete - Eliminar promoción
+  def deletePromotion(id: Long) = AdminAction { implicit request =>
+    PromotionRepo.find(id) match {
+      case Some(promo) =>
+        PromotionRepo.delete(id)
+        Redirect(routes.AdminController.listPromotions)
+          .flashing("success" -> s"Promoción '${promo.name}' eliminada")
+      case None =>
+        Redirect(routes.AdminController.listPromotions)
+          .flashing("error" -> "Promoción no encontrada")
+    }
+  }
+
+  // POST /admin/promotions/:id/toggle - Pausar/reanudar promoción
+  def togglePromotion(id: Long) = AdminAction { implicit request =>
+    PromotionRepo.toggleActive(id) match {
+      case Some(promo) =>
+        val status = if (promo.isActive) "activada" else "pausada"
+        Redirect(routes.AdminController.listPromotions)
+          .flashing("success" -> s"Promoción '${promo.name}' $status")
+      case None =>
+        Redirect(routes.AdminController.listPromotions)
+          .flashing("error" -> "Promoción no encontrada")
+    }
+  }
 }
+
