@@ -57,6 +57,13 @@ object BalanceRequestRepo {
       // Agregar saldo al usuario
       UserRepo.addBalance(request.userId, request.amount)
       
+      // Crear notificación para el usuario
+      NotificationRepo.create(
+        request.userId,
+        s"✅ Tu solicitud de recarga de $$${request.amount} ha sido APROBADA. El saldo ya está disponible en tu cuenta.",
+        NotificationType.BalanceApproved
+      )
+      
       // Actualizar solicitud
       val updated = request.copy(
         status = RequestStatus.Approved,
@@ -70,6 +77,13 @@ object BalanceRequestRepo {
   
   def reject(id: Long, adminId: Long): Option[BalanceRequest] = {
     requests.find(_.id == id).filter(_.status == RequestStatus.Pending).map { request =>
+      // Crear notificación para el usuario
+      NotificationRepo.create(
+        request.userId,
+        s"❌ Tu solicitud de recarga de $$${request.amount} ha sido RECHAZADA. Por favor contacta al administrador para más información.",
+        NotificationType.BalanceRejected
+      )
+      
       val updated = request.copy(
         status = RequestStatus.Rejected,
         reviewedBy = Some(adminId),

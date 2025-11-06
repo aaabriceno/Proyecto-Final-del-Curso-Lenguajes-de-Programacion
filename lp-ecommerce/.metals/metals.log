@@ -1449,3 +1449,655 @@ java.nio.file.FileSystemNotFoundException: Provider "vscode-chat-code-block" not
 2025.10.29 12:01:55 INFO  Shutting down server
 2025.10.29 12:01:55 INFO  shutting down Metals
 2025.10.29 12:01:55 INFO  Exiting server
+2025.10.30 17:41:22 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.105.1.
+2025.10.30 17:41:22 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:32 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+oct. 30, 2025 5:45:32 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 1
+oct. 30, 2025 5:45:33 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:52:22 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+oct. 30, 2025 12:52:22 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 8
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:52:23 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 12:52:22 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:52:33 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 12:52:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:52:35 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:53:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 12:53:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:54:17 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 12:54:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:54:20 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:54:22 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:54:22 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 12:54:23 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:54:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 12:54:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:55:19 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:55:21 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 12:55:24 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:59:36 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:59:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 12:59:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:59:40 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 12:59:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 12:59:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:00:06 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:00:06 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:00:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\services\UserService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\services\UserService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:03:33 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:03:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:03:36 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:03:44 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:03:45 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:03:45 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:03:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:00 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:09 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\target\scala-2.13\routes\main\controllers\ReverseRoutes.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\target\scala-2.13\routes\main\controllers\ReverseRoutes.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\target\scala-2.13\routes\main\controllers\ReverseRoutes.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:33 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:38 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:04:42 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\services\UserService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:13:20 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:13:20 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:13:30 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:13:30 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:13:30 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:13:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:13:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:13:38 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:13:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 13:13:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:14:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 13:14:12 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:18 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:22:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:20 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+oct. 30, 2025 1:22:20 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 282
+2025.10.30 13:22:21 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:22:26 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:28 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:22:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:39 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:22:52 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:22:52 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:23:05 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:23:05 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:23:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:23:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:23:55 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:23:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:23:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:23:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:24:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:38 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:42 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:47 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:47 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:24:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:24:54 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:25:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:25:50 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:25:52 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:25:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:25:54 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:26:00 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:26:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:26:01 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:27:19 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:27:32 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:27:51 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:27:52 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:27:54 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:28:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:28:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:33:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.10.30 13:33:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:33:52 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 13:33:52 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:06 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 13:34:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:11 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:34:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:14 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 13:34:17 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:55 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:34:56 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:35:04 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 13:45:09 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:22 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 13:45:22 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:34 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 13:45:34 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:39 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:43 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 13:45:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:52 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:53 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:45:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 13:45:54 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:02 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:06 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:07 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 13:46:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:11 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:11 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:12 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 13:46:13 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:20 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:35 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:46:35 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:40 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:46:41 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:46:55 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 13:46:55 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 13:47:07 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:45:28 INFO  Shutting down server
+2025.10.30 17:45:28 INFO  shutting down Metals
+2025.10.30 17:45:28 INFO  Exiting server
+2025.10.30 17:21:51 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.105.1.
+2025.10.30 17:21:51 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2025.10.30 17:21:58 WARN  Build server is not auto-connectable.
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.10.30 17:21:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.10.30 17:21:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:02 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 17:22:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+oct. 30, 2025 5:23:15 P. M. org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFORMACIÓN: Unsupported notification method: $/setTrace
+2025.10.30 19:06:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:16 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala
+2025.10.30 19:06:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:17 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala
+2025.10.30 19:06:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala
+2025.10.30 19:06:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:45 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:06:45 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:56 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:06:56 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:06:56 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:07:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:11 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:07:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:21 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:07:27 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:27 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:07:27 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:36 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:40 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:48 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:07:49 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.10.30 19:08:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:08:12 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:08:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:08:35 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:08:35 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:08:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:08:39 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:08:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.10.30 19:08:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:09:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:09:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:09:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:09:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:10:25 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:10:25 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.10.30 19:10:34 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:10:34 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.10.30 19:10:34 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:10:39 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.10.30 19:10:39 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:10:40 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.10.30 19:16:23 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:16:23 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:16:23 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:16:29 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:16:29 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:16:29 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:16:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:16:38 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:16:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:16:44 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:20:47 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.10.30 19:20:47 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.10.30 19:21:07 INFO  Shutting down server
+2025.10.30 19:21:07 INFO  shutting down Metals
+2025.10.30 19:21:07 INFO  Exiting server
+2025.11.05 02:13:18 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.105.1.
+2025.11.05 02:13:18 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2025.11.05 02:13:26 WARN  Build server is not auto-connectable.
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala
+2025.11.05 02:13:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:13:26 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\PurchaseController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Download.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:32 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:32 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Category.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:32 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:32 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\User.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:13:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:17 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:23:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:17 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:23:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:23:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:38 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:23:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:47 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:23:47 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:47 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:47 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:23:49 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:23:49 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:49 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:23:49 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:23:49 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:51 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:23:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:23:58 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:24:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:24:03 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:24:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:24:23 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:24:23 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:24:23 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:24:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:24:34 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:24:34 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:25:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:25:28 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:25:28 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:32 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 02:26:35 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:26:35 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:36 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:26:36 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:26:36 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:26:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:26:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:41 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:26:41 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:43 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 02:26:44 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:26:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:44 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:26:50 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:26:50 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:28:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:28:43 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala
+2025.11.05 02:28:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:28:43 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala
+2025.11.05 02:28:43 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:03 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:04 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:29:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala
+2025.11.05 02:29:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:29:09 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Notification.scala
+2025.11.05 02:29:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:29:29 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:29 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 02:29:29 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:49 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 02:29:49 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:29:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 02:32:31 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:32:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:31 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:32:31 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 05, 2025 2:32:32 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 118
+2025.11.05 02:32:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:33 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:34 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:32:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:39 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:32:39 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:41 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:32:41 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:33:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:33:02 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:05 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:33:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:11 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:11 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:33:14 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:33:14 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:14 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:16 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:33:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:18 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:33:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:20 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:33:25 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:26 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:33:26 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:33:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Cart.scala
+2025.11.05 02:34:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:34:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:34:01 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:34:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:34:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:34:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:34:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:34:09 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:34:36 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:35:24 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:35:24 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:35:24 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:35:24 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:35:25 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:35:25 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:35:27 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:35:27 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:36:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:39:20 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:39:21 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:39:21 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:39:24 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 02:39:24 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:40:48 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:45:32 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:45:54 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:45:54 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:45:54 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:45:55 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:45:55 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:45:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\BalanceRequest.scala
+2025.11.05 02:49:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:49:18 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 02:49:18 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:49:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 02:49:50 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 02:49:53 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AuthController.scala
+2025.11.05 03:12:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:12:16 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala
+2025.11.05 03:12:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:12:16 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:12:16 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala
+2025.11.05 03:12:21 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala
+2025.11.05 03:12:39 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:12:40 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:12:40 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 03:12:57 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 03:12:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:12:58 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Media.scala
+2025.11.05 03:13:07 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala
+2025.11.05 03:13:07 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Promotion.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:14:37 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:14:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 05, 2025 3:14:38 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 264
+2025.11.05 03:14:37 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:14:38 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:14:38 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:15:36 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:21:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:04 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:04 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:21:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:15 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:21:30 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:30 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:30 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:21:42 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:42 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:21:42 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:22:50 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:22:50 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:22:52 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala
+2025.11.05 03:24:07 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:24:08 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:24:08 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 03:24:10 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 03:24:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:24:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:24:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:24:13 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 03:27:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:27:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:27:01 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 03:27:01 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 03:27:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.05 03:27:02 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.05 03:28:25 INFO  Shutting down server
+2025.11.05 03:28:25 INFO  shutting down Metals
+2025.11.05 03:28:25 INFO  Exiting server

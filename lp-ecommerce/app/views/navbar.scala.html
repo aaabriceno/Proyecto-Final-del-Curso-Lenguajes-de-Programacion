@@ -21,6 +21,29 @@
             <a class="btn btn-outline-danger" href="@routes.AdminController.dashboard">👨‍💼 Admin</a>
             <a class="btn btn-outline-light" href="@routes.AuthController.logout">Salir</a>
           } else {
+            @* Botón de Notificaciones para usuarios normales *@
+            @defining(userOpt.map(u => models.NotificationRepo.countUnread(u.id)).getOrElse(0)) { notifCount =>
+              <a class="btn btn-outline-warning position-relative" href="#" id="notificationBtn" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                @if(notifCount > 0) {
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @notifCount
+                  </span>
+                }
+              </a>
+            }
+            
+            @* Botón de Carrito para usuarios normales *@
+            @defining(userOpt.map(u => models.CartRepo.countItems(u.id)).getOrElse(0)) { cartCount =>
+              <a class="btn btn-outline-primary position-relative" href="@routes.ShopController.viewCart">
+                <i class="bi bi-cart-fill"></i> Carrito
+                @if(cartCount > 0) {
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @cartCount
+                  </span>
+                }
+              </a>
+            }
             <a class="btn btn-outline-success" href="@routes.PurchaseController.showDownloads">
               <i class="bi bi-download"></i> Mis Descargas
             </a>
