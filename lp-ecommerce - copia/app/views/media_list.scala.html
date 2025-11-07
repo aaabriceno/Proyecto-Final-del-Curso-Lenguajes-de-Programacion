@@ -1,0 +1,228 @@
+@(items: Seq[models.Media], categories: Vector[models.Category], selectedCategory: Option[models.Category], searchQuery: Option[String], typeFilter: Option[models.MediaType], user: Option[models.User], cartItemCount: Int)(implicit request: play.api.mvc.RequestHeader)
+@main("Tienda — LP Studios") {
+  <div class="container py-4">
+    <div class="row">
+      @* Sidebar izquierdo: Filtros *@
+      <div class="col-md-3">
+        <div class="card mb-3">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🔍 Filtros</h5>
+          </div>
+          <div class="card-body">
+            @* Barra de búsqueda *@
+            <form method="GET" action="@routes.ShopController.list" class="mb-3">
+              <label class="form-label fw-bold">Buscar</label>
+              <input type="text" class="form-control" name="q" 
+                     placeholder="Buscar productos..." 
+                     value="@searchQuery.getOrElse("")">
+              <button type="submit" class="btn btn-primary btn-sm w-100 mt-2">Buscar</button>
+            </form>
+            
+            <hr>
+            
+            @* Filtro por tipo *@
+            <div class="mb-3">
+              <label class="form-label fw-bold">Tipo</label>
+              <div class="list-group">
+                <a href="@routes.ShopController.list" 
+                   class="list-group-item list-group-item-action @if(typeFilter.isEmpty){active}">
+                  Todos
+                </a>
+                <a href="@routes.ShopController.list?type=image" 
+                   class="list-group-item list-group-item-action @if(typeFilter.contains(models.MediaType.Image)){active}">
+                  🖼️ Imágenes
+                </a>
+                <a href="@routes.ShopController.list?type=audio" 
+                   class="list-group-item list-group-item-action @if(typeFilter.contains(models.MediaType.Audio)){active}">
+                  🎵 Audio
+                </a>
+                <a href="@routes.ShopController.list?type=video" 
+                   class="list-group-item list-group-item-action @if(typeFilter.contains(models.MediaType.Video)){active}">
+                  🎬 Video
+                </a>
+              </div>
+            </div>
+            
+            <hr>
+            
+            @* Categorías *@
+            <div>
+              <label class="form-label fw-bold">Categorías</label>
+              <div class="list-group">
+                <a href="@routes.ShopController.list" 
+                   class="list-group-item list-group-item-action @if(selectedCategory.isEmpty){active}">
+                  📂 Todas
+                </a>
+                @for(cat <- categories) {
+                  <a href="@routes.ShopController.list?category=@cat.id" 
+                     class="list-group-item list-group-item-action @if(selectedCategory.exists(_.id == cat.id)){active}">
+                    📁 @cat.name 
+                    <span class="badge bg-secondary float-end">
+                      @models.CategoryRepo.countProducts(cat.id)
+                    </span>
+                  </a>
+                  @* Subcategorías *@
+                  @for(subcat <- models.CategoryRepo.getChildren(cat.id)) {
+                    <a href="@routes.ShopController.list?category=@subcat.id" 
+                       class="list-group-item list-group-item-action ps-4 @if(selectedCategory.exists(_.id == subcat.id)){active}">
+                      └─ @subcat.name
+                      <span class="badge bg-secondary float-end">
+                        @models.CategoryRepo.countProducts(subcat.id)
+                      </span>
+                    </a>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      @* Contenido principal: Productos *@
+      <div class="col-md-9">
+        @* Breadcrumb *@
+        @selectedCategory.map { cat =>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="@routes.ShopController.list">Inicio</a></li>
+              @for(bc <- models.CategoryRepo.getBreadcrumb(cat.id)) {
+                <li class="breadcrumb-item @if(bc.id == cat.id){active}">
+                  @if(bc.id == cat.id) {
+                    @bc.name
+                  } else {
+                    <a href="@routes.ShopController.list?category=@bc.id">@bc.name</a>
+                  }
+                </li>
+              }
+            </ol>
+          </nav>
+        }
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2>
+            @selectedCategory.map(_.name).getOrElse("Catálogo")
+          </h2>
+          <span class="text-muted">@items.size producto(s)</span>
+        </div>
+        
+        @if(items.isEmpty) {
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            No se encontraron productos con los filtros aplicados.
+            <a href="@routes.ShopController.list">Ver todos</a>
+          </div>
+        } else {
+          <div class="row g-3">
+      @for(m <- items) {
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="card h-100">
+            <div class="ratio ratio-16x9">
+              @m.mtype match {
+                case models.MediaType.Image => {
+                  <img class="card-img-top" alt="@m.title" src='@routes.Assets.versioned(m.assetPath)'>
+                }
+                case models.MediaType.Audio => {
+                  <audio controls class="w-100">
+                    <source src='@routes.Assets.versioned(m.assetPath)' type="audio/mpeg">
+                  </audio>
+                }
+                case models.MediaType.Video => {
+                  <video controls class="w-100">
+                    <source src='@routes.Assets.versioned(m.assetPath)' type="video/mp4">
+                  </video>
+                }
+              }
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">@m.title</h5>
+              <p class="card-text small text-muted">@m.description</p>
+              
+              @* Mostrar categoría *@
+              @m.category.map { cat =>
+                <p class="card-text mb-2">
+                  <small class="text-muted">
+                    📁 <a href="@routes.ShopController.list?category=@cat.id">@cat.name</a>
+                  </small>
+                </p>
+              }
+              
+              @* Badge de stock *@
+              @if(m.isOutOfStock) {
+                <div class="mb-2">
+                  <span class="badge bg-danger">🚫 AGOTADO</span>
+                </div>
+              } else if(m.stock == 1) {
+                <div class="mb-2">
+                  <span class="badge bg-warning text-dark">⚠️ ÚLTIMA UNIDAD</span>
+                </div>
+              } else if(m.isLowStock) {
+                <div class="mb-2">
+                  <span class="badge bg-warning text-dark">⚠️ ÚLTIMAS @m.stock UNIDADES</span>
+                </div>
+              } else {
+                <div class="mb-2">
+                  <span class="badge bg-success">✅ Disponible (@m.stock unidades)</span>
+                </div>
+              }
+              
+              @* Badge de promoción *@
+              @if(m.hasActivePromotion) {
+                @m.activePromotion.map { promo =>
+                  <div class="mb-2">
+                    <span class="badge bg-danger fs-6 promotion-badge" data-promo-id="@promo.id">
+                      🔥 -@{promo.discountPercent}% OFF
+                    </span>
+                    @if(promo.hoursRemaining <= 48) {
+                      <small class="text-danger ms-2">
+                        <i class="bi bi-clock"></i> 
+                        @if(promo.hoursRemaining > 24) {
+                          Termina en @{promo.hoursRemaining / 24}d @{promo.hoursRemaining % 24}h
+                        } else {
+                          ¡Termina en @{promo.hoursRemaining}h!
+                        }
+                      </small>
+                    }
+                  </div>
+                }
+              }
+              
+              <div class="d-flex justify-content-between align-items-center">
+                @if(m.hasActivePromotion) {
+                  <div>
+                    <span class="text-decoration-line-through text-muted me-2">$$$@m.price</span>
+                    <span class="fw-bold text-danger fs-5">$$$@{m.finalPrice(user)}</span>
+                  </div>
+                } else {
+                  <span class="fw-semibold">$$$@m.price</span>
+                }
+                <div class="btn-group">
+                  <a class="btn btn-outline-info btn-sm" href='@routes.ShopController.detail(m.id)' title="Ver detalles">
+                    👁️
+                  </a>
+                  @if(!m.isOutOfStock) {
+                    <form method="POST" action="@routes.ShopController.addToCart" class="d-inline">
+                      @helper.CSRF.formField
+                      <input type="hidden" name="mediaId" value="@m.id">
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="btn btn-primary btn-sm">
+                        🛒 Agregar
+                      </button>
+                    </form>
+                  } else {
+                    <button class="btn btn-secondary btn-sm" disabled>
+                      🚫 No disponible
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+

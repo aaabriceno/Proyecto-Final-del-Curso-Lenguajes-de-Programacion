@@ -1,0 +1,114 @@
+@(media: Option[models.Media], admin: models.User)(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
+
+@main(if(media.isDefined) "Editar Producto" else "Nuevo Producto") {
+  <div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="text-white">
+          @if(media.isDefined) {
+            ✏️ Editar Producto
+          } else {
+            ➕ Nuevo Producto
+          }
+        </h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@routes.AdminController.dashboard" class="text-white">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="@routes.AdminController.mediaList" class="text-white">Productos</a></li>
+            <li class="breadcrumb-item active text-light">
+              @if(media.isDefined) {Editar} else {Nuevo}
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <form method="POST" action="@if(media.isDefined) {@routes.AdminController.updateMedia(media.get.id)} else {@routes.AdminController.createMedia}">
+          @helper.CSRF.formField
+          
+          <div class="mb-3">
+            <label for="title" class="form-label">Título del producto *</label>
+            <input type="text" class="form-control" id="title" name="title" 
+                   value="@media.map(_.title).getOrElse("")" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción *</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required>@media.map(_.description).getOrElse("")</textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label for="type" class="form-label">Tipo de producto *</label>
+              <select class="form-select" id="type" name="type" required>
+                <option value="image" @if(media.exists(_.mtype == models.MediaType.Image)){selected}>🖼️ Imagen</option>
+                <option value="audio" @if(media.exists(_.mtype == models.MediaType.Audio)){selected}>🎵 Audio</option>
+                <option value="video" @if(media.exists(_.mtype == models.MediaType.Video)){selected}>🎬 Video</option>
+              </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label for="category_id" class="form-label">Categoría</label>
+              <select class="form-select" id="category_id" name="category_id">
+                <option value="">Sin categoría</option>
+                @for((cat, depth) <- models.CategoryRepo.getTree) {
+                  <option value="@cat.id" @if(media.flatMap(_.categoryId).contains(cat.id)){selected}>
+                    @{("  " * depth) + cat.name}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label for="price" class="form-label">Precio (USD) *</label>
+              <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" 
+                     value="@media.map(_.price).getOrElse(0)" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label for="stock" class="form-label">Stock disponible *</label>
+              <input type="number" class="form-control" id="stock" name="stock" min="0" 
+                     value="@media.map(_.stock).getOrElse(0)" required>
+              <small class="form-text text-muted">Unidades disponibles</small>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="assetPath" class="form-label">Ruta del archivo *</label>
+            <input type="text" class="form-control" id="assetPath" name="assetPath" 
+                   value="@media.map(_.assetPath).getOrElse("")" 
+                   placeholder="images/producto.jpg o media/audio/cancion.mp3" required>
+            <small class="form-text text-muted">
+              Ejemplo: images/producto.jpg, media/audio/cancion.mp3, media/video/clip.mp4
+            </small>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              @if(media.isDefined) {💾 Guardar Cambios} else {➕ Crear Producto}
+            </button>
+            <a href="@routes.AdminController.mediaList" class="btn btn-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    @* Información adicional *@
+    <div class="card mt-3">
+      <div class="card-header bg-info text-dark">
+        <h5 class="mb-0">ℹ️ Información</h5>
+      </div>
+      <div class="card-body">
+        <h6>Rutas válidas para archivos:</h6>
+        <ul>
+          <li><code>images/nombre.jpg</code> - Para imágenes en /public/images/</li>
+          <li><code>media/audio/nombre.mp3</code> - Para audio en /public/media/audio/</li>
+          <li><code>media/video/nombre.mp4</code> - Para video en /public/media/video/</li>
+        </ul>
+        <p class="mb-0"><strong>Nota:</strong> Asegúrate de que el archivo exista en la carpeta pública antes de crear el producto.</p>
+      </div>
+    </div>
+  </div>
+}

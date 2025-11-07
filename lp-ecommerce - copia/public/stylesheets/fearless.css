@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Montserrat', Arial, sans-serif; }
+
+.hero {
+  min-height: 100vh;
+  position: relative;
+  background: url("/assets/images/hero-bg.jpg") center/cover no-repeat fixed;
+  color: #fff;
+}
+.hero .overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,.55);
+}
+.hero .hero-content {
+  position: relative; z-index: 1; padding: 2rem;
+  animation: fadeUp .8s ease-out both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,155 @@
+@()(implicit request: play.api.mvc.RequestHeader, flash: play.api.mvc.Flash, messages: play.api.i18n.Messages)
+
+@defining(request.session.get("userEmail").flatMap(models.UserRepo.findByEmail)) { userOpt =>
+  @userOpt match {
+    case Some(user) => {
+      @main(s"Mi Cuenta - ${user.name}") {
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/user_account.css")">
+        
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-md-8 mx-auto">
+              
+              @if(flash.get("success").isDefined) {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  @flash.get("success")
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              }
+              
+              @if(flash.get("error").isDefined) {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  @flash.get("error")
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              }
+              
+              <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                  <h3 class="mb-0">
+                    <i class="bi bi-person-circle me-2"></i>Mi Cuenta
+                  </h3>
+                </div>
+                
+                <div class="card-body">
+                  <!-- Información del usuario -->
+                  <div class="row mb-4">
+                    <div class="col-md-6">
+                      <h5><i class="bi bi-person me-2"></i>Información Personal</h5>
+                      <p class="mb-1"><strong>Nombre:</strong> @user.name</p>
+                      <p class="mb-1"><strong>Email:</strong> @user.email</p>
+                      <p class="mb-1"><strong>Teléfono:</strong> @user.phone</p>
+                    </div>
+                    <div class="col-md-6">
+                      <h5><i class="bi bi-wallet2 me-2"></i>Información Financiera</h5>
+                      <p class="mb-1"><strong>Saldo Disponible:</strong> <span class="text-success fw-bold" data-balance>$@{f"${user.balance}%.2f"}</span></p>
+                      <p class="mb-1"><strong>Total Gastado:</strong> <span class="text-info" data-total-spent>$@{f"${user.totalSpent}%.2f"}</span></p>
+                      @if(user.totalSpent >= 100) {
+                        <span class="badge bg-success" data-vip-badge>
+                          <i class="bi bi-star-fill"></i> Cliente VIP (20% descuento)
+                        </span>
+                      } else {
+                        <span class="badge bg-success" data-vip-badge style="display: none;">
+                          <i class="bi bi-star-fill"></i> Cliente VIP (20% descuento)
+                        </span>
+                      }
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  
+                  <!-- Solicitar Saldo -->
+                  <div class="mb-4">
+                    <h5><i class="bi bi-cash-coin me-2"></i>Solicitar Saldo</h5>
+                    <p class="text-muted">Envía una solicitud al administrador para agregar saldo a tu cuenta</p>
+                    
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#requestBalanceModal">
+                      <i class="bi bi-plus-circle me-2"></i>Solicitar Saldo
+                    </button>
+                  </div>
+                  
+                  <hr>
+                  
+                  <!-- Acciones Rápidas -->
+                  <div class="d-grid gap-2">
+                    <a href="@routes.PurchaseController.showDownloads" class="btn btn-outline-primary">
+                      <i class="bi bi-download me-2"></i>Ver Mis Descargas
+                    </a>
+                    <a href="@routes.ShopController.list" class="btn btn-outline-success">
+                      <i class="bi bi-shop me-2"></i>Ir a la Tienda
+                    </a>
+                    <a href="@routes.AuthController.logout" class="btn btn-outline-secondary">
+                      <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal para Solicitar Saldo -->
+        <div class="modal fade" id="requestBalanceModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Solicitar Saldo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <form method="POST" action="@routes.AuthController.requestBalance">
+                @helper.CSRF.formField
+                <div class="modal-body">
+                  <p class="text-muted">Completa el formulario para enviar una solicitud de saldo al administrador.</p>
+                  
+                  <div class="mb-3">
+                    <label for="amount" class="form-label">Monto a solicitar ($):</label>
+                    <input type="number" 
+                           class="form-control" 
+                           id="amount" 
+                           name="amount" 
+                           step="0.01" 
+                           min="1" 
+                           placeholder="50.00"
+                           required>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="payment_method" class="form-label">Método de pago:</label>
+                    <select class="form-select" id="payment_method" name="payment_method" required>
+                      <option value="">Selecciona...</option>
+                      <option value="visa">Visa</option>
+                      <option value="mastercard">Mastercard</option>
+                      <option value="bcp">BCP</option>
+                      <option value="paypal">PayPal</option>
+                    </select>
+                  </div>
+                  
+                  <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    El administrador revisará tu solicitud y agregará el saldo a tu cuenta.
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success">
+                    <i class="bi bi-send me-2"></i>Enviar Solicitud
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      }
+    }
+    case None => {
+      @main("Mi Cuenta") {
+        <div class="container mt-5">
+          <div class="alert alert-warning">
+            Debes iniciar sesión para ver tu cuenta.
+            <a href="@routes.AuthController.loginForm" class="alert-link">Iniciar Sesión</a>
+          </div>
+        </div>
+      }
+    }
+  }
+}

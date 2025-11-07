@@ -1,0 +1,157 @@
+/* Estilo general del layout de búsqueda */
+.container .search-layout {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Contenedor del formulario de búsqueda */
+.container .search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Formulario con input y botón */
+.container .search-form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 600px;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Campo de texto del buscador */
+.container .search-form input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+}
+
+/* Botón de búsqueda */
+.container .search-form button {
+    border-radius: 5px;
+    padding: 8px 16px;
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.container .search-form button:hover {
+    background-color: #03995d;
+}
+
+/* Contenedor de los filtros de tipo checkbox */
+.container .filter-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: #000000;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+/* Etiquetas de los filtros */
+.container .filter-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #000000;
+}
+
+/* Contenedor de resultados con scroll si hay muchas columnas */
+#search-results-admi {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    overflow-x: auto;
+}
+
+/* Encabezado de resultados y filas de datos */
+.result-header,
+.result-row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(120px, auto);
+    gap: 10px;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    width: max-content; /* fuerza que ocupe el ancho necesario */
+}
+
+/* Estilo del encabezado */
+.result-header {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}
+
+/* Hover para las filas de resultado */
+.result-row:hover {
+    background-color: #f5f5f5;
+}
+
+/* Manejo de texto largo */
+.result-header span,
+.result-row span {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Contenedor con scroll horizontal si hay muchas columnas */
+/* Contenedor principal de los resultados: debe permitir scroll horizontal */
+#search-results-admi {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    overflow-x: auto;       /* Permite scroll horizontal */
+    width: 100%;            /* Ocupa todo el ancho disponible */
+}
+
+/* Fila de encabezado y cada fila de datos */
+.result-header,
+.result-row {
+    display: grid;
+    grid-template-columns: repeat(4, 150px); /* Ajusta el número según tus columnas reales */
+    width: max-content;       /* Permite que se expanda más allá del contenedor padre */
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+/* Estilo del encabezado */
+.result-header {
+    font-weight: bold;
+    background-color: #e0e0e0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Estilo de las filas de datos */
+.result-row {
+    border-bottom: 1px solid #ccc;
+}
+
+.result-row:hover {
+    background-color: #f5f5f5;
+}
+
+/* Celdas individuales con bordes y alineación */
+.result-header span,
+.result-row span {
+    padding: 8px 12px;
+    border-right: 1px solid #ccc;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Elimina borde derecho en la última celda */
+.result-header span:last-child,
+.result-row span:last-child {
+    border-right: none;
+}
