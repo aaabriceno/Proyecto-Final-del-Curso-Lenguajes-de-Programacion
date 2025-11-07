@@ -1,0 +1,36 @@
+@()(implicit request: play.api.mvc.RequestHeader)
+@main("DownEz-transacciones") {
+<div id="search-results"></div>
+    <div id="recargas-container" style="display: none;"></div>
+    <u><h1>DownEz</h1></u>
+
+    <div class="container">
+        <div class="search-layout">
+            <div class="search-container">
+
+                <form class="search-form" id="form-busqueda">
+                    <div class="search-actions">
+                        <select id="content-filter">
+                            <option value="">-- Acciones --</option>
+                            <option value="compras">Compras</option>
+                            <option value="regalos">Regalos</option>
+                            <option value="promociones">Promociones</option>
+                            <option value="puntuaciones">Puntuaciones</option>
+                            <option value="categorias">Categorías</option>
+                            <option value="recargas">Recargas</option>
+                            <option value="descarga">Descargas</option>
+                            <option value="usuarios">Usuarios</option>
+                            <option value="notificaciones">Notificaciones</option>
+                            <option value="contenidos">Contenidos</option>
+                            <!-- Futuras opciones -->
+                        </select>
+                        <button type="button" id="option-action">Ejecutar</button>
+                    </div>
+                    
+                </form>
+            </div>
+            <div id="search-results-admi"></div>
+        </div>
+
+    </div>
+}

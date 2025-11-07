@@ -1,0 +1,68 @@
+@()(implicit request: play.api.mvc.RequestHeader)
+@main("DownEz-Add Content") {
+<div id="search-results"></div>
+    <form id="content-form" enctype="multipart/form-data" method="POST">
+        <label for="content-type">Content Type:</label><br>
+        <select id="content-type" name="content-type">
+            <option value="imagen">Imagen</option>
+            <option value="video">Video</option>
+            <option value="audio">Audio</option>
+        </select><br>
+
+        <div class="file-upload-container">
+            <label for="fileInput" class="custom-file-label">Seleccionar archivo</label>
+            <input type="file" id="fileInput" name="file" style="display: none;" />
+            
+            <div id="preview-container"></div>
+            <span id="file-name">Ningún archivo seleccionado</span>
+        </div>
+
+        <label for="content-title">Title:</label><br>
+        <input type="text" id="content-title" name="content-title"><br>
+
+        <label for="content-author">Author:</label><br>
+        <input type="text" id="content-author" name="content-author"><br>
+
+        <label for="content-price" id="content-price-view">Price usuario</label><br>
+        <input type="text" id="content-price" name="content-price">
+
+        <label for="content-category">Category:</label><br>
+        <input type="text" id="content-category" name="content-category" disabled><br>
+
+        <button type="button" id="send-category">Categorias disponibles</button><br>
+            <div id="category-container" style="display: none; margin-top: 10px;">
+                <select id="category-select">
+                    <option value="">Selecciona una Categoría</option>
+                </select>
+                <button type="button" id="btn-usar-category">Usar Categoría</button>
+                <button type="button" id="btn-agregar-category">Agregar Categoría</button>
+                    <div id="form-agregar-category" style="display: none; margin-top: 10px;">
+                        <label for="content-category">Si no seleciona ninguna categoria, se creará como categoria raiz.</label><br>
+                        <input type="text" id="category-title" placeholder="Título de Categoria"><br>
+                        <button type="button" id="btn-guardar-category">Guardar Categoría</button>
+                    </div>
+            </div>
+
+        <label for="content-description">Description:</label><br>
+        <textarea id="content-description" name="content-description"></textarea><br>
+
+        <div id="error-message" class="error"></div>
+        
+        <button type="button" id="send-promocion">Promoción</button><br>
+            <div id="promocion-container" style="display: none; margin-top: 10px;">
+                <select id="promo-select">
+                    <option value="">Selecciona una promoción</option>
+                </select>
+                <button type="button" id="btn-usar-promo">Usar promoción</button>
+                <button type="button" id="btn-agregar-promo">Agregar promoción</button>
+                    <div id="form-agregar-promo" style="display: none; margin-top: 10px;">
+                        <input type="text" id="promo-title" placeholder="Título de promoción"><br>
+                        <input type="number" id="promo-descuento" placeholder="Descuento %" min="0" max="100"><br>
+                        <input type="number" id="promo-dias" placeholder="Días hábiles" min="1"><br>
+                        <button type="button" id="btn-guardar-promo">Guardar promoción</button>
+                    </div>
+            </div>
+        <button type="button" id="send-eliminar">Eliminar</button><br>
+        <button type="submit" id="send-guardar">Guardar</button><br>
+    </form>
+}

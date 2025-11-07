@@ -1,0 +1,188 @@
+@(media: models.Media, user: models.User, hasDiscount: Boolean, discountRate: Double)(implicit request: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
+
+@main("Comprar - " + media.title) {
+
+<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/item_view.css")">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const quantityInput = document.getElementById('quantity');
+  const priceDisplay = document.getElementById('unitPrice');
+  const discountDisplay = document.getElementById('discountAmount');
+  const totalDisplay = document.getElementById('totalPrice');
+  const balanceWarning = document.getElementById('balanceWarning');
+  const buyButton = document.getElementById('buyButton');
+  
+  const basePrice = parseFloat('@media.price');
+  const userBalance = parseFloat('@user.balance');
+  const discountRate = parseFloat('@discountRate');
+  
+  function updatePrice() {
+    const quantity = parseInt(quantityInput.value) || 1;
+    const subtotal = basePrice * quantity;
+    const discountAmount = subtotal * discountRate;
+    const finalPrice = subtotal - discountAmount;
+    
+    priceDisplay.textContent = '$' + subtotal.toFixed(2);
+    discountDisplay.textContent = '-$' + discountAmount.toFixed(2);
+    totalDisplay.textContent = '$' + finalPrice.toFixed(2);
+    
+    if (userBalance >= finalPrice) {
+      balanceWarning.classList.add('d-none');
+      balanceWarning.classList.remove('d-block');
+      buyButton.disabled = false;
+    } else {
+      const faltante = finalPrice - userBalance;
+      balanceWarning.querySelector('strong').textContent = '$' + faltante.toFixed(2);
+      balanceWarning.classList.remove('d-none');
+      balanceWarning.classList.add('d-block');
+      buyButton.disabled = true;
+    }
+  }
+  
+  quantityInput.addEventListener('input', updatePrice);
+  updatePrice();
+});
+</script>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      
+      @if(flash.get("error").isDefined) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          @flash.get("error")
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      }
+      
+      @if(flash.get("warning").isDefined) {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          @flash.get("warning")
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      }
+      
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">
+            <i class="bi bi-cart-check me-2"></i>Confirmar Compra
+          </h3>
+        </div>
+        
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-5">
+              @media.mtype match {
+                case models.MediaType.Image => {
+                  <img src="@routes.Assets.versioned(media.assetPath)" 
+                       class="img-fluid rounded shadow-sm" 
+                       alt="@media.title">
+                }
+                case models.MediaType.Audio => {
+                  <div class="text-center p-5 bg-light rounded">
+                    <i class="bi bi-music-note-beamed display-1 text-primary"></i>
+                  </div>
+                }
+                case models.MediaType.Video => {
+                  <div class="text-center p-5 bg-light rounded">
+                    <i class="bi bi-camera-video display-1 text-primary"></i>
+                  </div>
+                }
+              }
+            </div>
+            
+            <div class="col-md-7">
+              <h4 class="mb-3">@media.title</h4>
+              
+              <table class="table table-borderless">
+                <tr>
+                  <td class="text-muted">Tipo:</td>
+                  <td><strong>@media.mtype</strong></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Descripción:</td>
+                  <td>@media.description</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Archivo:</td>
+                  <td><code>@media.assetPath</code></td>
+                </tr>
+              </table>
+              
+              <hr>
+              
+              <div class="pricing-section">
+                <h5 class="mb-3">Detalles del Pago</h5>
+                
+                <div class="mb-3">
+                  <label for="quantity" class="form-label">Cantidad:</label>
+                  <input type="number" class="form-control" id="quantity" name="quantity" 
+                         value="1" min="1" max="100" required>
+                  <small class="text-muted">Precio unitario: $@{f"${media.price}%.2f"}</small>
+                </div>
+                
+                <table class="table">
+                  <tr>
+                    <td>Subtotal:</td>
+                    <td class="text-end" id="unitPrice">$@{f"${media.price}%.2f"}</td>
+                  </tr>
+                  
+                  @if(hasDiscount) {
+                    <tr class="table-success">
+                      <td>
+                        <strong>Descuento 20%</strong>
+                        <br><small class="text-muted">Por gastar más de $100</small>
+                      </td>
+                      <td class="text-end text-success">
+                        <strong id="discountAmount">-$@{f"${media.price * discountRate}%.2f"}</strong>
+                      </td>
+                    </tr>
+                  } else {
+                    <tr class="d-none">
+                      <td>Descuento:</td>
+                      <td class="text-end" id="discountAmount">$0.00</td>
+                    </tr>
+                  }
+                  
+                  <tr class="table-primary">
+                    <td><strong>Total a pagar:</strong></td>
+                    <td class="text-end"><strong class="fs-5" id="totalPrice">$@{f"${media.price * (1 - discountRate)}%.2f"}</strong></td>
+                  </tr>
+                </table>
+                
+                <div class="alert alert-info">
+                  <i class="bi bi-wallet2 me-2"></i>
+                  Tu saldo actual: <strong>$@{f"${user.balance}%.2f"}</strong>
+                </div>
+                
+                <div class="alert alert-danger d-none" id="balanceWarning">
+                  <i class="bi bi-exclamation-triangle me-2"></i>
+                  Saldo insuficiente. Te faltan 
+                  <strong>$0.00</strong>
+                  <br><small>Contacta al administrador para recargar saldo</small>
+                </div>
+                
+                <form method="POST" action="@routes.PurchaseController.processPurchase(media.id)">
+                  @helper.CSRF.formField
+                  <input type="hidden" name="quantity" id="hiddenQuantity" value="1">
+                  <button type="submit" class="btn btn-success btn-lg w-100" id="buyButton" 
+                          onclick="document.getElementById('hiddenQuantity').value = document.getElementById('quantity').value">
+                    <i class="bi bi-cart-check me-2"></i>
+                    Comprar Ahora
+                  </button>
+                </form>
+                
+                <a href="@routes.ShopController.list" class="btn btn-outline-secondary w-100 mt-2">
+                  <i class="bi bi-arrow-left me-2"></i>Volver a la tienda
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+}

@@ -1,0 +1,166 @@
+@(users: Vector[models.User], media: Vector[models.Media], admin: models.User)(implicit req: RequestHeader, flash: Flash, messages: play.api.i18n.Messages)
+
+@main("Panel de Administración") {
+  <div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="text-white">👨‍💼 Panel de Administración</h1>
+        <p class="text-light">Bienvenido, <strong>@admin.name</strong></p>
+      </div>
+    </div>
+
+    @* Mensajes flash *@
+    @flash.get("success").map { msg =>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    }
+    @flash.get("error").map { msg =>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        ❌ @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    }
+
+    @* Estadísticas *@
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">👥 Usuarios</h5>
+            <h2>@users.size</h2>
+            <a href="@routes.AdminController.userList" class="text-white">Ver todos →</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">🎬 Productos</h5>
+            <h2>@media.size</h2>
+            <a href="@routes.AdminController.mediaList" class="text-white">Gestionar →</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <h5 class="card-title">👨‍💼 Admins</h5>
+            <h2>@users.count(_.isAdmin)</h2>
+            <p class="mb-0">Administradores activos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @* Accesos rápidos *@
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">🎬 Gestión de Productos</h5>
+          </div>
+          <div class="card-body">
+            <p>Crear, editar y eliminar productos multimedia</p>
+            <a href="@routes.AdminController.mediaList" class="btn btn-primary">Ver productos</a>
+            <a href="@routes.AdminController.newMediaForm" class="btn btn-success">➕ Nuevo producto</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">📁 Gestión de Categorías</h5>
+          </div>
+          <div class="card-body">
+            <p>Organizar productos en categorías jerárquicas</p>
+            <a href="@routes.AdminController.listCategories" class="btn btn-primary">
+              <i class="bi bi-folder-fill me-2"></i>Ver categorías
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">🔥 Gestión de Promociones</h5>
+          </div>
+          <div class="card-body">
+            <p>Crear y administrar descuentos temporales</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small class="text-muted">
+                  Activas: <strong>@models.PromotionRepo.countActive</strong> |
+                  Próximas: <strong>@models.PromotionRepo.countUpcoming</strong>
+                </small>
+              </div>
+              <a href="@routes.AdminController.listPromotions" class="btn btn-danger">
+                <i class="bi bi-percent me-2"></i>Ver promociones
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">👥 Gestión de Usuarios</h5>
+          </div>
+          <div class="card-body">
+            <p>Ver y administrar usuarios del sistema</p>
+            <a href="@routes.AdminController.userList" class="btn btn-primary">Ver usuarios</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 mb-3">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">📊 Estadísticas Avanzadas</h5>
+          </div>
+          <div class="card-body">
+            <p>Ver estadísticas detalladas, ingresos, distribución de productos y más</p>
+            <a href="@routes.AdminController.statistics" class="btn btn-info">📈 Ver estadísticas completas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @* Productos recientes *@
+    <div class="row mt-4">
+      <div class="col">
+        <h3 class="text-white">Productos más descargados</h3>
+        <div class="table-responsive">
+          <table class="table table-dark table-striped">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>⭐ Rating</th>
+                <th>📥 Descargas</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(m <- media.take(5)) {
+                <tr>
+                  <td>@m.title</td>
+                  <td>
+                    @m.mtype match {
+                      case models.MediaType.Image => { 🖼️ Imagen }
+                      case models.MediaType.Audio => { 🎵 Audio }
+                      case models.MediaType.Video => { 🎬 Video }
+                    }
+                  </td>
+                  <td>$@m.price</td>
+                  <td>@m.rating</td>
+                  <td>@m.downloads</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+}

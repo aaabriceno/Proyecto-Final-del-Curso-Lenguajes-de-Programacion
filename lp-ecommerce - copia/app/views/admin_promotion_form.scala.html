@@ -1,0 +1,323 @@
+@(promotion: Option[models.Promotion], categories: Vector[models.Category], mediaList: Vector[models.Media])(implicit request: MessagesRequest[AnyContent])
+
+@main(if(promotion.isDefined) "Editar Promoción - Admin" else "Nueva Promoción - Admin") {
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1>@if(promotion.isDefined) { 🔥 Editar Promoción } else { 🔥 Nueva Promoción }</h1>
+        <p class="text-muted">Configure los detalles de la promoción</p>
+      </div>
+      <a href="@routes.AdminController.listPromotions" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+      </a>
+    </div>
+
+    @request.flash.get("error").map { msg =>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>@msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+          <div class="card-body">
+            <form method="post" 
+                  action="@if(promotion.isDefined) { @routes.AdminController.updatePromotion(promotion.get.id) } else { @routes.AdminController.createPromotion }"
+                  id="promotionForm">
+              @helper.CSRF.formField
+
+              <!-- Información básica -->
+              <h5 class="border-bottom pb-2 mb-3">📋 Información Básica</h5>
+              
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre de la Promoción <span class="text-danger">*</span></label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name" 
+                       value="@promotion.map(_.name).getOrElse("")"
+                       placeholder="Ej: Black Friday 2024"
+                       required>
+                <small class="text-muted">Nombre descriptivo que verán los usuarios</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Descripción</label>
+                <textarea class="form-control" 
+                          id="description" 
+                          name="description" 
+                          rows="2"
+                          placeholder="Descripción breve de la promoción">@promotion.map(_.description).getOrElse("")</textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="discountPercent" class="form-label">Descuento (%) <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input type="number" 
+                         class="form-control" 
+                         id="discountPercent" 
+                         name="discountPercent" 
+                         value="@promotion.map(_.discountPercent).getOrElse(10)"
+                         min="1"
+                         max="99"
+                         step="1"
+                         required>
+                  <span class="input-group-text">%</span>
+                </div>
+                <small class="text-muted">Porcentaje de descuento (1-99%)</small>
+              </div>
+
+              <!-- Fechas -->
+              <h5 class="border-bottom pb-2 mb-3 mt-4">📅 Vigencia</h5>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="startDate" class="form-label">Fecha de Inicio <span class="text-danger">*</span></label>
+                  <input type="datetime-local" 
+                         class="form-control" 
+                         id="startDate" 
+                         name="startDate" 
+                         value="@promotion.map(_.startDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"))).getOrElse("")"
+                         required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="endDate" class="form-label">Fecha de Fin <span class="text-danger">*</span></label>
+                  <input type="datetime-local" 
+                         class="form-control" 
+                         id="endDate" 
+                         name="endDate" 
+                         value="@promotion.map(_.endDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"))).getOrElse("")"
+                         required>
+                </div>
+              </div>
+
+              <!-- Target Type -->
+              <h5 class="border-bottom pb-2 mb-3 mt-4">🎯 Alcance de la Promoción</h5>
+
+              <div class="mb-3">
+                <label for="targetType" class="form-label">Aplicar a <span class="text-danger">*</span></label>
+                <select class="form-select" 
+                        id="targetType" 
+                        name="targetType" 
+                        required
+                        onchange="toggleTargetInputs()">
+                  <option value="">Seleccione...</option>
+                  <option value="All" @if(promotion.exists(_.targetType == models.PromotionTarget.All)) { selected }>
+                    🌐 Todos los productos
+                  </option>
+                  <option value="Product" @if(promotion.exists(_.targetType == models.PromotionTarget.Product)) { selected }>
+                    📦 Productos específicos
+                  </option>
+                  <option value="Category" @if(promotion.exists(_.targetType == models.PromotionTarget.Category)) { selected }>
+                    📁 Categorías específicas
+                  </option>
+                  <option value="MediaType" @if(promotion.exists(_.targetType == models.PromotionTarget.MediaType)) { selected }>
+                    🎵 Tipos de media (Audio/Video/Imagen)
+                  </option>
+                </select>
+              </div>
+
+              <!-- Target IDs (oculto para "All") -->
+              @defining(promotion.exists(_.targetType != models.PromotionTarget.All)) { shouldShow =>
+                <div id="targetIdsContainer" class="@if(!shouldShow) {d-none}">
+                
+                <!-- Para Productos -->
+                <div id="productSelector" class="mb-3" style="display: none;">
+                  <label class="form-label">Seleccionar Productos</label>
+                  <select class="form-select" id="productIds" name="productIds" multiple size="8">
+                    @mediaList.sortBy(_.title).map { media =>
+                      <option value="@media.id" 
+                              @if(promotion.exists(p => p.targetType == models.PromotionTarget.Product && p.targetIds.contains(media.id))) { selected }>
+                        @media.title (@{media.mtype} - $$$@media.price)
+                      </option>
+                    }
+                  </select>
+                  <small class="text-muted">Mantén Ctrl/Cmd para seleccionar múltiples</small>
+                </div>
+
+                <!-- Para Categorías -->
+                <div id="categorySelector" class="mb-3" style="display: none;">
+                  <label class="form-label">Seleccionar Categorías</label>
+                  <select class="form-select" id="categoryIds" name="categoryIds" multiple size="8">
+                    @categories.sortBy(_.name).map { cat =>
+                      <option value="@cat.id"
+                              @if(promotion.exists(p => p.targetType == models.PromotionTarget.Category && p.targetIds.contains(cat.id))) { selected }>
+                        @cat.name @cat.parentId.map(_ => s"(subcategoría)").getOrElse("(principal)")
+                      </option>
+                    }
+                  </select>
+                  <small class="text-muted">Mantén Ctrl/Cmd para seleccionar múltiples</small>
+                </div>
+
+                <!-- Para MediaType (manual: 1=Audio, 2=Video, 3=Imagen) -->
+                <div id="mediatypeSelector" class="mb-3" style="display: none;">
+                  <label class="form-label">Seleccionar Tipos de Media</label>
+                  <div class="form-check">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           name="mediatypeIds" 
+                           value="1" 
+                           id="mediatype1"
+                           @if(promotion.exists(p => p.targetType == models.PromotionTarget.MediaType && p.targetIds.contains(1L))) { checked }>
+                    <label class="form-check-label" for="mediatype1">
+                      🎵 Audio
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           name="mediatypeIds" 
+                           value="2" 
+                           id="mediatype2"
+                           @if(promotion.exists(p => p.targetType == models.PromotionTarget.MediaType && p.targetIds.contains(2L))) { checked }>
+                    <label class="form-check-label" for="mediatype2">
+                      🎬 Video
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           name="mediatypeIds" 
+                           value="3" 
+                           id="mediatype3"
+                           @if(promotion.exists(p => p.targetType == models.PromotionTarget.MediaType && p.targetIds.contains(3L))) { checked }>
+                    <label class="form-check-label" for="mediatype3">
+                      🖼️ Imagen
+                    </label>
+                  </div>
+                </div>
+
+                <input type="hidden" id="targetIds" name="targetIds" value="@promotion.map(_.targetIds.mkString(",")).getOrElse("")">
+              </div>
+              }
+
+              <!-- Estado -->
+              @if(promotion.isDefined) {
+                <h5 class="border-bottom pb-2 mb-3 mt-4">⚙️ Estado</h5>
+                <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" 
+                         type="checkbox" 
+                         id="isActive" 
+                         name="isActive" 
+                         value="true"
+                         @if(promotion.get.isActive) { checked }>
+                  <label class="form-check-label" for="isActive">
+                    Promoción activa (desmarcar para pausar)
+                  </label>
+                </div>
+              }
+
+              <!-- Botones -->
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-danger btn-lg">
+                  <i class="bi bi-check-circle me-2"></i>
+                  @if(promotion.isDefined) { Guardar Cambios } else { Crear Promoción }
+                </button>
+                <a href="@routes.AdminController.listPromotions" class="btn btn-outline-secondary">
+                  Cancelar
+                </a>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Preview de la promoción -->
+        <div class="card mt-3 bg-light">
+          <div class="card-body">
+            <h6 class="text-muted mb-2">Vista Previa del Badge:</h6>
+            <div class="d-flex gap-2 align-items-center">
+              <span class="badge bg-danger fs-5">
+                🔥 -<span id="previewDiscount">10</span>% OFF
+              </span>
+              <span class="text-muted">← Así se verá en la tienda</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Actualizar preview de descuento
+    document.getElementById('discountPercent').addEventListener('input', function() {
+      document.getElementById('previewDiscount').textContent = this.value;
+    });
+
+    // Mostrar/ocultar selectores según targetType
+    function toggleTargetInputs() {
+      const targetType = document.getElementById('targetType').value;
+      const container = document.getElementById('targetIdsContainer');
+      const productSelector = document.getElementById('productSelector');
+      const categorySelector = document.getElementById('categorySelector');
+      const mediatypeSelector = document.getElementById('mediatypeSelector');
+
+      // Ocultar todos
+      productSelector.style.display = 'none';
+      categorySelector.style.display = 'none';
+      mediatypeSelector.style.display = 'none';
+      container.style.display = 'none';
+
+      // Mostrar el correspondiente
+      if (targetType === 'Product') {
+        container.style.display = 'block';
+        productSelector.style.display = 'block';
+      } else if (targetType === 'Category') {
+        container.style.display = 'block';
+        categorySelector.style.display = 'block';
+      } else if (targetType === 'MediaType') {
+        container.style.display = 'block';
+        mediatypeSelector.style.display = 'block';
+      }
+    }
+
+    // Actualizar targetIds oculto antes de submit
+    document.getElementById('promotionForm').addEventListener('submit', function(e) {
+      const targetType = document.getElementById('targetType').value;
+      let ids = [];
+
+      if (targetType === 'Product') {
+        const selected = Array.from(document.getElementById('productIds').selectedOptions);
+        ids = selected.map(opt => opt.value);
+      } else if (targetType === 'Category') {
+        const selected = Array.from(document.getElementById('categoryIds').selectedOptions);
+        ids = selected.map(opt => opt.value);
+      } else if (targetType === 'MediaType') {
+        const checked = Array.from(document.querySelectorAll('input[name="mediatypeIds"]:checked'));
+        ids = checked.map(cb => cb.value);
+      }
+
+      document.getElementById('targetIds').value = ids.join(',');
+
+      // Validar que se hayan seleccionado IDs si no es "All"
+      if (targetType !== 'All' && ids.length === 0) {
+        e.preventDefault();
+        alert('Debes seleccionar al menos un elemento para este tipo de promoción.');
+        return false;
+      }
+    });
+
+    // Inicializar en carga
+    window.addEventListener('DOMContentLoaded', function() {
+      toggleTargetInputs();
+      const discount = document.getElementById('discountPercent').value;
+      if (discount) {
+        document.getElementById('previewDiscount').textContent = discount;
+      }
+    });
+
+    // Validar fechas
+    document.getElementById('endDate').addEventListener('change', function() {
+      const startDate = new Date(document.getElementById('startDate').value);
+      const endDate = new Date(this.value);
+      
+      if (endDate <= startDate) {
+        alert('La fecha de fin debe ser posterior a la fecha de inicio.');
+        this.value = '';
+      }
+    });
+  </script>
+}
