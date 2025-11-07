@@ -1,119 +1,135 @@
+// ================================================================
+// [IDF-0014] Envía una cadena de texto y filtros al servidor
+// ================================================================
+export async function realizarBusqueda(textoBusqueda, resultsContainer, filterContainer) {
+  const query = textoBusqueda.trim().toLowerCase();
+  const selectedFilters = Array.from(filterContainer.querySelectorAll(".filter-checkbox"))
+    .filter(cb => cb.checked)
+    .map(cb => cb.dataset.filter);
 
-// [IDF-0014] envia una cadena de texto para buscarla en los contenidos existentes.
-export function realizarBusqueda(textoBusqueda, resultsContainer,filterContainer) {
-    const query = textoBusqueda.trim().toLowerCase();
-    const selectedFilters = Array.from(filterContainer.querySelectorAll('.filter-checkbox'))
-        .filter(checkbox => checkbox.checked)
-        .map(checkbox => checkbox.dataset.filter);
+  if (!query) {
+    resultsContainer.innerHTML = "<p class='text-warning'>Ingrese una búsqueda.</p>";
+    return;
+  }
 
-    fetch('/search_content', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query: query, filters: selectedFilters })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.data.length > 0) {
-            var html = '<div class="result-cards">';
-            data.data.forEach(item => {
-                const itemUrl =data.auth === true
-                    ? `item_view_admi.html?id=${item.id}`
-                    : `item_view.html?id=${item.id}`;
-
-                html += `
-                <div class="result-card">
-                    <a href="${itemUrl}"><h4>${item.title}</a> (${item.type})</h4>
-                    <p><strong>Autor:</strong> ${item.author} - 
-                    <strong>Category:</strong> ${item.category}</p>
-                </div>`;
-            });
-            html += '</div>';
-            resultsContainer.innerHTML = html;
-        } else {
-            resultsContainer.innerHTML = "<p>No se encontraron resultados.</p>";
-        }
-    })
-    .catch(error => {
-        console.error('Error buscando:', error);
-        resultsContainer.innerHTML = "<p>Error al buscar.</p>";
+  try {
+    const res = await fetch("/search_content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, filters: selectedFilters })
     });
+
+    if (!res.ok) throw new Error("Error HTTP: " + res.status);
+    const data = await res.json();
+
+    // Renderizado de resultados
+    if (data.data?.length > 0) {
+      let html = '<div class="result-cards">';
+      data.data.forEach(item => {
+        const itemUrl = data.auth
+          ? `item_view_admi.html?id=${item.id}`
+          : `item_view.html?id=${item.id}`;
+
+        html += `
+          <div class="result-card border border-secondary rounded p-3 mb-2 bg-dark text-light shadow-sm">
+            <a href="${itemUrl}" class="text-info text-decoration-none">
+              <h5 class="mb-1">${item.title}</h5>
+            </a>
+            <p class="small mb-0 text-muted">
+              <strong>Tipo:</strong> ${item.type} &nbsp;|&nbsp;
+              <strong>Autor:</strong> ${item.author} &nbsp;|&nbsp;
+              <strong>Categoría:</strong> ${item.category}
+            </p>
+          </div>
+        `;
+      });
+      html += "</div>";
+      resultsContainer.innerHTML = html;
+    } else {
+      resultsContainer.innerHTML = "<p class='text-muted'>No se encontraron resultados.</p>";
+    }
+
+  } catch (error) {
+    console.error("Error buscando:", error);
+    resultsContainer.innerHTML = "<p class='text-danger'>Error al realizar la búsqueda.</p>";
+  }
 }
 
-// [IDF-0036] Renderiza la barra de busqueda para los clientes y administrador, una busqueda de contenidos.
-export function gen_searchBar(){
-    var resultsContainer =  document.getElementById("search-results");
-    // var resultsContainer = document.createElement('div');
-    // resultsContainer.setAttribute('id', 'search-results');
-    // document.body.insertBefore(resultsContainer, header.nextSibling);
 
-    var searchLi = document.createElement('li');
-    searchLi.classList.add('search-layout');
+// ================================================================
+// [IDF-0036] Genera la barra de búsqueda dinámica (clientes / admin)
+// ================================================================
+export function gen_searchBar() {
+  const resultsContainer = document.getElementById("search-results");
+  const searchLi = document.createElement("li");
+  searchLi.classList.add("search-layout");
 
-    var searchContainer = document.createElement('div');
-    searchContainer.classList.add('search-container');
+  const searchContainer = document.createElement("div");
+  searchContainer.classList.add("search-container");
 
-    var searchForm = document.createElement('form');
-    searchForm.setAttribute('action', '#'); 
-    searchForm.setAttribute('method', 'get');
-    searchForm.classList.add('search-form');
+  // === Formulario ===
+  const searchForm = document.createElement("form");
+  searchForm.classList.add("search-form", "d-flex", "align-items-center", "gap-2");
+  searchForm.setAttribute("action", "#");
+  searchForm.setAttribute("method", "get");
 
-    var searchInput = document.createElement('input');
-    searchInput.setAttribute('type', 'text');
-    searchInput.setAttribute('name', 'search');
-    searchInput.setAttribute('placeholder', 'Escribe lo que buscas...');
-    searchForm.appendChild(searchInput);
+  // Input de texto
+  const searchInput = document.createElement("input");
+  searchInput.type = "text";
+  searchInput.name = "search";
+  searchInput.placeholder = "🔍 Escribe lo que buscas...";
+  searchInput.classList.add("form-control", "bg-dark", "text-light");
+  searchForm.appendChild(searchInput);
 
-    var searchButton = document.createElement('button');
-    searchButton.setAttribute('type', 'submit');
-    searchButton.textContent = 'Buscar';
-    searchForm.appendChild(searchButton);
+  // Botón buscar
+  const searchButton = document.createElement("button");
+  searchButton.type = "submit";
+  searchButton.textContent = "Buscar";
+  searchButton.classList.add("btn", "btn-primary");
+  searchForm.appendChild(searchButton);
 
-    var clearButton = document.createElement('button');
-    clearButton.setAttribute('type', 'button');
-    clearButton.textContent = '✖';
-    clearButton.classList.add('clear-search-btn');
-    searchForm.appendChild(clearButton);
-    clearButton.addEventListener('click', function () {
-        searchInput.value = '';
-        resultsContainer.innerHTML = '';
-        filterContainer.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
-    });
+  // Botón limpiar
+  const clearButton = document.createElement("button");
+  clearButton.type = "button";
+  clearButton.textContent = "✖";
+  clearButton.classList.add("btn", "btn-outline-danger", "clear-search-btn");
+  searchForm.appendChild(clearButton);
 
-    var filterContainer = document.createElement('div');
-    filterContainer.classList.add('filter-checkboxes');
+  // === Filtros ===
+  const filterContainer = document.createElement("div");
+  filterContainer.classList.add("filter-checkboxes", "mt-3");
 
-    var filtros = ['video', 'audio', 'imagen','autor', 'categorias'];
-    filtros.forEach(tipo => {
-        var label = document.createElement('label');
-        label.classList.add('filter-label');
+  const filtros = ["video", "audio", "imagen", "autor", "categorias"];
+  filtros.forEach(tipo => {
+    const label = document.createElement("label");
+    label.classList.add("filter-label", "me-3", "text-light");
 
-        var checkbox = document.createElement('input');
-        checkbox.setAttribute('type', 'checkbox');
-        checkbox.classList.add('filter-checkbox');
-        checkbox.dataset.filter = tipo;
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("filter-checkbox", "form-check-input", "me-1");
+    checkbox.dataset.filter = tipo;
 
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(tipo.charAt(0).toUpperCase() + tipo.slice(1)));
-        filterContainer.appendChild(label);
-    });
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(tipo.charAt(0).toUpperCase() + tipo.slice(1)));
+    filterContainer.appendChild(label);
+  });
 
-    searchContainer.appendChild(searchForm);
-    searchContainer.appendChild(filterContainer);
-    searchLi.appendChild(searchContainer);
+  // === Acciones ===
+  clearButton.addEventListener("click", () => {
+    searchInput.value = "";
+    resultsContainer.innerHTML = "";
+    filterContainer.querySelectorAll(".filter-checkbox").forEach(cb => (cb.checked = false));
+  });
 
-    searchForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const texto = searchInput.value;
+  searchForm.addEventListener("submit", e => {
+    e.preventDefault();
+    realizarBusqueda(searchInput.value, resultsContainer, filterContainer);
+  });
 
-        if (texto.trim() === '') {
-            resultsContainer.innerHTML = "<p>Ingrese búsqueda.</p>";
-            return;
-        }
-        
-        realizarBusqueda(texto, resultsContainer, filterContainer);
-    });
+  // === Ensamblar elementos ===
+  searchContainer.appendChild(searchForm);
+  searchContainer.appendChild(filterContainer);
+  searchLi.appendChild(searchContainer);
 
-    return searchLi;
+  return searchLi;
 }

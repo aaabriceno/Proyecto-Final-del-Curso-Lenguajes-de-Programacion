@@ -1,106 +1,128 @@
+// ================================================================
+// [IDF-0029] Renderiza información detallada de un contenido multimedia
+// ================================================================
+export function createMediaInfo({ data = null, Div = null }) {
+  if (!data || !Div) return;
 
-// [IDF-0029] Función que renderiza la información de un contenido, ya sea de video, audio, o imagen.
-export function createMediaInfo({data=null, Div=null}) {
-    var infoDiv = document.createElement('div');
-    infoDiv.className = 'info';
-    
-    var author = document.createElement('p');
-    author.textContent = 'Autor: ' + data.author;
+  const infoDiv = document.createElement("div");
+  infoDiv.className = "info mt-3";
 
-    var price = document.createElement('p');
-    price.innerHTML = `Precio: ${data.price}`;
+  const fields = [
+    { label: "Autor", value: data.author },
+    { label: "Precio", value: `$${parseFloat(data.price || 0).toFixed(2)}` },
+    { label: "Extensión de archivo", value: data.extension },
+    { label: "Categoría", value: data.category },
+    { label: "Nota promedio", value: data.rating },
+    { label: "Descargas", value: data.downloaded },
+  ];
 
-    var extension = document.createElement('p');
-    extension.textContent = 'Extensión de archivo: ' + data.extension;
+  fields.forEach(f => {
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${f.label}:</strong> ${f.value || "—"}`;
+    infoDiv.appendChild(p);
+  });
 
-    var category = document.createElement('p');
-    category.textContent = 'Categoría: ' + data.category;
+  // Descripción (más larga, separada visualmente)
+  if (data.description) {
+    const desc = document.createElement("p");
+    desc.className = "mt-2";
+    desc.innerHTML = `<strong>Descripción:</strong> ${data.description}`;
+    infoDiv.appendChild(desc);
+  }
 
-    var rating = document.createElement('p');
-    rating.textContent = 'Nota promedio: ' + data.rating;
-
-    var description = document.createElement('p');
-    description.textContent = 'Descripción: ' + data.description;
-
-    var downloaded = document.createElement('p');
-    downloaded.textContent = 'Descargas: ' + data.downloaded;
-    
-    //var buyButton = document.createElement('button');
-    //buyButton.className = 'buy-button';
-
-    //buyButton.dataset.id = data.id;
-
-    infoDiv.appendChild(author);
-    infoDiv.appendChild(price);
-    infoDiv.appendChild(extension);
-    infoDiv.appendChild(category);
-    infoDiv.appendChild(rating);
-    infoDiv.appendChild(description);
-    infoDiv.appendChild(downloaded);
-    Div.appendChild(infoDiv);
+  Div.appendChild(infoDiv);
 }
 
-// [IDF-0030] Renderización el tipo de media de cierto contenido.
-export function createContentType({data = null, current_role = null, linked=true}) {
-    var Div = document.createElement('div');
-    Div.className = 'media-item' + (linked ? ' linked' : '');
 
-    var title = document.createElement('h2');
-    title.textContent = data.title;
-    Div.appendChild(title);
+// ================================================================
+// [IDF-0030] Renderiza el tipo de media y enlaza según el rol y permisos
+// ================================================================
+export function createContentType({ data = null, current_role = null, linked = true }) {
+  if (!data) return;
 
-    if (data.type == "imagen") {
-        var img = document.createElement('img');
-        img.src = data.src;
-        img.className = "media";
-        Div.appendChild(img);
-    } else if (data.type == "audio") {    
-        var au = document.createElement('audio');
-        au.src = data.src;
-        au.controls = true;
-        au.className = "media";
-        Div.appendChild(au);
-    } else {
-        var video = document.createElement('video');
-        video.controls = true;
-        video.src = data.src;
-        video.type = "video/mp4";
-        video.textContent = 'Your browser does not support the video element.';
-        Div.appendChild(video);
-    }
+  const container = document.querySelector(".container");
+  if (!container) {
+    console.error("No se encontró el contenedor '.container'.");
+    return;
+  }
 
+  const Div = document.createElement("div");
+  Div.className = `media-item${linked ? " linked" : ""} bg-dark text-light p-3 rounded shadow-sm mb-4 border border-secondary`;
 
-    createMediaInfo({data:data, Div:Div});
+  // === Título ===
+  const title = document.createElement("h2");
+  title.className = "fw-bold text-info mb-3";
+  title.textContent = data.title || "Contenido sin título";
+  Div.appendChild(title);
 
-    if(linked){
-        Div.style.cursor = 'pointer';
-        Div.addEventListener('click', function () {
-            // [IDF-0005] envia al servidor la verificaion si puede decargar cierto contenido.
-            fetch('/verificate_downloaded_content', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: data.id })
-            })
-            .then(response => response.json())
-            .then(respuesta => {
-                if (respuesta.success) {
-                    window.location.href = `item_view.html?id=${data.id}`;
-                } 
-                else {
-                    if(current_role=='Cliente'){
-                        window.location.href = `item_shop.html?id=${data.id}`;
-                    }
-                    else{
-                        window.location.href = `register.html`;
-                    }
-                }
-            })
-            .catch(error => {
-                //alert('Error:', error);
-                window.location.href = `register.html`;
-            });
+  // === Tipo de contenido ===
+  const mediaWrapper = document.createElement("div");
+  mediaWrapper.className = "media-wrapper text-center";
+
+  const src = data.src || "";
+  let mediaElement;
+
+  switch (data.type) {
+    case "imagen":
+      mediaElement = document.createElement("img");
+      mediaElement.src = src;
+      mediaElement.alt = data.title || "Imagen";
+      mediaElement.className = "media img-fluid rounded";
+      break;
+
+    case "audio":
+      mediaElement = document.createElement("audio");
+      mediaElement.src = src;
+      mediaElement.controls = true;
+      mediaElement.className = "media w-100";
+      break;
+
+    case "video":
+    default:
+      mediaElement = document.createElement("video");
+      mediaElement.src = src;
+      mediaElement.controls = true;
+      mediaElement.className = "media w-100 rounded";
+      mediaElement.innerText = "Tu navegador no soporta el elemento de video.";
+      break;
+  }
+
+  mediaWrapper.appendChild(mediaElement);
+  Div.appendChild(mediaWrapper);
+
+  // === Información ===
+  createMediaInfo({ data, Div });
+
+  // === Enlace o acción de click ===
+  if (linked) {
+    Div.style.cursor = "pointer";
+    Div.addEventListener("click", () => {
+      // [IDF-0005] Verifica si el usuario puede descargar cierto contenido
+      fetch("/verificate_downloaded_content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: data.id })
+      })
+        .then(res => res.json())
+        .then(respuesta => {
+          if (respuesta.success) {
+            // Puede acceder al contenido
+            window.location.href = `item_view.html?id=${data.id}`;
+          } else {
+            // Redirigir según el rol actual
+            if (current_role === "Cliente") {
+              window.location.href = `item_shop.html?id=${data.id}`;
+            } else {
+              window.location.href = `register.html`;
+            }
+          }
+        })
+        .catch(err => {
+          console.error("Error verificando contenido:", err);
+          window.location.href = `register.html`;
         });
-    }
-    var Content = document.querySelector('.container');
-    Content.appendChild(Div);
+    });
+  }
+
+  container.appendChild(Div);
 }

@@ -1,15 +1,23 @@
-name := "lp-ecommerce-manual"
+name := "lp-ecommerce"
 
-organization := "pe.ucsp.lp"
+version := "1.0"
 
-version := "1.0-SNAPSHOT"
+scalaVersion := "2.13.12"
 
-scalaVersion := "2.13.17"
+// Sin dependencias de frameworks - Scala puro
+libraryDependencies ++= Seq(
+  // Opcional: ScalaTest para tests futuros
+  "org.scalatest" %% "scalatest" % "3.2.17" % Test
+)
 
-// SIN FRAMEWORKS - Solo Scala stdlib
-// NO Play, NO http4s, NO Akka HTTP
-// Solo java.net.* para HTTP
+// Directorios de código fuente
+Compile / scalaSource := baseDirectory.value / "app"
+Compile / resourceDirectory := baseDirectory.value / "public"
 
+// Punto de entrada principal
+Compile / mainClass := Some("services.Main")
+
+// Configuración del compilador
 scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
@@ -17,13 +25,5 @@ scalacOptions ++= Seq(
   "-Xlint"
 )
 
-// Configuración de directorios
-Compile / scalaSource := baseDirectory.value / "app"
-Compile / mainClass := Some("Main")
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0"
 
-// Excluir carpetas viejas de la compilación
-Compile / unmanagedSourceDirectories := Seq(
-  baseDirectory.value / "app"
-)
-
-Compile / excludeFilter := HiddenFileFilter || "controllers_old" || "*.old"

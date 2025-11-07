@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Cuenta — LP Studios</title>
+
+  <!-- ===== Bootstrap ===== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- ===== Estilos locales ===== -->
+  <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
+  <link rel="stylesheet" href="/assets/stylesheets/user_account.css">
+</head>
+
+<body class="bg-dark text-light">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
+      <div class="ms-auto d-flex gap-2">
+        <a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
+        <a class="btn btn-outline-light btn-sm" href="/user/account">👤 Mi cuenta</a>
+        <a class="btn btn-outline-light btn-sm" href="/login">🚪 Salir</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="card bg-dark border-secondary shadow-lg">
+          <div class="card-header bg-primary text-white text-center">
+            <h3 class="mb-0"><i class="bi bi-person-circle me-2"></i>Mi Cuenta</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <!-- Información Personal -->
+              <div class="col-md-6 mb-4">
+                <h5><i class="bi bi-person me-2"></i>Información Personal</h5>
+                <p class="mb-1"><strong>Nombre:</strong> Usuario Ejemplo</p>
+                <p class="mb-1"><strong>Email:</strong> usuario@ejemplo.com</p>
+                <p class="mb-1"><strong>Teléfono:</strong> +123456789</p>
+                <span class="badge bg-success" data-vip-badge>
+                  <i class="bi bi-star-fill me-1"></i>Cliente VIP (20% descuento)
+                </span>
+              </div>
+
+              <!-- Información Financiera -->
+              <div class="col-md-6 mb-4">
+                <h5><i class="bi bi-wallet2 me-2"></i>Información Financiera</h5>
+                <p class="mb-1"><strong>Saldo Disponible:</strong> <span class="text-success fw-bold" data-balance>$500.00</span></p>
+                <p class="mb-1"><strong>Total Gastado:</strong> <span class="text-info" data-total-spent>$200.00</span></p>
+                <button type="button" class="btn btn-success mt-3 w-100" data-bs-toggle="modal" data-bs-target="#requestBalanceModal">
+                  <i class="bi bi-plus-circle me-2"></i>Solicitar Saldo
+                </button>
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- Acciones rápidas -->
+            <div class="d-grid gap-2">
+              <a href="/user/downloads" class="btn btn-outline-primary">
+                <i class="bi bi-download me-2"></i>Ver Mis Descargas
+              </a>
+              <a href="/shop" class="btn btn-outline-success">
+                <i class="bi bi-shop me-2"></i>Ir a la Tienda
+              </a>
+              <a href="/login" class="btn btn-outline-secondary">
+                <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== MODAL: Solicitar Saldo ===== -->
+  <div class="modal fade" id="requestBalanceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title"><i class="bi bi-cash-coin me-2"></i>Solicitar Saldo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <form method="POST" action="/request-balance">
+          <div class="modal-body">
+            <p class="text-muted">
+              Completa el formulario para enviar una solicitud al administrador y agregar saldo a tu cuenta.
+            </p>
+
+            <div class="mb-3">
+              <label for="amount" class="form-label">Monto a solicitar ($)</label>
+              <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="1" placeholder="50.00" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="payment_method" class="form-label">Método de pago</label>
+              <select class="form-select bg-secondary text-light border-0" id="payment_method" name="payment_method" required>
+                <option value="">Selecciona...</option>
+                <option value="visa">💳 Visa</option>
+                <option value="mastercard">💳 Mastercard</option>
+                <option value="bcp">🏦 BCP</option>
+                <option value="paypal">🌐 PayPal</option>
+              </select>
+            </div>
+
+            <div class="alert alert-info small">
+              <i class="bi bi-info-circle me-2"></i>
+              El administrador revisará tu solicitud y agregará el saldo a tu cuenta una vez aprobada.
+            </div>
+          </div>
+
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-send me-2"></i>Enviar Solicitud
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

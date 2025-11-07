@@ -1,36 +1,54 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.querySelector('form');
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.querySelector('form');
+  const btnSubmit = form.querySelector('button[type="submit"]');
 
-    // [IDF-0001] : envio de datos para el inicio de sesión.
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+  // ============================================================
+  // [IDF-0001] Envío de datos para inicio de sesión
+  // ============================================================
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-        var name = document.getElementById('name').value;
-        var password = document.getElementById('password').value;
+    const name = document.getElementById('name').value.trim();
+    const password = document.getElementById('password').value.trim();
 
-        var requestData = {
-            name: name,
-            password: password
-        };
-        
-        fetch('/signin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success)
-                window.location.href = data.url;
-            else{
-                document.getElementById('name').value = '';
-                document.getElementById('password').value = '';
-                alert(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-        
-      
-    });
+    if (!name || !password) {
+      alert('⚠️ Por favor, completa todos los campos.');
+      return;
+    }
 
+    // Desactivar botón temporalmente
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = 'Iniciando sesión...';
+
+    try {
+      const res = await fetch('/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, password })
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error HTTP: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Redirección según el rol o URL recibida
+        window.location.href = data.url;
+      } else {
+        // Limpia los campos y alerta el mensaje
+        form.reset();
+        alert(`❌ ${data.message || 'Credenciales incorrectas.'}`);
+      }
+
+    } catch (error) {
+      console.error('Error en inicio de sesión:', error);
+      alert('Error al conectar con el servidor.');
+    } finally {
+      // Reactivar botón
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Iniciar Sesión';
+    }
+  });
 });

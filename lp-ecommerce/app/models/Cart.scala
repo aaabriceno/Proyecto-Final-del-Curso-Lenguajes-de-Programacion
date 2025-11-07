@@ -2,6 +2,7 @@ package models
 
 import java.time.LocalDateTime
 
+/** Representa un ítem dentro del carrito */
 case class CartItem(
   id: Long,
   userId: Long,
@@ -10,91 +11,83 @@ case class CartItem(
   dateAdded: LocalDateTime
 )
 
+/** Repositorio in-memory para manejar carritos */
 object CartRepo {
-  private var cartItems = Vector[CartItem]()
-  private var nextId: Long = 1
 
-  // Agregar item al carrito (o incrementar cantidad si ya existe)
-  def addOrUpdate(userId: Long, mediaId: Long, quantity: Int): Either[String, CartItem] = {
-    if (quantity <= 0) {
-      return Left("La cantidad debe ser mayor a 0")
-    }
+  private var cartItems: Vector[CartItem] = Vector.empty
+  private var nextId: Long = 1L
 
-    // Verificar que el producto existe
-    MediaRepo.find(mediaId) match {
-      case None => Left("Producto no encontrado")
-      case Some(media) =>
-        // Buscar si ya existe en el carrito
-        cartItems.find(item => item.userId == userId && item.mediaId == mediaId) match {
-          case Some(existingItem) =>
-            // Actualizar cantidad
-            val newQuantity = existingItem.quantity + quantity
-            val updated = existingItem.copy(quantity = newQuantity)
-            cartItems = cartItems.map(item =>
-              if (item.id == existingItem.id) updated else item
-            )
-            Right(updated)
-          
-          case None =>
-            // Crear nuevo item
-            val item = CartItem(nextId, userId, mediaId, quantity, LocalDateTime.now())
-            cartItems = cartItems :+ item
-            nextId += 1
-            Right(item)
-        }
+  /** Agregar item al carrito (o actualizar cantidad si ya existe) */
+  def addOrUpdate(userId: Long, mediaId: Long, quantity: Int): Either[String, CartItem] = synchronized {
+    if (quantity <= 0)
+      Left("La cantidad debe ser mayor a 0")
+    else {
+      MediaRepo.find(mediaId) match {
+        case None => Left("Producto no encontrado")
+        case Some(_) =>
+          cartItems.find(i => i.userId == userId && i.mediaId == mediaId) match {
+            case Some(existing) =>
+              val updated = existing.copy(quantity = existing.quantity + quantity)
+              cartItems = cartItems.map(i => if (i.id == existing.id) updated else i)
+              Right(updated)
+
+            case None =>
+              val newItem = CartItem(nextId, userId, mediaId, quantity, LocalDateTime.now())
+              cartItems :+= newItem
+              nextId += 1
+              Right(newItem)
+          }
+      }
     }
   }
 
-  // Actualizar cantidad de un item específico
-  def updateQuantity(itemId: Long, userId: Long, newQuantity: Int): Either[String, CartItem] = {
-    if (newQuantity <= 0) {
-      return Left("La cantidad debe ser mayor a 0")
-    }
-
-    cartItems.find(item => item.id == itemId && item.userId == userId) match {
-      case None => Left("Item no encontrado en tu carrito")
-      case Some(item) =>
-        val updated = item.copy(quantity = newQuantity)
-        cartItems = cartItems.map(i => if (i.id == itemId) updated else i)
-        Right(updated)
+  /** Actualizar cantidad de un item existente */
+  def updateQuantity(itemId: Long, userId: Long, newQuantity: Int): Either[String, CartItem] = synchronized {
+    if (newQuantity <= 0)
+      Left("La cantidad debe ser mayor a 0")
+    else {
+      cartItems.find(i => i.id == itemId && i.userId == userId) match {
+        case None => Left("Item no encontrado en tu carrito")
+        case Some(item) =>
+          val updated = item.copy(quantity = newQuantity)
+          cartItems = cartItems.map(i => if (i.id == itemId) updated else i)
+          Right(updated)
+      }
     }
   }
 
-  // Remover item del carrito
-  def remove(itemId: Long, userId: Long): Boolean = {
+  /** Eliminar un ítem del carrito */
+  def remove(itemId: Long, userId: Long): Boolean = synchronized {
     val initialSize = cartItems.size
-    cartItems = cartItems.filterNot(item => item.id == itemId && item.userId == userId)
+    cartItems = cartItems.filterNot(i => i.id == itemId && i.userId == userId)
     cartItems.size < initialSize
   }
 
-  // Obtener carrito de un usuario con información de productos
-  def getByUser(userId: Long): Vector[(CartItem, Media)] = {
+  /** Obtener carrito completo de un usuario */
+  def getByUser(userId: Long): Vector[(CartItem, Media)] = synchronized {
     cartItems
       .filter(_.userId == userId)
-      .flatMap { item =>
-        MediaRepo.find(item.mediaId).map(media => (item, media))
-      }
+      .sortBy(_.dateAdded)
+      .flatMap(item => MediaRepo.find(item.mediaId).map(media => (item, media)))
   }
 
-  // Limpiar carrito de un usuario (después de comprar)
-  def clearByUser(userId: Long): Unit = {
+  /** Limpiar carrito de un usuario */
+  def clearByUser(userId: Long): Unit = synchronized {
     cartItems = cartItems.filterNot(_.userId == userId)
   }
 
-  // Calcular total del carrito (sin descuentos, eso se aplica en checkout)
-  def getTotal(userId: Long): BigDecimal = {
-    getByUser(userId).map { case (item, media) =>
-      media.price * item.quantity
-    }.sum
+  /** Calcular el total del carrito */
+  def getTotal(userId: Long): BigDecimal = synchronized {
+    getByUser(userId).map { case (item, media) => media.price * item.quantity }.sum
   }
 
-  // Contar items en carrito
-  def countItems(userId: Long): Int = {
+  /** Contar total de unidades en el carrito */
+  def countItems(userId: Long): Int = synchronized {
     cartItems.filter(_.userId == userId).map(_.quantity).sum
   }
 
-  // Obtener un item específico
-  def findById(itemId: Long): Option[CartItem] = {
+  /** Buscar un ítem por ID */
+  def findById(itemId: Long): Option[CartItem] = synchronized {
     cartItems.find(_.id == itemId)
   }
 }
