@@ -1,38 +1,55 @@
-// [IDF-0026] Genera una barra de navegacion para un usuario sin cuenta.
+// [IDF-0026] Genera una barra de navegación para un usuario sin cuenta.
 function generateNavbar() {
-    var header = document.createElement('header');
-    var stylevar = document.createElement('link');
-    stylevar.href = "/styles/navbar.css";
-    stylevar.rel = "stylesheet"; 
-    stylevar.type = "text/css";
+  const header = document.createElement('header');
+  header.setAttribute('role', 'banner');
+  header.classList.add('navbar-guest');
 
-    var nav = document.createElement('nav');
-    var ul = document.createElement('ul');
+  // === Cargar estilos globales ===
+  const stylevar = document.createElement('link');
+  stylevar.href = '/styles/navbar.css';
+  stylevar.rel = 'stylesheet';
+  stylevar.type = 'text/css';
+  header.appendChild(stylevar);
 
-    var liYouEz = document.createElement('li');
-    var aYouEz = document.createElement('a');
-    aYouEz.href = '/';
-    aYouEz.textContent = 'DownEz';
-    liYouEz.appendChild(aYouEz);
-    ul.appendChild(liYouEz);
-    
-    var options = {"Register":"register.html", "Sign in":"login.html"};
-    for(var key in options){
-        var liInformes = document.createElement('li');
-        var aInformes = document.createElement('a');
-        aInformes.href = options[key];
-        aInformes.textContent = key;    
-        liInformes.appendChild(aInformes);
-        ul.appendChild(liInformes);
-    };
+  // === Contenedor de navegación ===
+  const nav = document.createElement('nav');
+  nav.setAttribute('role', 'navigation');
 
-    nav.appendChild(ul);
-    header.appendChild(nav);
-    header.appendChild(stylevar);
+  const ul = document.createElement('ul');
 
-    document.body.insertBefore(header, document.body.firstChild);
+  // === Logo principal ===
+  const liLogo = document.createElement('li');
+  const btnLogo = document.createElement('button');
+  btnLogo.textContent = 'DownEz';
+  btnLogo.id = 'logo-btn';
+  btnLogo.className = 'logo-button';
+  btnLogo.addEventListener('click', () => {
+    window.location.href = '/';
+  });
+  liLogo.appendChild(btnLogo);
+  ul.appendChild(liLogo);
+
+  // === Opciones ===
+  const options = {
+    Register: 'register.html',
+    'Sign in': 'login.html',
+  };
+
+  for (const [key, link] of Object.entries(options)) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = link;
+    a.textContent = key;
+    a.setAttribute('aria-label', `Ir a ${key}`);
+    li.appendChild(a);
+    ul.appendChild(li);
+  }
+
+  // === Insertar en el DOM ===
+  nav.appendChild(ul);
+  header.appendChild(nav);
+  document.body.insertBefore(header, document.body.firstChild);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    generateNavbar();
-});
+// Inicialización
+document.addEventListener('DOMContentLoaded', generateNavbar);

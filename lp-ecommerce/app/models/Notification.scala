@@ -2,7 +2,11 @@ package models
 
 import java.time.LocalDateTime
 
+/**
+ * Tipos de notificaciones que el sistema puede generar.
+ */
 sealed trait NotificationType { def asString: String }
+
 object NotificationType {
   case object BalanceApproved extends NotificationType { val asString = "balance_approved" }
   case object BalanceRejected extends NotificationType { val asString = "balance_rejected" }
@@ -13,10 +17,13 @@ object NotificationType {
     case "balance_approved" => BalanceApproved
     case "balance_rejected" => BalanceRejected
     case "purchase_success" => PurchaseSuccess
-    case _ => Info
+    case _                  => Info
   }
 }
 
+/**
+ * Representa una notificación enviada a un usuario.
+ */
 case class Notification(
   id: Long,
   userId: Long,
@@ -26,65 +33,105 @@ case class Notification(
   createdAt: LocalDateTime = LocalDateTime.now()
 )
 
+/**
+ * Repositorio en memoria de notificaciones de usuarios.
+ * Thread-safe, funcional y optimizado para consultas frecuentes.
+ */
 object NotificationRepo {
-  private var notifications = Vector[Notification]()
-  private var nextId: Long = 1
 
-  // Crear notificación
-  def create(userId: Long, message: String, notificationType: NotificationType): Notification = {
-    val notification = Notification(nextId, userId, message, notificationType, false, LocalDateTime.now())
-    notifications = notifications :+ notification
+  private var notifications: Vector[Notification] = Vector.empty
+  private var nextId: Long = 1L
+
+  // =========================
+  // CREAR / AGREGAR
+  // =========================
+
+  def create(userId: Long, message: String, notificationType: NotificationType): Notification = synchronized {
+    val n = Notification(nextId, userId, message, notificationType, read = false, createdAt = LocalDateTime.now())
+    notifications :+= n
     nextId += 1
-    notification
+    n
   }
 
-  // Obtener notificaciones no leídas de un usuario
-  def getUnread(userId: Long): Vector[Notification] = {
-    notifications.filter(n => n.userId == userId && !n.read).sortBy(_.createdAt).reverse
-  }
+  // =========================
+  // CONSULTAS
+  // =========================
 
-  // Obtener todas las notificaciones de un usuario
-  def getByUser(userId: Long, limit: Int = 50): Vector[Notification] = {
-    notifications.filter(_.userId == userId).sortBy(_.createdAt).reverse.take(limit)
-  }
+  /** Obtiene las notificaciones no leídas más recientes de un usuario */
+  def getUnread(userId: Long): Vector[Notification] =
+    notifications.view.filter(n => n.userId == userId && !n.read)
+      .toVector.sortBy(_.createdAt)(Ordering[LocalDateTime].reverse)
 
-  // Contar notificaciones no leídas
-  def countUnread(userId: Long): Int = {
+  /** Obtiene todas las notificaciones del usuario (limit configurable) */
+  def getByUser(userId: Long, limit: Int = 50): Vector[Notification] =
+    notifications.view.filter(_.userId == userId)
+      .toVector.sortBy(_.createdAt)(Ordering[LocalDateTime].reverse)
+      .take(limit)
+
+  /** Cuenta cuántas notificaciones no leídas tiene un usuario */
+  def countUnread(userId: Long): Int =
     notifications.count(n => n.userId == userId && !n.read)
-  }
 
-  // Marcar notificación como leída
-  def markAsRead(notificationId: Long, userId: Long): Boolean = {
-    notifications.find(n => n.id == notificationId && n.userId == userId) match {
-      case Some(notification) =>
-        val updated = notification.copy(read = true)
-        notifications = notifications.filterNot(_.id == notificationId) :+ updated
-        true
-      case None => false
-    }
-  }
+  // =========================
+  // ACTUALIZAR ESTADO
+  // =========================
 
-  // Marcar todas las notificaciones de un usuario como leídas
-  def markAllAsRead(userId: Long): Int = {
-    val unreadNotifications = notifications.filter(n => n.userId == userId && !n.read)
+  /** Marca una notificación como leída */
+  def markAsRead(notificationId: Long, userId: Long): Boolean = synchronized {
+    var updatedFlag = false
     notifications = notifications.map { n =>
-      if (n.userId == userId && !n.read) n.copy(read = true) else n
+      if (n.id == notificationId && n.userId == userId && !n.read) {
+        updatedFlag = true
+        n.copy(read = true)
+      } else n
     }
-    unreadNotifications.size
+    updatedFlag
   }
 
-  // Eliminar notificación
-  def delete(notificationId: Long, userId: Long): Boolean = {
-    val initialSize = notifications.size
+  /** Marca todas las notificaciones de un usuario como leídas */
+  def markAllAsRead(userId: Long): Int = synchronized {
+    val unreadCount = notifications.count(n => n.userId == userId && !n.read)
+    if (unreadCount > 0) {
+      notifications = notifications.map { n =>
+        if (n.userId == userId && !n.read) n.copy(read = true) else n
+      }
+    }
+    unreadCount
+  }
+
+  // =========================
+  // ELIMINAR
+  // =========================
+
+  /** Elimina una notificación específica del usuario */
+  def delete(notificationId: Long, userId: Long): Boolean = synchronized {
+    val before = notifications.size
     notifications = notifications.filterNot(n => n.id == notificationId && n.userId == userId)
-    notifications.size < initialSize
+    notifications.size < before
   }
 
-  // Limpiar notificaciones antiguas (más de 30 días)
-  def cleanOld(): Int = {
-    val thirtyDaysAgo = LocalDateTime.now().minusDays(30)
-    val oldNotifications = notifications.filter(_.createdAt.isBefore(thirtyDaysAgo))
-    notifications = notifications.filterNot(_.createdAt.isBefore(thirtyDaysAgo))
-    oldNotifications.size
+  /** Limpia notificaciones más antiguas de 30 días */
+  def cleanOld(): Int = synchronized {
+    val threshold = LocalDateTime.now().minusDays(30)
+    val old = notifications.filter(_.createdAt.isBefore(threshold))
+    notifications = notifications.filterNot(_.createdAt.isBefore(threshold))
+    old.size
   }
+
+  // =========================
+  // ESTADÍSTICAS (Opcional)
+  // =========================
+
+  /** Número total de notificaciones en el sistema */
+  def totalCount: Int = notifications.size
+
+  /** Usuarios con más notificaciones no leídas */
+  def topUsersWithUnread(limit: Int = 5): Vector[(Long, Int)] =
+    notifications
+      .filterNot(_.read)
+      .groupBy(_.userId)
+      .view.mapValues(_.size)
+      .toVector
+      .sortBy(-_._2)
+      .take(limit)
 }

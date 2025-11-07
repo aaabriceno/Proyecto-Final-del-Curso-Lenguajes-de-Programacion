@@ -1,0 +1,47 @@
+﻿<!-- ===== Navbar Component ===== -->
+<nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
+
+    <div class="ms-auto d-flex gap-2 align-items-center">
+      <!-- Link global -->
+      <a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
+
+      <!-- 🔸 Usuario NO logueado -->
+      <div id="guestBtns">
+        <a class="btn btn-outline-light btn-sm" href="/login">🔑 Login</a>
+        <a class="btn btn-warning btn-sm text-dark" href="/register">🧾 Registro</a>
+      </div>
+
+      <!-- 🔹 Usuario NORMAL logueado -->
+      <div id="userBtns" style="display:none;">
+        <a class="btn btn-outline-warning btn-sm position-relative" href="/user/notifications" title="Notificaciones">
+          <i class="bi bi-bell-fill"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+        </a>
+
+        <a class="btn btn-outline-primary btn-sm position-relative" href="/cart">
+          <i class="bi bi-cart-fill"></i> Carrito
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+        </a>
+
+        <a class="btn btn-outline-success btn-sm" href="/user/downloads">
+          <i class="bi bi-download"></i> Mis Descargas
+        </a>
+
+        <a class="btn btn-outline-light btn-sm" href="/user/account">👤 Mi cuenta</a>
+        <a class="btn btn-outline-light btn-sm" href="/logout">🚪 Salir</a>
+      </div>
+
+      <!-- 🔻 Usuario ADMIN logueado -->
+      <div id="adminBtns" style="display:none;">
+        <a class="btn btn-outline-warning btn-sm position-relative" href="/admin/balance/requests">
+          <i class="bi bi-bell-fill"></i> Solicitudes
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">5</span>
+        </a>
+        <a class="btn btn-outline-danger btn-sm" href="/admin">👨‍💼 Admin</a>
+        <a class="btn btn-outline-light btn-sm" href="/logout">🚪 Salir</a>
+      </div>
+    </div>
+  </div>
+</nav>

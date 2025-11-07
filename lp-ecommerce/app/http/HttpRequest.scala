@@ -2,9 +2,12 @@ package http
 
 import java.io.BufferedReader
 import scala.collection.mutable
+import scala.util.Try
 
 /**
- * Representación de un HTTP Request
+ * Representa una solicitud HTTP recibida por el servidor.
+ * Similar a `play.api.mvc.Request`, pero implementado de forma nativa.
+ * Compatible con Scala estándar (sin dependencias externas).
  */
 case class HttpRequest(
   method: String,
@@ -14,132 +17,135 @@ case class HttpRequest(
   body: Option[String],
   cookies: Map[String, String]
 ) {
-  
-  /** Obtener parámetro de query string */
+
+  /** Obtiene un parámetro del query string (?x=1) */
   def getQueryParam(key: String): Option[String] = queryParams.get(key)
-  
-  /** Obtener header */
+
+  /** Obtiene un header, sin distinguir mayúsculas/minúsculas */
   def getHeader(key: String): Option[String] = headers.get(key.toLowerCase)
-  
-  /** Obtener cookie */
+
+  /** Obtiene una cookie por nombre */
   def getCookie(key: String): Option[String] = cookies.get(key)
+
+  /** Devuelve el cuerpo si es JSON (parser simple sin dependencias externas) */
+  def jsonBody: Option[Map[String, Any]] =
+    if (getHeader("content-type").exists(_.contains("application/json")))
+      body.flatMap(b => parseSimpleJson(b))
+    else None
   
-  /** Obtener datos de formulario (application/x-www-form-urlencoded) */
-  def formData: Map[String, String] = {
-    body match {
-      case Some(b) if getHeader("content-type").exists(_.contains("application/x-www-form-urlencoded")) =>
-        parseQueryString(b)
-      case _ => Map.empty
-    }
-  }
-  
-  private def parseQueryString(qs: String): Map[String, String] = {
-    qs.split("&")
-      .flatMap { pair =>
-        pair.split("=", 2) match {
-          case Array(key, value) => Some(urlDecode(key) -> urlDecode(value))
-          case Array(key) => Some(urlDecode(key) -> "")
+  /** Parser JSON ultra simple para formularios básicos */
+  private def parseSimpleJson(json: String): Option[Map[String, Any]] = {
+    Try {
+      val trimmed = json.trim.stripPrefix("{").stripSuffix("}")
+      trimmed.split(",").map(_.trim).flatMap { pair =>
+        pair.split(":", 2) match {
+          case Array(k, v) =>
+            val key = k.trim.stripPrefix("\"").stripSuffix("\"")
+            val value = v.trim.stripPrefix("\"").stripSuffix("\"")
+            Some(key -> value)
           case _ => None
         }
-      }
-      .toMap
+      }.toMap
+    }.toOption
   }
-  
-  private def urlDecode(s: String): String = {
+
+  /** Devuelve el cuerpo si es formulario (application/x-www-form-urlencoded) */
+  def formData: Map[String, String] =
+    if (getHeader("content-type").exists(_.contains("application/x-www-form-urlencoded")))
+      body.map(parseQueryString).getOrElse(Map.empty)
+    else Map.empty
+
+  // --- Utils internos ---
+  private def parseQueryString(qs: String): Map[String, String] =
+    qs.split("&").flatMap {
+      case pair if pair.nonEmpty =>
+        pair.split("=", 2) match {
+          case Array(key, value) => Some(urlDecode(key) -> urlDecode(value))
+          case Array(key)        => Some(urlDecode(key) -> "")
+          case _                 => None
+        }
+      case _ => None
+    }.toMap
+
+  private def urlDecode(s: String): String =
     java.net.URLDecoder.decode(s.replace("+", " "), "UTF-8")
-  }
 }
 
 object HttpRequest {
-  
+
+  /** Límite máximo del tamaño del body (por seguridad) */
+  private val MAX_BODY_SIZE = 1024 * 1024 * 5 // 5 MB
+
   /**
-   * Parsear HTTP request desde BufferedReader
+   * Parsea una solicitud HTTP completa desde un BufferedReader de socket.
    */
   def parse(reader: BufferedReader): HttpRequest = {
-    // Leer línea de request (GET /path HTTP/1.1)
-    val requestLine = reader.readLine()
-    if (requestLine == null || requestLine.isEmpty) {
-      throw new Exception("Request line vacía")
-    }
-    
+    // --- Línea inicial ---
+    val requestLine = Option(reader.readLine()).getOrElse(
+      throw new Exception("Request vacío o malformado")
+    )
+
     val parts = requestLine.split(" ")
-    if (parts.length < 2) {
-      throw new Exception(s"Request line inválida: $requestLine")
-    }
-    
+    if (parts.length < 2) throw new Exception(s"Request line inválida: $requestLine")
+
     val method = parts(0)
     val fullPath = parts(1)
-    
-    // Separar path y query string
     val (path, queryString) = fullPath.split("\\?", 2) match {
       case Array(p, qs) => (p, Some(qs))
-      case Array(p) => (p, None)
+      case Array(p)     => (p, None)
     }
-    
-    // Parsear query params
     val queryParams = queryString.map(parseQueryString).getOrElse(Map.empty)
-    
-    // Leer headers
+
+    // --- Headers ---
     val headers = mutable.Map[String, String]()
-    var line = reader.readLine()
-    while (line != null && line.nonEmpty) {
+    var line: String = null
+    while ({ line = reader.readLine(); line != null && line.nonEmpty }) {
       line.split(":", 2) match {
-        case Array(key, value) => 
-          headers(key.trim.toLowerCase) = value.trim
-        case _ => // Ignorar líneas mal formadas
+        case Array(k, v) => headers(k.trim.toLowerCase) = v.trim
+        case _           => // ignorar líneas mal formadas
       }
-      line = reader.readLine()
     }
-    
-    // Parsear cookies
-    val cookies = headers.get("cookie")
+
+    // --- Cookies ---
+    val cookies = headers
+      .get("cookie")
       .map(parseCookies)
       .getOrElse(Map.empty)
-    
-    // Leer body (si existe Content-Length)
-    val body = headers.get("content-length")
-      .flatMap(len => scala.util.Try(len.toInt).toOption)
-      .filter(_ > 0)
-      .map { length =>
-        val buffer = new Array[Char](length)
-        reader.read(buffer, 0, length)
-        new String(buffer)
+
+    // --- Body ---
+    val body = headers
+      .get("content-length")
+      .flatMap(len => Try(len.toInt).toOption)
+      .filter(len => len > 0 && len < MAX_BODY_SIZE)
+      .map { len =>
+        val buffer = new Array[Char](len)
+        val readCount = reader.read(buffer, 0, len)
+        new String(buffer.take(readCount))
       }
-    
-    HttpRequest(
-      method = method,
-      path = path,
-      queryParams = queryParams,
-      headers = headers.toMap,
-      body = body,
-      cookies = cookies
-    )
+
+    HttpRequest(method, path, queryParams, headers.toMap, body, cookies)
   }
-  
-  private def parseQueryString(qs: String): Map[String, String] = {
-    qs.split("&")
-      .flatMap { pair =>
+
+  // --- Utils ---
+  private def parseQueryString(qs: String): Map[String, String] =
+    qs.split("&").flatMap {
+      case pair if pair.nonEmpty =>
         pair.split("=", 2) match {
-          case Array(key, value) => Some(urlDecode(key) -> urlDecode(value))
-          case Array(key) => Some(urlDecode(key) -> "")
-          case _ => None
+          case Array(k, v) => Some(urlDecode(k) -> urlDecode(v))
+          case Array(k)    => Some(urlDecode(k) -> "")
+          case _           => None
         }
+      case _ => None
+    }.toMap
+
+  private def parseCookies(raw: String): Map[String, String] =
+    raw.split(";").flatMap { cookie =>
+      cookie.trim.split("=", 2) match {
+        case Array(k, v) => Some(k.trim -> v.trim)
+        case _           => None
       }
-      .toMap
-  }
-  
-  private def parseCookies(cookieHeader: String): Map[String, String] = {
-    cookieHeader.split(";")
-      .flatMap { cookie =>
-        cookie.trim.split("=", 2) match {
-          case Array(key, value) => Some(key.trim -> value.trim)
-          case _ => None
-        }
-      }
-      .toMap
-  }
-  
-  private def urlDecode(s: String): String = {
+    }.toMap
+
+  private def urlDecode(s: String): String =
     java.net.URLDecoder.decode(s.replace("+", " "), "UTF-8")
-  }
 }

@@ -2,20 +2,22 @@ package models
 
 import java.time.LocalDateTime
 
+/** Estados posibles de una solicitud de recarga */
 sealed trait RequestStatus
 object RequestStatus {
   case object Pending extends RequestStatus
   case object Approved extends RequestStatus
   case object Rejected extends RequestStatus
-  
+
   def from(s: String): RequestStatus = s.toLowerCase match {
-    case "pending" => Pending
+    case "pending"  => Pending
     case "approved" => Approved
     case "rejected" => Rejected
-    case _ => Pending
+    case _          => Pending
   }
 }
 
+/** Representa una solicitud de recarga de saldo */
 case class BalanceRequest(
   id: Long,
   userId: Long,
@@ -27,69 +29,76 @@ case class BalanceRequest(
   reviewDate: Option[LocalDateTime] = None
 )
 
+/** Repositorio in-memory para solicitudes de recarga */
 object BalanceRequestRepo {
+
   private var requests: Vector[BalanceRequest] = Vector.empty
-  private var nextId = 1L
-  
-  def all: Vector[BalanceRequest] = requests
-  
-  def findById(id: Long): Option[BalanceRequest] = 
+  private var nextId: Long = 1L
+
+  def all: Vector[BalanceRequest] = requests.sortBy(_.requestDate)(Ordering[LocalDateTime].reverse)
+
+  def findById(id: Long): Option[BalanceRequest] =
     requests.find(_.id == id)
-  
-  def findByUserId(userId: Long): Vector[BalanceRequest] = 
-    requests.filter(_.userId == userId).sortBy(_.requestDate).reverse
-  
-  def findPending: Vector[BalanceRequest] = 
-    requests.filter(_.status == RequestStatus.Pending).sortBy(_.requestDate).reverse
-  
-  def countPending: Int = 
+
+  def findByUserId(userId: Long): Vector[BalanceRequest] =
+    requests.filter(_.userId == userId).sortBy(_.requestDate)(Ordering[LocalDateTime].reverse)
+
+  def findPending: Vector[BalanceRequest] =
+    requests.filter(_.status == RequestStatus.Pending).sortBy(_.requestDate)(Ordering[LocalDateTime].reverse)
+
+  def countPending: Int =
     requests.count(_.status == RequestStatus.Pending)
-  
-  def add(userId: Long, amount: BigDecimal, paymentMethod: String): BalanceRequest = {
+
+  /** Crea una nueva solicitud */
+  def add(userId: Long, amount: BigDecimal, paymentMethod: String): BalanceRequest = synchronized {
     val request = BalanceRequest(nextId, userId, amount, paymentMethod)
-    requests = requests :+ request
+    requests :+= request
     nextId += 1
     request
   }
-  
-  def approve(id: Long, adminId: Long): Option[BalanceRequest] = {
+
+  /** Aprueba una solicitud de recarga */
+  def approve(id: Long, adminId: Long): Option[BalanceRequest] = synchronized {
     requests.find(_.id == id).filter(_.status == RequestStatus.Pending).map { request =>
       // Agregar saldo al usuario
       UserRepo.addBalance(request.userId, request.amount)
-      
-      // Crear notificación para el usuario
+
+      // Notificar usuario
       NotificationRepo.create(
         request.userId,
         s"✅ Tu solicitud de recarga de $$${request.amount} ha sido APROBADA. El saldo ya está disponible en tu cuenta.",
         NotificationType.BalanceApproved
       )
-      
-      // Actualizar solicitud
+
       val updated = request.copy(
         status = RequestStatus.Approved,
         reviewedBy = Some(adminId),
         reviewDate = Some(LocalDateTime.now())
       )
-      requests = requests.filterNot(_.id == id) :+ updated
+
+      // Actualizar lista
+      requests = requests.map(r => if (r.id == id) updated else r)
       updated
     }
   }
-  
-  def reject(id: Long, adminId: Long): Option[BalanceRequest] = {
+
+  /** Rechaza una solicitud de recarga */
+  def reject(id: Long, adminId: Long): Option[BalanceRequest] = synchronized {
     requests.find(_.id == id).filter(_.status == RequestStatus.Pending).map { request =>
-      // Crear notificación para el usuario
+      // Notificar usuario
       NotificationRepo.create(
         request.userId,
         s"❌ Tu solicitud de recarga de $$${request.amount} ha sido RECHAZADA. Por favor contacta al administrador para más información.",
         NotificationType.BalanceRejected
       )
-      
+
       val updated = request.copy(
         status = RequestStatus.Rejected,
         reviewedBy = Some(adminId),
         reviewDate = Some(LocalDateTime.now())
       )
-      requests = requests.filterNot(_.id == id) :+ updated
+
+      requests = requests.map(r => if (r.id == id) updated else r)
       updated
     }
   }

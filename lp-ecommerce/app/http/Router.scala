@@ -1,188 +1,128 @@
 package http
 
-import scala.util.matching.Regex
+import controllers._
+import scala.util.Try
 
 /**
- * Sistema de routing manual con pattern matching
- * SIN frameworks - rutas definidas manualmente
+ * Router HTTP simple que redirige rutas hacia los controladores.
+ * Inspirado en Play Framework, pero totalmente funcional sin él.
  */
 object Router {
-  
-  type Handler = HttpRequest => HttpResponse
-  
-  /**
-   * Rutear request a handler correspondiente
-   */
+
   def route(request: HttpRequest): HttpResponse = {
-    // Logging
-    println(s"  → Routing: ${request.method} ${request.path}")
-    
-    // Pattern matching por método y path
-    (request.method, request.path) match {
-      
-      // ========== RUTAS PÚBLICAS ==========
-      
-      case ("GET", "/") => 
-        // TODO: HomeController.index
-        HttpResponse.ok("<h1>Página de inicio</h1><p>Bienvenido al e-commerce</p>")
-      
-      case ("GET", "/login") =>
-        // TODO: AuthController.loginForm
-        HttpResponse.ok("<h1>Login</h1><p>Formulario de inicio de sesión</p>")
-      
-      case ("POST", "/login") =>
-        // TODO: AuthController.login
-        HttpResponse.ok("<h1>Login POST</h1><p>Procesando inicio de sesión...</p>")
-      
-      case ("GET", "/register") =>
-        // TODO: AuthController.registerForm
-        HttpResponse.ok("<h1>Registro</h1><p>Formulario de registro</p>")
-      
-      case ("POST", "/register") =>
-        // TODO: AuthController.register
-        HttpResponse.ok("<h1>Registro POST</h1><p>Procesando registro...</p>")
-      
-      case ("GET", "/logout") =>
-        // TODO: AuthController.logout
-        HttpResponse.redirect("/")
-      
-      // ========== RUTAS DE TIENDA ==========
-      
-      case ("GET", "/shop") =>
-        // TODO: ShopController.list
-        HttpResponse.ok("<h1>Tienda</h1><p>Lista de productos</p>")
-      
-      case ("GET", path) if path.startsWith("/shop/") =>
-        // Extraer ID del producto
-        extractId(path, "/shop/") match {
-          case Some(id) =>
-            // TODO: ShopController.detail(id)
-            HttpResponse.ok(s"<h1>Producto $id</h1><p>Detalles del producto</p>")
-          case None =>
-            HttpResponse.notFound("Producto no encontrado")
-        }
-      
-      case ("GET", "/cart") =>
-        // TODO: CartController.view
-        HttpResponse.ok("<h1>Carrito</h1><p>Tu carrito de compras</p>")
-      
-      case ("POST", "/cart/add") =>
-        // TODO: CartController.add
-        HttpResponse.redirect("/cart")
-      
-      case ("POST", "/cart/remove") =>
-        // TODO: CartController.remove
-        HttpResponse.redirect("/cart")
-      
-      case ("POST", "/checkout") =>
-        // TODO: CartController.checkout
-        HttpResponse.redirect("/user/purchases")
-      
-      // ========== RUTAS DE USUARIO ==========
-      
-      case ("GET", "/user/account") =>
-        // TODO: UserController.account
-        HttpResponse.ok("<h1>Mi Cuenta</h1><p>Información de usuario</p>")
-      
-      case ("GET", "/user/purchases") =>
-        // TODO: UserController.purchases
-        HttpResponse.ok("<h1>Mis Compras</h1><p>Historial de compras</p>")
-      
-      case ("POST", "/user/request-balance") =>
-        // TODO: UserController.requestBalance
-        HttpResponse.redirect("/user/account")
-      
-      // ========== RUTAS DE ADMIN ==========
-      
-      case ("GET", "/admin") =>
-        // TODO: AdminController.dashboard
-        HttpResponse.ok("<h1>Admin Panel</h1><p>Panel de administración</p>")
-      
-      case ("GET", "/admin/users") =>
-        // TODO: AdminController.userList
-        HttpResponse.ok("<h1>Usuarios</h1><p>Lista de usuarios</p>")
-      
-      case ("GET", "/admin/media") =>
-        // TODO: AdminController.mediaList
-        HttpResponse.ok("<h1>Productos</h1><p>Lista de productos</p>")
-      
-      case ("GET", "/admin/categories") =>
-        // TODO: AdminController.listCategories
-        HttpResponse.ok("<h1>Categorías</h1><p>Gestión de categorías</p>")
-      
-      case ("GET", "/admin/promotions") =>
-        // TODO: AdminController.listPromotions
-        HttpResponse.ok("<h1>Promociones</h1><p>Gestión de promociones</p>")
-      
-      case ("GET", "/admin/balance-requests") =>
-        // TODO: AdminController.balanceRequests
-        HttpResponse.ok("<h1>Solicitudes de Saldo</h1><p>Gestión de solicitudes</p>")
-      
-      // ========== ARCHIVOS ESTÁTICOS ==========
-      
-      case ("GET", path) if path.startsWith("/assets/") =>
-        // TODO: AssetController.serve
-        serveStaticFile(path.stripPrefix("/assets/"))
-      
-      // ========== 404 NOT FOUND ==========
-      
-      case _ =>
-        HttpResponse.notFound(s"Ruta no encontrada: ${request.method} ${request.path}")
-    }
-  }
-  
-  /**
-   * Extraer ID numérico de un path
-   */
-  private def extractId(path: String, prefix: String): Option[Long] = {
-    val id = path.stripPrefix(prefix).takeWhile(_.isDigit)
-    if (id.nonEmpty) scala.util.Try(id.toLong).toOption else None
-  }
-  
-  /**
-   * Servir archivo estático desde public/
-   */
-  private def serveStaticFile(path: String): HttpResponse = {
+    val path   = request.path
+    val method = request.method.toUpperCase
+
     try {
-      val file = new java.io.File(s"public/$path")
-      if (file.exists() && file.isFile) {
-        val content = scala.io.Source.fromFile(file, "UTF-8").mkString
-        val mimeType = getMimeType(path)
-        
-        HttpResponse(
-          status = 200,
-          statusText = "OK",
-          headers = Map("Content-Type" -> mimeType),
-          body = content
-        )
-      } else {
-        HttpResponse.notFound(s"Archivo no encontrado: $path")
+      (method, path) match {
+
+        // ---------- Página principal ----------
+        case ("GET", "/") =>
+          HomeController.index(request)
+
+        // ---------- Autenticación ----------
+        case ("GET", "/login")     => AuthController.loginForm(request)
+        case ("POST", "/login")    => AuthController.login(request)
+        case ("GET", "/register")  => AuthController.registerForm(request)
+        case ("POST", "/register") => AuthController.register(request)
+        case ("GET", "/logout") | ("POST", "/logout") =>
+          AuthController.logout(request)
+
+        // ---------- Tienda ----------
+        case ("GET", "/shop")           => ShopController.shop(request)
+        case ("GET", p) if p.startsWith("/shop/") =>
+          val id = Try(p.stripPrefix("/shop/").toLong).getOrElse(0L)
+          ShopController.detail(id, request)
+
+        // ---------- Carrito ----------
+        case ("GET", "/cart")           => ShopController.viewCart(request)
+        case ("POST", "/cart/clear")    => ShopController.clearCart(request)
+        case ("POST", p) if p.startsWith("/cart/add/") =>
+          val id = Try(p.stripPrefix("/cart/add/").toLong).getOrElse(0L)
+          ShopController.addToCart(id, request)
+        case ("POST", p) if p.startsWith("/cart/remove/") =>
+          val id = Try(p.stripPrefix("/cart/remove/").toLong).getOrElse(0L)
+          ShopController.removeFromCart(id, request)
+        case ("POST", p) if p.startsWith("/cart/update/") =>
+          val id = Try(p.stripPrefix("/cart/update/").toLong).getOrElse(0L)
+          ShopController.updateCartQuantity(id, request)
+
+        // ---------- Compras ----------
+        case ("GET", "/purchase")  => ShopController.purchasePage(request)
+        case ("POST", "/purchase") => ShopController.processPurchase(request)
+
+        // ---------- Usuarios ----------
+        case ("GET", "/user/account")     => UserController.account(request)
+        case ("GET", "/user/info")        => UserController.info(request)
+        case ("POST", "/user/info")       => UserController.updateInfo(request)
+        case ("GET", "/user/downloads")   => UserController.downloads(request)
+        case ("GET", "/user/transactions")=> UserController.transactions(request)
+        case ("GET", "/user/balance/request")  => UserController.balanceRequestForm(request)
+        case ("POST", "/user/balance/request") => UserController.createBalanceRequest(request)
+
+        // ---------- Administración ----------
+        case ("GET", "/admin")              => AdminController.dashboard(request)
+        case ("GET", "/admin/users")        => AdminController.users(request)
+        case ("GET", "/api/users")          => AdminController.usersJson(request)
+        case ("POST", p) if p.startsWith("/admin/users/") && p.endsWith("/toggle") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.toggleUserActive(id, request)
+
+        case ("GET", "/admin/media")        => AdminController.media(request)
+        case ("GET", "/admin/media/new")    => AdminController.newMediaForm(request)
+        case ("POST", "/admin/media")       => AdminController.createMedia(request)
+        case ("GET", "/api/media")          => AdminController.mediaJson(request)
+        case ("GET", p) if p.startsWith("/admin/media/") && p.endsWith("/edit") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.editMediaForm(id, request)
+        case ("POST", p) if p.startsWith("/admin/media/") && !p.endsWith("/delete") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.updateMedia(id, request)
+        case ("POST", p) if p.endsWith("/delete") && p.startsWith("/admin/media/") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.deleteMedia(id, request)
+
+        // ---------- Categorías ----------
+        case ("GET", "/admin/categories")     => AdminController.categories(request)
+        case ("POST", "/admin/categories")    => AdminController.createCategory(request)
+        case ("GET", "/api/categories")       => AdminController.categoriesJson(request)
+        case ("POST", p) if p.endsWith("/delete") && p.startsWith("/admin/categories/") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.deleteCategory(id, request)
+
+        // ---------- Promociones ----------
+        case ("GET", "/admin/promotions")      => AdminController.promotions(request)
+        case ("GET", "/admin/promotions/new")  => AdminController.newPromotionForm(request)
+        case ("POST", "/admin/promotions")     => AdminController.createPromotion(request)
+        case ("POST", p) if p.endsWith("/delete") && p.startsWith("/admin/promotions/") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.deletePromotion(id, request)
+
+        // ---------- Solicitudes de saldo ----------
+        case ("GET", "/admin/balance/requests") => AdminController.balanceRequests(request)
+        case ("POST", p) if p.endsWith("/approve") =>
+          val id = Try(p.split("/")(4).toLong).getOrElse(0L)
+          AdminController.approveBalanceRequest(id, request)
+        case ("POST", p) if p.endsWith("/reject") =>
+          val id = Try(p.split("/")(4).toLong).getOrElse(0L)
+          AdminController.rejectBalanceRequest(id, request)
+
+        // ---------- Estadísticas ----------
+        case ("GET", "/admin/statistics") => AdminController.statistics(request)
+
+        // ---------- Archivos estáticos ----------
+        case ("GET", p) if p.startsWith("/assets/") || p.startsWith("/styles/") || p.startsWith("/scripts/") =>
+          val relPath = p.stripPrefix("/assets/").stripPrefix("/styles/").stripPrefix("/scripts/")
+          HttpResponse.serveStaticFile(relPath)
+
+        // ---------- Rutas no encontradas ----------
+        case _ =>
+          HttpResponse.notFound(s"Ruta no encontrada: $method $path")
       }
     } catch {
       case e: Exception =>
-        HttpResponse.internalError(s"Error al leer archivo: ${e.getMessage}")
-    }
-  }
-  
-  /**
-   * Determinar MIME type por extensión
-   */
-  private def getMimeType(path: String): String = {
-    path.split("\\.").lastOption match {
-      case Some("css") => "text/css; charset=UTF-8"
-      case Some("js") => "application/javascript; charset=UTF-8"
-      case Some("html") => "text/html; charset=UTF-8"
-      case Some("json") => "application/json; charset=UTF-8"
-      case Some("png") => "image/png"
-      case Some("jpg" | "jpeg") => "image/jpeg"
-      case Some("gif") => "image/gif"
-      case Some("svg") => "image/svg+xml"
-      case Some("ico") => "image/x-icon"
-      case Some("woff") => "font/woff"
-      case Some("woff2") => "font/woff2"
-      case Some("ttf") => "font/ttf"
-      case Some("eot") => "application/vnd.ms-fontobject"
-      case _ => "application/octet-stream"
+        e.printStackTrace()
+        HttpResponse.internalError(s"Error en Router: ${e.getMessage}")
     }
   }
 }

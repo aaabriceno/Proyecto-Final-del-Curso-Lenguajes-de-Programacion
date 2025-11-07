@@ -1,239 +1,205 @@
-import {createContentType} from './create_item.js';
+import { createContentType } from './create_item.js';
 
-// [IDF-0023] retorna el role del inicio de sesion, si es cliente, administrador, o un usuario.
-document.addEventListener('DOMContentLoaded', function () {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    let hasRated = false;
-    
-    fetch('/verificate_downloaded_content', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id })
-        })
-        .then(response => response.json())
-        .then(respuesta => {
-            if (!respuesta.success) {
-                window.location.href = `item_shop.html?id=${id}`;
-            }
-            else{
-                hasRated = respuesta.hasRated || false;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+// =============================================================
+// [IDF-0023] Determina rol de usuario y muestra vista de contenido
+// =============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (!id) {
+    document.querySelector('.container').innerHTML = "<p class='text-danger'>Error: No se proporcionó un ID válido.</p>";
+    return;
+  }
+
+  try {
+    // Verificar si el usuario puede acceder al contenido
+    const verifRes = await fetch('/verificate_downloaded_content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
     });
+    const verifData = await verifRes.json();
 
-    var header = document.createElement('header');
-    var scriptAdmi = document.createElement('script');
-    var current_role = "Usuario";
-
-    fetch('/get_user_role')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.role);
-                if (data.role == "Administrador") {
-                    current_role = "Administrador";
-                } else if (data.role == "Cliente") {
-                    current_role = "Cliente";
-                }
-                console.log(current_role);
-                itemGen(current_role, id, hasRated);
-            })
-    .catch(error => {
-        console.error('Error al verificar rol:', error);
-        alert("Error al verificar tu rol.");
-    });
-    header.appendChild(scriptAdmi);
-    console.log(current_role);
-
-});
-
-// [IDF-0028] Solicita información de cierto contenido al servidor.
-function itemGen(current_role, id, hasRated){
-    const itemDetails = document.querySelector('.container');
-
-    if (!id) {
-        itemDetails.innerHTML = "<p>Error: No se proporcionó un ID válido.</p>";
-        return;        
+    if (!verifData.success) {
+      window.location.href = `item_shop.html?id=${id}`;
+      return;
     }
 
-    var buyButton = document.createElement('button');
-    buyButton.className = 'buy-button';
-    buyButton.textContent = 'Descargar';
+    const hasRated = verifData.hasRated || false;
 
-    fetch('/get_content_by_id', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: id })
-    })
-    .then(response => response.json())
-    .then(data => {
-            if (data) {
-                itemDetails.innerHTML = '';
-                
-                createContentType({data:data,current_role:current_role, linked:false});
+    // Obtener rol actual
+    const roleRes = await fetch('/get_user_role');
+    const roleData = await roleRes.json();
 
-                buyButton.addEventListener('click', function () {
-                    alert("CONTENIDO DESCARGADO :D");
-                    descargarContenido(data.id, data.title);
-                    //itemGen(current_role,id, hasRated);
-                });
+    const current_role = roleData.role || "Usuario";
+    console.log("Rol actual:", current_role);
 
-                var Div = document.querySelector(".media-item");
-                Div.appendChild(buyButton);
+    itemGen(current_role, id, hasRated);
+  } catch (error) {
+    console.error('Error verificando rol o contenido:', error);
+    alert("Error al verificar el acceso al contenido.");
+  }
+});
 
-                if(current_role === "Cliente"){
-                    var giftButton = document.createElement('button');
-                    giftButton.textContent = 'Regalar';
-                    giftButton.className = 'gift-button';
-                    giftButton.style.marginLeft = '10px';
-                    giftButton.addEventListener('click', function () {
-                        window.location.href = `item_shop.html?id=${data.id}&gift=1`;
-                    });
-                    console.log("gift");
-                    Div.appendChild(giftButton);
-                }
+// =============================================================
+// [IDF-0028] Renderiza la información del contenido adquirido
+// =============================================================
+async function itemGen(current_role, id, hasRated) {
+  const itemDetails = document.querySelector('.container');
+  if (!id) {
+    itemDetails.innerHTML = "<p>Error: No se proporcionó un ID válido.</p>";
+    return;
+  }
 
-                if (current_role === "Cliente" && hasRated === true) {
-                    var rateButton = document.createElement('button');
-                    rateButton.textContent = 'Calificar contenido';
-                    rateButton.className = 'rate-button';
-                    rateButton.style.marginLeft = '10px';
-                    rateButton.addEventListener('click', function () {
-                        showRatingPrompt(data.id);
-                        //itemGen(current_role,id, hasRated);
-                    });
-                    Div.appendChild(rateButton);
-                }                
-            
-            } else {
-                itemDetails.innerHTML = "<p>No se encontró el item.</p>";
-            }
-        })
-        .catch(error => {
-            console.error('Error obteniendo el item:', error);
-            itemDetails.innerHTML = "<p>Error cargando el contenido.</p>";
-        });
+  try {
+    const res = await fetch('/get_content_by_id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    const data = await res.json();
+
+    if (!data) {
+      itemDetails.innerHTML = "<p class='text-warning'>No se encontró el contenido solicitado.</p>";
+      return;
+    }
+
+    itemDetails.innerHTML = '';
+    createContentType({ data, current_role, linked: false });
+
+    // Botón de descarga
+    const btnDownload = document.createElement('button');
+    btnDownload.className = 'btn btn-success mt-3';
+    btnDownload.textContent = '⬇ Descargar';
+    btnDownload.addEventListener('click', () => descargarContenido(data.id, data.title));
+
+    const mediaDiv = document.querySelector('.media-item');
+    mediaDiv.appendChild(btnDownload);
+
+    // Botón de regalo (solo clientes)
+    if (current_role === "Cliente") {
+      const btnGift = document.createElement('button');
+      btnGift.className = 'btn btn-primary mt-3 ms-2';
+      btnGift.textContent = '🎁 Regalar';
+      btnGift.addEventListener('click', () => {
+        window.location.href = `item_shop.html?id=${data.id}&gift=1`;
+      });
+      mediaDiv.appendChild(btnGift);
+    }
+
+    // Botón de calificación (si aún no ha calificado)
+    if (current_role === "Cliente" && hasRated === true) {
+      const btnRate = document.createElement('button');
+      btnRate.className = 'btn btn-warning mt-3 ms-2';
+      btnRate.textContent = '⭐ Calificar contenido';
+      btnRate.addEventListener('click', () => showRatingPrompt(data.id));
+      mediaDiv.appendChild(btnRate);
+    }
+
+  } catch (error) {
+    console.error('Error obteniendo el item:', error);
+    itemDetails.innerHTML = "<p class='text-danger'>Error cargando el contenido.</p>";
+  }
 }
 
-// [IDF-0006] pide el contenido al servidor y descarga el contenido en el dispositivo.
-function descargarContenido(id,name) {
-    fetch('/download_content', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: id })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("No se pudo descargar el archivo");
-        }
-        return response.blob();
+// =============================================================
+// [IDF-0006] Descarga el contenido desde el servidor
+// =============================================================
+function descargarContenido(id, name) {
+  fetch('/download_content', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("No se pudo descargar el archivo.");
+      return res.blob();
     })
     .then(blob => {
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = downloadUrl;
-
-        // Esto es solo temporal si no tienes el nombre desde JS.
-        //a.download = "contenido_" + id;
-        a.download = name;
-
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(downloadUrl);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name || `contenido_${id}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      alert('✅ Descarga completada.');
     })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Error al descargar el archivo");
+    .catch(err => {
+      console.error('Error al descargar:', err);
+      alert('Error al descargar el archivo.');
     })
-    .finally(() => {
-        location.reload();
-    });
+    .finally(() => location.reload());
 }
 
-// [IDF-0008] solicita y registra una puntuación para cierto contenido.
+// =============================================================
+// [IDF-0008] Muestra un modal para calificar contenido
+// =============================================================
 function showRatingPrompt(contentId) {
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = '100vw';
-    overlay.style.height = '100vh';
-    overlay.style.background = 'rgba(0, 0, 0, 0.6)';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = 1000;
+  const overlay = document.createElement('div');
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    top: 0, left: 0, width: '100vw', height: '100vh',
+    background: 'rgba(0,0,0,0.6)',
+    display: 'flex', justifyContent: 'center', alignItems: 'center',
+    zIndex: 1000
+  });
 
-    const modal = document.createElement('div');
-    modal.style.background = 'white';
-    modal.style.padding = '20px';
-    modal.style.borderRadius = '10px';
-    modal.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
-    modal.style.textAlign = 'center';
+  const modal = document.createElement('div');
+  Object.assign(modal.style, {
+    background: '#fff',
+    padding: '20px',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+    textAlign: 'center',
+    width: '320px'
+  });
 
-    const message = document.createElement('p');
-    message.textContent = '¿Deseas calificar este contenido? (Opcional)';
-    
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.min = 1;
-    input.max = 10;
-    input.placeholder = 'Ingresa una puntuación del 1 al 10';
-    input.style.margin = '10px';
+  modal.innerHTML = `
+    <p class="fw-semibold">¿Deseas calificar este contenido?</p>
+    <input type="number" id="rating-input" class="form-control mb-3" min="1" max="10" placeholder="Puntuación (1–10)">
+    <div class="d-flex justify-content-center gap-2">
+      <button class="btn btn-success">Enviar</button>
+      <button class="btn btn-secondary">Cancelar</button>
+    </div>
+  `;
 
-    const sendButton = document.createElement('button');
-    sendButton.textContent = 'Enviar';
-    sendButton.style.margin = '5px';
+  const [sendBtn, cancelBtn] = modal.querySelectorAll('button');
+  const input = modal.querySelector('#rating-input');
 
-    const cancelButton = document.createElement('button');
-    cancelButton.textContent = 'Cancelar';
-    cancelButton.style.margin = '5px';
+  sendBtn.addEventListener('click', async () => {
+    const score = parseFloat(input.value);
+    if (isNaN(score) || score < 1 || score > 10) {
+      alert('⚠️ La puntuación debe estar entre 1 y 10.');
+      return;
+    }
 
-    sendButton.addEventListener('click', () => {
-        const score = parseFloat(input.value);
-        if (isNaN(score) || score < 1 || score > 10) {
-            alert("La puntuación debe ser un número entre 1 y 10.");
-            return;
-        }
+    try {
+      const res = await fetch('/rate_content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: contentId, score })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('⭐ ¡Gracias por tu calificación!');
+        location.reload();
+      } else {
+        alert('Error al enviar la puntuación.');
+      }
+    } catch (err) {
+      console.error('Error al calificar:', err);
+      alert('No se pudo enviar la calificación.');
+    } finally {
+      document.body.removeChild(overlay);
+    }
+  });
 
-        fetch('/rate_content', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: contentId, score: score })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("¡Gracias por tu puntuación!");
-                location.reload();
-            } else {
-                alert("Hubo un error al enviar tu puntuación.");
-            }
-            document.body.removeChild(overlay);
-            //window.location.href = `item_view.html?id=${contentId}`;
-        })
-        .catch(err => {
-            alert("Error al calificar.");
-            console.error(err);
-        });
-    });
+  cancelBtn.addEventListener('click', () => {
+    document.body.removeChild(overlay);
+  });
 
-    cancelButton.addEventListener('click', () => {
-        document.body.removeChild(overlay);
-        //window.location.href = `item_view.html?id=${contentId}`;
-    });
-
-    modal.appendChild(message);
-    modal.appendChild(input);
-    modal.appendChild(sendButton);
-    modal.appendChild(cancelButton);
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 }
