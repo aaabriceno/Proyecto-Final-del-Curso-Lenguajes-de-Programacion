@@ -194,10 +194,20 @@
         const mediaData = await mediaResponse.json();
         const totalProducts = mediaData.products.length;
         
+        // Cargar estadísticas de promociones
+        const promoResponse = await fetch('/api/promotions/stats');
+        const promoData = await promoResponse.json();
+        
         // Actualizar las tarjetas del dashboard
         document.querySelectorAll('.card h2')[0].textContent = totalUsers;
         document.querySelectorAll('.card h2')[1].textContent = totalProducts;
         document.querySelectorAll('.card h2')[2].textContent = totalAdmins;
+        
+        // Actualizar estadísticas de promociones
+        const promoStats = document.querySelector('.mt-3.text-muted.small');
+        if (promoStats) {
+          promoStats.innerHTML = `Activas: <strong>${promoData.active}</strong> | Próximas: <strong>${promoData.upcoming}</strong>`;
+        }
         
       } catch (error) {
         console.error('Error cargando estadísticas del dashboard:', error);

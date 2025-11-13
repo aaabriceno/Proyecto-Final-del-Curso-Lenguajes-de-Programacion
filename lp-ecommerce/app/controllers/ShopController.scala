@@ -1,7 +1,7 @@
 package controllers
 
 import http.{HttpRequest, HttpResponse}
-import models.{MediaRepo, CategoryRepo}
+import models.{MediaRepo, CategoryRepo, PromotionRepo, PromotionTarget}
 import session.SessionManager
 import scala.io.Source
 import scala.util.{Try, Success, Failure}
@@ -132,6 +132,38 @@ object ShopController {
       case Right(user) =>
         MediaRepo.find(id) match {
           case Some(media) =>
+            // Buscar promoción activa para este producto (por producto O por categoría)
+            import java.time.LocalDateTime
+            val now = LocalDateTime.now()
+            val activePromotion = PromotionRepo.all.find { promo =>
+              val isActive = !promo.startDate.isAfter(now) && !promo.endDate.isBefore(now)
+              if (!isActive) false
+              else {
+                promo.targetType match {
+                  case PromotionTarget.Product => promo.targetIds.contains(media.id)
+                  case PromotionTarget.Category => 
+                    media.categoryId.exists(catId => promo.targetIds.contains(catId))
+                  case _ => false
+                }
+              }
+            }
+            
+            val (finalPrice, priceDisplay) = activePromotion match {
+              case Some(promo) =>
+                val discount = promo.discountPercent
+                val discountedPrice = media.price * (100 - discount) / 100
+                (discountedPrice, 
+                 s"""<div class="mb-3">
+                      <span class="badge bg-danger fs-5">🔥 ${discount}% OFF</span>
+                    </div>
+                    <div>
+                      <span class="text-secondary text-decoration-line-through fs-6">Precio original: $$${media.price}</span><br>
+                      <span class="text-warning fw-bold" style="font-size: 2rem;">$$${discountedPrice}</span>
+                    </div>""")
+              case None =>
+                (media.price, s"""<span class="text-success fw-bold" style="font-size: 2rem;">$$${media.price}</span>""")
+            }
+            
             // Generar navbar dinámico
             val navbarButtons = if (user.isAdmin) {
               """<a class="btn btn-warning btn-sm" href="/admin">👨‍💼 Admin</a>
@@ -142,13 +174,26 @@ object ShopController {
                  <a class="btn btn-success btn-sm" href="/cart">🛒 Carrito</a>
                  <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
             }
+            
+            // Botón de compra (usuario logueado) - con precio final
+            val purchaseButton = s"""
+              <form method="POST" action="/shop/${media.id}/purchase" class="mb-3">
+                <button type="submit" class="btn btn-primary btn-lg w-100 ${if (media.stock <= 0) "disabled" else ""}">
+                  <i class="bi bi-cart-plus me-2"></i>Comprar ahora ($$${finalPrice})
+                </button>
+              </form>
+              
+              <button onclick="addToCart(${media.id})" class="btn btn-success w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}">
+                <i class="bi bi-cart me-2"></i>Agregar al carrito
+              </button>
+            """
 
             val projectDir = System.getProperty("user.dir")
             val path = s"$projectDir/app/views/media_detail.html"
             
             Try(Source.fromFile(path, "UTF-8").mkString) match {
               case Success(html) =>
-                // Reemplazar navbar y datos del producto
+                // Reemplazar navbar, botón de compra y datos del producto
                 val updatedHtml = html
                   .replace(
                     """<a class="btn btn-outline-light btn-sm" href="/login">
@@ -159,8 +204,15 @@ object ShopController {
         </a>""",
                     navbarButtons
                   )
+                  .replace(
+                    """<a href="/login" class="btn btn-primary btn-lg w-100 mb-3">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Inicia sesión para comprar
+        </a>""",
+                    purchaseButton
+                  )
+                  .replace("/assets/images/placeholder.jpg", media.getCoverImageUrl)
                   .replace("🎵 Nombre del Producto", escapeHtml(media.title))
-                  .replace("$99.99", s"$$${media.price}")
+                  .replace("$99.99", priceDisplay)
                   .replace("Descripción detallada del producto. Aquí puedes incluir características, inspiración o información del autor.", 
                            escapeHtml(media.description))
                 
@@ -189,10 +241,61 @@ object ShopController {
   /** GET /cart */
   def viewCart(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
+      case Right(user) =>
         val sessionId = request.cookies.getOrElse("sessionId", "")
-        val _ = SessionCartRepo.get(sessionId)
-        serveHtml("cart", request)
+        val cart = SessionCartRepo.get(sessionId)
+        
+        val html = serveHtml("cart", request).body
+        
+        // Inyectar datos del carrito
+        val hasItems = !cart.isEmpty
+        val cartItemsHtml = if (hasItems) {
+          cart.items.map { case (mediaId, qty) =>
+            MediaRepo.find(mediaId).map { media =>
+              val subtotal = media.price * qty
+              s"""
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="ms-2">
+                      <h6 class="mb-0">${media.title}</h6>
+                      <small class="text-muted">${media.description.take(50)}...</small>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center align-middle">$$${media.price}</td>
+                <td class="text-center align-middle">
+                  <form method="POST" action="/cart/update/${media.id}" class="d-inline">
+                    <div class="input-group input-group-sm">
+                      <input type="number" name="quantity" class="form-control text-center" value="${qty}" min="1" max="${media.stock}">
+                      <button type="submit" class="btn btn-sm btn-secondary">✓</button>
+                    </div>
+                  </form>
+                </td>
+                <td class="text-center align-middle"><span class="badge bg-success">${media.stock}</span></td>
+                <td class="text-end align-middle"><strong>$$${subtotal}</strong></td>
+                <td class="text-center align-middle">
+                  <form method="POST" action="/cart/remove/${media.id}" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                  </form>
+                </td>
+              </tr>
+              """
+            }.getOrElse("")
+          }.mkString("\n")
+        } else ""
+        
+        val totalPrice = cart.total
+        val itemCount = cart.items.size
+        
+        val updatedHtml = html
+          .replace("const hasItems = false;", s"const hasItems = ${hasItems};")
+          .replace("📦 Productos en tu carrito (2)", s"📦 Productos en tu carrito ($itemCount)")
+          .replace("<!-- Ejemplo Producto -->", cartItemsHtml)
+          .replace("$180.00", s"$$$totalPrice")
+          .replace("💵 Tu saldo actual: <strong>$500.00</strong>", s"💵 Tu saldo actual: <strong>$$${user.balance}</strong>")
+        
+        HttpResponse(200, "OK", Map("Content-Type" -> "text/html; charset=UTF-8"), updatedHtml)
       case Left(resp) => resp
     }
   }
@@ -272,6 +375,51 @@ object ShopController {
         else {
           SessionCartRepo.clear(sessionId)
           HttpResponse.redirect("/shop?success=Compra+realizada+exitosamente")
+        }
+      case Left(resp) => resp
+    }
+  }
+
+  /** POST /shop/:id/purchase - Compra directa de un producto */
+  def purchaseItem(id: Long, request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        MediaRepo.find(id) match {
+          case Some(media) =>
+            // Calcular precio final con promoción si aplica (por producto O por categoría)
+            import java.time.LocalDateTime
+            val now = LocalDateTime.now()
+            val activePromotion = PromotionRepo.all.find { promo =>
+              val isActive = !promo.startDate.isAfter(now) && !promo.endDate.isBefore(now)
+              if (!isActive) false
+              else {
+                promo.targetType match {
+                  case PromotionTarget.Product => promo.targetIds.contains(media.id)
+                  case PromotionTarget.Category => 
+                    media.categoryId.exists(catId => promo.targetIds.contains(catId))
+                  case _ => false
+                }
+              }
+            }
+            
+            val finalPrice = activePromotion match {
+              case Some(promo) =>
+                val discount = promo.discountPercent
+                media.price * (100 - discount) / 100
+              case None =>
+                media.price
+            }
+            
+            models.UserRepo.deductBalance(user.id, finalPrice) match {
+              case Some(updatedUser) =>
+                // TODO: Registrar transacción en TransactionRepo cuando esté implementado
+                // TODO: Agregar media a UserDownloads cuando esté implementado
+                HttpResponse.redirect(s"/shop/${id}?success=Compra+realizada.+Nuevo+saldo:+$$${updatedUser.balance}")
+              case None =>
+                HttpResponse.redirect(s"/shop/${id}?error=Saldo+insuficiente.+Necesitas+$$${media.price},+tienes+$$${user.balance}")
+            }
+          case None =>
+            HttpResponse.redirect("/shop?error=Producto+no+encontrado")
         }
       case Left(resp) => resp
     }

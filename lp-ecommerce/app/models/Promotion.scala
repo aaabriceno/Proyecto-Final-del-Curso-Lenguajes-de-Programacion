@@ -1,6 +1,14 @@
 package models
 
 import java.time.LocalDateTime
+import org.mongodb.scala.Document
+import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Updates._
+import db.MongoConnection
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import org.mongodb.scala.bson.BsonDateTime
+import java.time.{ZoneId, Instant}
 
 // =======================================
 //   Tipos de objetivo de la promoción
@@ -78,54 +86,91 @@ case class Promotion(
 //   Repositorio de promociones
 // =======================================
 object PromotionRepo {
-  private var promotions: Vector[Promotion] = Vector.empty
-  private var nextId: Long = 1L
+  
+  private val collection = MongoConnection.Collections.promotions
 
-  // Bloque de inicialización
-  init()
+  // ========= CONVERSIONES DOCUMENT <-> PROMOTION =========
 
-  /** Carga inicial con promociones de ejemplo */
-  private def init(): Unit = synchronized {
-    val musicPromo = Promotion(
-      nextId,
-      "Black Friday Música",
-      "30% de descuento en toda la música",
-      30,
-      LocalDateTime.now().minusDays(1),
-      LocalDateTime.now().plusDays(5),
-      PromotionTarget.Category,
-      Vector(1L), // categoría "Música"
-      true
+  private def nextId(): Long = synchronized {
+    val docs = Await.result(collection.find().toFuture(), 5.seconds)
+    val maxId = if (docs.isEmpty) 0L else {
+      docs.map(doc => doc.getLong("_id").toLong).max
+    }
+    maxId + 1L
+  }
+
+  private def localDateTimeToEpoch(ldt: LocalDateTime): Long = {
+    ldt.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
+  }
+
+  private def epochToLocalDateTime(epoch: Long): LocalDateTime = {
+    LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault())
+  }
+
+  private def docToPromotion(doc: Document): Promotion = {
+    val targetIdsArray = try {
+      doc.getList("targetIds", classOf[java.lang.Long])
+        .toArray.map(_.asInstanceOf[java.lang.Long].toLong).toVector
+    } catch {
+      case _: Exception => Vector.empty[Long]
+    }
+
+    Promotion(
+      id = doc.getLong("_id"),
+      name = doc.getString("name"),
+      description = doc.getString("description"),
+      discountPercent = doc.getInteger("discountPercent"),
+      startDate = epochToLocalDateTime(doc("startDate").asInstanceOf[BsonDateTime].getValue),
+      endDate = epochToLocalDateTime(doc("endDate").asInstanceOf[BsonDateTime].getValue),
+      targetType = PromotionTarget.from(doc.getString("targetType")),
+      targetIds = targetIdsArray,
+      isActive = doc.getBoolean("isActive"),
+      createdAt = epochToLocalDateTime(doc("createdAt").asInstanceOf[BsonDateTime].getValue)
     )
-    promotions :+= musicPromo
-    nextId += 1
+  }
 
-    val futurePromo = Promotion(
-      nextId,
-      "Cyber Monday Videos",
-      "50% en todos los videos",
-      50,
-      LocalDateTime.now().plusDays(7),
-      LocalDateTime.now().plusDays(10),
-      PromotionTarget.MediaType,
-      Vector(2L), // tipo Video
-      true
-    )
-    promotions :+= futurePromo
-    nextId += 1
+  private def promotionToDoc(promotion: Promotion): Document = {
+    import org.mongodb.scala.bson.{BsonArray, BsonInt64, BsonDocument}
+    
+    val targetIdsArray = BsonArray(promotion.targetIds.map(id => BsonInt64(id)))
+    
+    val bsonDoc = new BsonDocument()
+    bsonDoc.append("_id", BsonInt64(promotion.id))
+    bsonDoc.append("name", org.mongodb.scala.bson.BsonString(promotion.name))
+    bsonDoc.append("description", org.mongodb.scala.bson.BsonString(promotion.description))
+    bsonDoc.append("discountPercent", org.mongodb.scala.bson.BsonInt32(promotion.discountPercent))
+    bsonDoc.append("startDate", BsonDateTime(localDateTimeToEpoch(promotion.startDate)))
+    bsonDoc.append("endDate", BsonDateTime(localDateTimeToEpoch(promotion.endDate)))
+    bsonDoc.append("targetType", org.mongodb.scala.bson.BsonString(promotion.targetType.asString))
+    bsonDoc.append("targetIds", targetIdsArray)
+    bsonDoc.append("isActive", org.mongodb.scala.bson.BsonBoolean(promotion.isActive))
+    bsonDoc.append("createdAt", BsonDateTime(localDateTimeToEpoch(promotion.createdAt)))
+    
+    Document(bsonDoc)
   }
 
   // =============================
   //   CONSULTAS
   // =============================
-  def all: Vector[Promotion] =
-    promotions.sortBy(_.startDate)(Ordering[LocalDateTime].reverse)
+  def all: Vector[Promotion] = {
+    val docs = Await.result(
+      collection.find().toFuture(),
+      5.seconds
+    )
+    docs.map(docToPromotion).toVector.sortBy(_.startDate)(Ordering[LocalDateTime].reverse)
+  }
 
-  def find(id: Long): Option[Promotion] =
-    promotions.find(_.id == id)
+  def find(id: Long): Option[Promotion] = {
+    val result = Await.result(
+      collection.find(equal("_id", id)).toFuture(),
+      5.seconds
+    )
+    result.headOption.map(docToPromotion)
+  }
 
-  def getActive: Vector[Promotion] =
-    promotions.view.filter(_.isCurrentlyActive).toVector
+  def getActive: Vector[Promotion] = {
+    all.filter(_.isCurrentlyActive)
+  }
 
   /** Promoción activa aplicable a un producto específico */
   def getActiveForProduct(mediaId: Long): Option[Promotion] =
@@ -176,10 +221,14 @@ object PromotionRepo {
     targetIds: Vector[Long]
   ): Promotion = synchronized {
     val safeDiscount = discountPercent.max(0).min(100)
-    val promotion = Promotion(nextId, name, description, safeDiscount,
+    val promotion = Promotion(nextId(), name, description, safeDiscount,
       startDate, endDate, targetType, targetIds, true)
-    promotions :+= promotion
-    nextId += 1
+    
+    Await.result(
+      collection.insertOne(promotionToDoc(promotion)).toFuture(),
+      5.seconds
+    )
+    println(s"✅ Promoción creada en MongoDB: ${promotion.name} (${promotion.discountPercent}% OFF)")
     promotion
   }
 
@@ -194,7 +243,7 @@ object PromotionRepo {
     targetIds: Vector[Long],
     isActive: Boolean
   ): Option[Promotion] = synchronized {
-    promotions.find(_.id == id).map { old =>
+    find(id).map { old =>
       val updated = old.copy(
         name = name,
         description = description,
@@ -205,21 +254,39 @@ object PromotionRepo {
         targetIds = targetIds,
         isActive = isActive
       )
-      promotions = promotions.map(p => if (p.id == id) updated else p)
+      Await.result(
+        collection.replaceOne(equal("_id", id), promotionToDoc(updated)).toFuture(),
+        5.seconds
+      )
+      println(s"✅ Promoción actualizada en MongoDB: ${updated.name}")
       updated
     }
   }
 
   def delete(id: Long): Boolean = synchronized {
-    val before = promotions.size
-    promotions = promotions.filterNot(_.id == id)
-    promotions.size < before
+    find(id) match {
+      case Some(promo) =>
+        Await.result(
+          collection.deleteOne(equal("_id", id)).toFuture(),
+          5.seconds
+        )
+        println(s"🗑️ Promoción eliminada: ${promo.name}")
+        true
+      case None => false
+    }
   }
 
   def toggleActive(id: Long): Option[Promotion] = synchronized {
-    promotions.find(_.id == id).map { promo =>
+    find(id).map { promo =>
       val updated = promo.copy(isActive = !promo.isActive)
-      promotions = promotions.map(p => if (p.id == id) updated else p)
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          set("isActive", updated.isActive)
+        ).toFuture(),
+        5.seconds
+      )
+      println(s"🔄 Promoción ${if (updated.isActive) "activada" else "desactivada"}: ${promo.name}")
       updated
     }
   }
@@ -229,9 +296,13 @@ object PromotionRepo {
   // =============================
   def countActive: Int = getActive.size
 
-  def countUpcoming: Int =
-    promotions.count(p => p.isActive && LocalDateTime.now().isBefore(p.startDate))
+  def countUpcoming: Int = {
+    val allPromotions = all
+    allPromotions.count(p => p.isActive && LocalDateTime.now().isBefore(p.startDate))
+  }
 
-  def countExpired: Int =
-    promotions.count(p => LocalDateTime.now().isAfter(p.endDate))
+  def countExpired: Int = {
+    val allPromotions = all
+    allPromotions.count(p => LocalDateTime.now().isAfter(p.endDate))
+  }
 }

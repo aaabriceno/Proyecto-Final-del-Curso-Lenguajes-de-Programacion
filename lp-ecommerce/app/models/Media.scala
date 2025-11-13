@@ -1,5 +1,12 @@
 package models
 
+import org.mongodb.scala.Document
+import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Updates._
+import db.MongoConnection
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
 /**
  * Tipos de medios disponibles
  */
@@ -30,8 +37,14 @@ case class Media(
   rating: Double,
   categoryId: Option[Long] = None,     // Categoría asociada
   assetPath: String,                   // Ruta del archivo (en /public/media/ o /public/images/)
-  stock: Int = 0                       // Stock disponible
+  coverImage: Option[String] = None,   // Imagen de portada (ruta a /assets/images/)
+  stock: Int = 0,                      // Stock disponible
+  promotionId: Option[Long] = None,    // ID de promoción asociada (si aplica)
+  isActive: Boolean = true             // Soft delete
 ) {
+
+  // Obtener imagen de portada o placeholder
+  def getCoverImageUrl: String = coverImage.getOrElse("/assets/images/placeholder.jpg")
 
   // ========= RELACIONES =========
 
@@ -85,40 +98,123 @@ case class Media(
  */
 object MediaRepo {
 
-  private var seq: Long = 0L
-  private def nextId(): Long = { seq += 1; seq }
+  private val collection = MongoConnection.Collections.media
 
-  // Seed inicial con ejemplos
-  private var data: Vector[Media] = Vector(
-    Media(nextId(), "Poster Aurora", "Póster en alta resolución",
-      MediaType.Image, 7.50, 4.6, Some(11), "images/poster_aurora.jpg", 25),
-    Media(nextId(), "Beat LoFi #12", "Pista LoFi 48kHz",
-      MediaType.Audio, 4.00, 4.8, Some(7), "media/audio/lofi12.mp3", 50),
-    Media(nextId(), "Corto City Rush", "Clip FullHD 30s",
-      MediaType.Video, 11.99, 4.4, Some(9), "media/video/city_rush.mp4", 8)
-  )
+  // ========= CONVERSIONES DOCUMENT <-> MEDIA =========
+
+  private def nextId(): Long = synchronized {
+    val docs = Await.result(collection.find().toFuture(), 5.seconds)
+    val maxId = if (docs.isEmpty) 0L else {
+      docs.map(doc => doc.getLong("_id").toLong).max
+    }
+    maxId + 1L
+  }
+
+  private def docToMedia(doc: Document): Media = {
+    // Extrae Long opcional de un campo del documento
+    def getLongOpt(fieldName: String): Option[Long] = {
+      try {
+        Some(doc.getLong(fieldName))
+      } catch {
+        case _: Exception => None
+      }
+    }
+    
+    // Extrae String opcional de un campo del documento
+    def getStringOpt(fieldName: String): Option[String] = {
+      try {
+        Option(doc.getString(fieldName))
+      } catch {
+        case _: Exception => None
+      }
+    }
+    
+    Media(
+      id = doc.getLong("_id"),
+      title = doc.getString("title"),
+      description = doc.getString("description"),
+      mtype = MediaType.from(doc.getString("mtype")),
+      price = BigDecimal(doc.getDouble("price")),
+      rating = doc.getDouble("rating"),
+      categoryId = getLongOpt("categoryId"),
+      assetPath = doc.getString("assetPath"),
+      coverImage = getStringOpt("coverImage"),
+      stock = doc.getInteger("stock"),
+      promotionId = getLongOpt("promotionId"),
+      isActive = doc.getBoolean("isActive")
+    )
+  }
+
+  private def mediaToDoc(media: Media): Document = {
+    val doc = Document(
+      "_id" -> media.id,
+      "title" -> media.title,
+      "description" -> media.description,
+      "mtype" -> media.mtype.asString,
+      "price" -> media.price.toDouble,
+      "rating" -> media.rating,
+      "assetPath" -> media.assetPath,
+      "stock" -> media.stock,
+      "isActive" -> media.isActive
+    )
+    // Agregar campos opcionales solo si están presentes
+    media.categoryId.foreach(cid => doc.append("categoryId", cid))
+    media.promotionId.foreach(pid => doc.append("promotionId", pid))
+    media.coverImage.foreach(img => doc.append("coverImage", img))
+    doc
+  }
 
   // ========= CONSULTAS =========
 
-  def all: Vector[Media] = data.sortBy(-_.downloads)
-  def find(id: Long): Option[Media] = data.find(_.id == id)
+  def all: Vector[Media] = {
+    val docs = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    )
+    docs.map(docToMedia).toVector.sortBy(-_.downloads)
+  }
+
+  def find(id: Long): Option[Media] = {
+    val result = Await.result(
+      collection.find(and(equal("_id", id), equal("isActive", true))).toFuture(),
+      5.seconds
+    )
+    result.headOption.map(docToMedia)
+  }
 
   def search(query: String): Vector[Media] = {
     val q = query.toLowerCase.trim
     if (q.isEmpty) all
-    else data.filter { m =>
-      m.title.toLowerCase.contains(q) ||
-      m.description.toLowerCase.contains(q) ||
-      m.id.toString == q
-    }.sortBy(-_.downloads)
+    else {
+      val allMedia = Await.result(
+        collection.find(equal("isActive", true)).toFuture(),
+        5.seconds
+      ).map(docToMedia).toVector
+      
+      allMedia.filter { m =>
+        m.title.toLowerCase.contains(q) ||
+        m.description.toLowerCase.contains(q) ||
+        m.id.toString == q
+      }.sortBy(-_.downloads)
+    }
   }
 
-  def filterByType(mtype: MediaType): Vector[Media] =
-    data.filter(_.mtype == mtype).sortBy(-_.downloads)
+  def filterByType(mtype: MediaType): Vector[Media] = {
+    val docs = Await.result(
+      collection.find(and(equal("mtype", mtype.asString), equal("isActive", true))).toFuture(),
+      5.seconds
+    )
+    docs.map(docToMedia).toVector.sortBy(-_.downloads)
+  }
 
   def filterByCategory(categoryId: Long): Vector[Media] = {
     val categoryIds = categoryId +: CategoryRepo.getAllDescendants(categoryId).map(_.id)
-    data.filter(m => m.categoryId.exists(categoryIds.contains)).sortBy(-_.downloads)
+    val allMedia = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    ).map(docToMedia).toVector
+    
+    allMedia.filter(m => m.categoryId.exists(categoryIds.contains)).sortBy(-_.downloads)
   }
 
   def searchAdvanced(
@@ -126,7 +222,12 @@ object MediaRepo {
     mtype: Option[MediaType] = None,
     categoryId: Option[Long] = None
   ): Vector[Media] = {
-    var results = data
+    val allMedia = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    ).map(docToMedia).toVector
+    
+    var results = allMedia
 
     mtype.foreach(t => results = results.filter(_.mtype == t))
     categoryId.foreach { cid =>
@@ -146,63 +247,145 @@ object MediaRepo {
 
   // ========= ESTADÍSTICAS =========
 
-  def totalProducts: Int = data.size
+  def totalProducts: Int = {
+    val docs = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    )
+    docs.size
+  }
+  
   def totalRevenue: BigDecimal = DownloadRepo.totalRevenue
-  def averagePrice: BigDecimal =
-    if (data.nonEmpty) data.map(_.price).sum / BigDecimal(data.size) else BigDecimal(0.0)
-  def averageRating: Double =
-    if (data.nonEmpty) data.map(_.rating).sum / data.size else 0.0
+  
+  def averagePrice: BigDecimal = {
+    val allMedia = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    ).map(docToMedia).toVector
+    
+    if (allMedia.nonEmpty) allMedia.map(_.price).sum / BigDecimal(allMedia.size) 
+    else BigDecimal(0.0)
+  }
+  
+  def averageRating: Double = {
+    val allMedia = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    ).map(docToMedia).toVector
+    
+    if (allMedia.nonEmpty) allMedia.map(_.rating).sum / allMedia.size 
+    else 0.0
+  }
+  
   def totalDownloads: Int = DownloadRepo.totalDownloads
-  def countByType(mtype: MediaType): Int = data.count(_.mtype == mtype)
-  def topProducts(limit: Int = 5): Vector[Media] = data.sortBy(-_.downloads).take(limit)
+  
+  def countByType(mtype: MediaType): Int = {
+    val docs = Await.result(
+      collection.find(and(equal("mtype", mtype.asString), equal("isActive", true))).toFuture(),
+      5.seconds
+    )
+    docs.size
+  }
+  
+  def topProducts(limit: Int = 5): Vector[Media] = {
+    val allMedia = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    ).map(docToMedia).toVector
+    
+    allMedia.sortBy(-_.downloads).take(limit)
+  }
 
   // ========= CRUD ADMIN =========
 
   def add(title: String, description: String, mtype: MediaType,
           price: BigDecimal, categoryId: Option[Long], assetPath: String,
-          stock: Int = 0): Media = synchronized {
-    val media = Media(nextId(), title, description, mtype, price, 0.0, categoryId, assetPath, stock)
-    data :+= media
+          coverImage: Option[String] = None,
+          stock: Int = 0, promotionId: Option[Long] = None): Media = synchronized {
+    val media = Media(nextId(), title, description, mtype, price, 0.0, categoryId, assetPath, coverImage, stock, promotionId)
+    Await.result(
+      collection.insertOne(mediaToDoc(media)).toFuture(),
+      5.seconds
+    )
+    println(s"✅ Producto creado en MongoDB: ${media.title} (ID: ${media.id})")
     media
   }
 
   def update(id: Long, title: String, description: String, mtype: MediaType,
              price: BigDecimal, categoryId: Option[Long], assetPath: String,
-             stock: Int): Option[Media] = synchronized {
-    data.find(_.id == id).map { oldMedia =>
-      val updated = oldMedia.copy(title = title, description = description,
-        mtype = mtype, price = price, categoryId = categoryId,
-        assetPath = assetPath, stock = stock)
-      data = data.map(m => if (m.id == id) updated else m)
+             coverImage: Option[String] = None,
+             stock: Int, promotionId: Option[Long] = None): Option[Media] = synchronized {
+    find(id).map { oldMedia =>
+      val updated = oldMedia.copy(
+        title = title, 
+        description = description,
+        mtype = mtype, 
+        price = price, 
+        categoryId = categoryId,
+        assetPath = assetPath,
+        coverImage = coverImage,
+        stock = stock,
+        promotionId = promotionId
+      )
+      
+      Await.result(
+        collection.replaceOne(equal("_id", id), mediaToDoc(updated)).toFuture(),
+        5.seconds
+      )
+      println(s"✅ Producto actualizado en MongoDB: ${updated.title} (ID: ${id})")
       updated
     }
   }
 
   def reduceStock(id: Long, quantity: Int): Either[String, Media] = synchronized {
-    data.find(_.id == id) match {
+    find(id) match {
       case None => Left("Producto no encontrado")
       case Some(media) =>
         if (media.stock < quantity)
           Left(s"Stock insuficiente. Solo quedan ${media.stock} unidades disponibles")
         else {
           val updated = media.copy(stock = media.stock - quantity)
-          data = data.map(m => if (m.id == id) updated else m)
+          Await.result(
+            collection.updateOne(
+              equal("_id", id),
+              set("stock", updated.stock)
+            ).toFuture(),
+            5.seconds
+          )
+          println(s"📦 Stock reducido: ${media.title} (-${quantity}, quedan ${updated.stock})")
           Right(updated)
         }
     }
   }
 
   def addStock(id: Long, quantity: Int): Option[Media] = synchronized {
-    data.find(_.id == id).map { media =>
+    find(id).map { media =>
       val updated = media.copy(stock = media.stock + quantity)
-      data = data.map(m => if (m.id == id) updated else m)
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          set("stock", updated.stock)
+        ).toFuture(),
+        5.seconds
+      )
+      println(s"📦 Stock agregado: ${media.title} (+${quantity}, total ${updated.stock})")
       updated
     }
   }
 
   def delete(id: Long): Boolean = synchronized {
-    val sizeBefore = data.size
-    data = data.filterNot(_.id == id)
-    data.size < sizeBefore
+    find(id) match {
+      case Some(media) =>
+        Await.result(
+          collection.updateOne(
+            equal("_id", id),
+            set("isActive", false)
+          ).toFuture(),
+          5.seconds
+        )
+        println(s"🗑️ Producto eliminado (soft delete): ${media.title} (ID: ${id})")
+        true
+      case None => false
+    }
   }
 }

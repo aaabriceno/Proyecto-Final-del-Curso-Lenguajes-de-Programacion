@@ -1,21 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Montserrat', Arial, sans-serif; }
+html, body { 
+  height: 100%; 
+  background-color: #f8f9fa; /* Fondo claro por defecto */
+  color: #333; /* Texto oscuro por defecto */
+}
+body { 
+  margin: 0; 
+  font-family: 'Montserrat', Arial, sans-serif; 
+}
 
-.hero {
+/* Solo aplicar hero en la página de inicio */
+.hero-home {
   min-height: 100vh;
   position: relative;
   background: url("/assets/images/hero-bg.jpg") center/cover no-repeat fixed;
   color: #fff;
 }
-.hero .overlay {
+.hero-home .overlay {
   position: absolute; inset: 0; background: rgba(0,0,0,.55);
 }
-.hero .hero-content {
+.hero-home .hero-content {
   position: relative; z-index: 1; padding: 2rem;
   animation: fadeUp .8s ease-out both;
 }
+
+/* Para otras páginas, fondo claro */
+.hero {
+  background: #f8f9fa;
+  color: #333;
+  min-height: auto;
+}
+.hero .overlay {
+  background: transparent;
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
