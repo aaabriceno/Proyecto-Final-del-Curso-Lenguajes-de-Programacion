@@ -1,5 +1,12 @@
 package models
 
+import org.mongodb.scala.Document
+import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Updates._
+import db.MongoConnection
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
 /**
  * Modelo que representa una categoría jerárquica (puede tener subcategorías)
  */
@@ -7,7 +14,8 @@ case class Category(
   id: Long,
   name: String,
   parentId: Option[Long] = None, // None = categoría raíz
-  description: String = ""
+  description: String = "",
+  isActive: Boolean = true       // Soft delete
 )
 
 /**
@@ -16,53 +24,82 @@ case class Category(
  */
 object CategoryRepo {
 
-  private var seq: Long = 0L
-  private def nextId(): Long = { seq += 1; seq }
+  private val collection = MongoConnection.Collections.categories
 
-  // Datos iniciales (semilla)
-  private var data: Vector[Category] = Vector(
-    // Categorías raíz
-    Category(nextId(), "Música", None, "Contenido musical de todo tipo"),
-    Category(nextId(), "Video", None, "Contenido audiovisual"),
-    Category(nextId(), "Diseño", None, "Imágenes y recursos gráficos"),
+  // ========= CONVERSIONES DOCUMENT <-> CATEGORY =========
 
-    // Subcategorías de Música
-    Category(nextId(), "LoFi", Some(1), "Música LoFi y chill"),
-    Category(nextId(), "Electrónica", Some(1), "Música electrónica"),
-    Category(nextId(), "Rock", Some(1), "Rock y metal"),
+  private def nextId(): Long = synchronized {
+    val docs = Await.result(collection.find().toFuture(), 5.seconds)
+    val maxId = if (docs.isEmpty) 0L else {
+      docs.map(doc => doc.getLong("_id").toLong).max
+    }
+    maxId + 1L
+  }
 
-    // Sub-subcategorías de LoFi
-    Category(nextId(), "Beats", Some(4), "Beats instrumentales LoFi"),
-    Category(nextId(), "Ambient", Some(4), "Ambient y atmosférico"),
+  private def getLongOpt(doc: Document, fieldName: String): Option[Long] = {
+    try {
+      Some(doc.getLong(fieldName))
+    } catch {
+      case _: Exception => None
+    }
+  }
 
-    // Subcategorías de Video
-    Category(nextId(), "Cortos", Some(2), "Cortometrajes y clips"),
-    Category(nextId(), "Documentales", Some(2), "Documentales"),
+  private def docToCategory(doc: Document): Category = {
+    Category(
+      id = doc.getLong("_id"),
+      name = doc.getString("name"),
+      parentId = getLongOpt(doc, "parentId"),
+      description = doc.getString("description"),
+      isActive = doc.getBoolean("isActive")
+    )
+  }
 
-    // Subcategorías de Diseño
-    Category(nextId(), "Pósters", Some(3), "Pósters y carteles"),
-    Category(nextId(), "Fotografía", Some(3), "Fotografía profesional"),
-    Category(nextId(), "Ilustraciones", Some(3), "Ilustraciones digitales")
-  )
+  private def categoryToDoc(category: Category): Document = {
+    val doc = Document(
+      "_id" -> category.id,
+      "name" -> category.name,
+      "description" -> category.description,
+      "isActive" -> category.isActive
+    )
+    // Agregar parentId solo si existe
+    category.parentId.foreach(pid => doc.append("parentId", pid))
+    doc
+  }
 
   // ==============================
   // CONSULTAS
   // ==============================
 
-  def all: Vector[Category] =
-    data.sortBy(c => (c.parentId.getOrElse(0L), c.name))
+  def all: Vector[Category] = {
+    val docs = Await.result(
+      collection.find(equal("isActive", true)).toFuture(),
+      5.seconds
+    )
+    docs.map(docToCategory).toVector.sortBy(c => (c.parentId.getOrElse(0L), c.name))
+  }
 
-  def find(id: Long): Option[Category] =
-    data.find(_.id == id)
+  def find(id: Long): Option[Category] = {
+    val result = Await.result(
+      collection.find(and(equal("_id", id), equal("isActive", true))).toFuture(),
+      5.seconds
+    )
+    result.headOption.map(docToCategory)
+  }
 
-  def getRoots: Vector[Category] =
-    data.filter(_.parentId.isEmpty).sortBy(_.name)
+  def getRoots: Vector[Category] = {
+    val allCategories = all
+    allCategories.filter(_.parentId.isEmpty).sortBy(_.name)
+  }
 
-  def getChildren(parentId: Long): Vector[Category] =
-    data.filter(_.parentId.contains(parentId)).sortBy(_.name)
+  def getChildren(parentId: Long): Vector[Category] = {
+    val allCategories = all
+    allCategories.filter(_.parentId.contains(parentId)).sortBy(_.name)
+  }
 
-  def hasChildren(categoryId: Long): Boolean =
-    data.exists(_.parentId.contains(categoryId))
+  def hasChildren(categoryId: Long): Boolean = {
+    val allCategories = all
+    allCategories.exists(_.parentId.contains(categoryId))
+  }
 
   /** Retorna la jerarquía completa (breadcrumb) desde la raíz */
   def getBreadcrumb(categoryId: Long): Vector[Category] = {
@@ -76,7 +113,7 @@ object CategoryRepo {
         case None => acc
       }
     }
-    buildPath(categoryId, Vector.empty).reverse
+    buildPath(categoryId, Vector.empty)  // SIN .reverse - ya está en orden correcto
   }
 
   /** Retorna el árbol completo de categorías junto con la profundidad */
@@ -106,13 +143,40 @@ object CategoryRepo {
   // CRUD
   // ==============================
 
+  /** Crear categoría con ID específico (para scripts de inicialización) */
+  def create(category: Category): Category = synchronized {
+    category.parentId.foreach { pid =>
+      require(find(pid).isDefined, s"Categoría padre $pid no existe")
+    }
+
+    Await.result(
+      collection.insertOne(categoryToDoc(category)).toFuture(),
+      5.seconds
+    )
+    println(s"✅ Categoría creada: ${category.name} (ID: ${category.id})")
+    category
+  }
+
+  /** Eliminar TODAS las categorías (para scripts de reorganización) */
+  def deleteAll(): Unit = synchronized {
+    Await.result(
+      collection.deleteMany(Document()).toFuture(),
+      5.seconds
+    )
+    println(s"🗑️  Todas las categorías eliminadas")
+  }
+
   def add(name: String, parentId: Option[Long], description: String = ""): Category = synchronized {
     parentId.foreach { pid =>
       require(find(pid).isDefined, s"Categoría padre $pid no existe")
     }
 
     val category = Category(nextId(), name, parentId, description)
-    data :+= category
+    Await.result(
+      collection.insertOne(categoryToDoc(category)).toFuture(),
+      5.seconds
+    )
+    println(s"✅ Categoría creada en MongoDB: ${category.name} (ID: ${category.id})")
     category
   }
 
@@ -128,9 +192,13 @@ object CategoryRepo {
       require(find(pid).isDefined, s"Categoría padre $pid no existe")
     }
 
-    data.find(_.id == id).map { oldCategory =>
+    find(id).map { oldCategory =>
       val updated = oldCategory.copy(name = name, parentId = parentId, description = description)
-      data = data.map(c => if (c.id == id) updated else c)
+      Await.result(
+        collection.replaceOne(equal("_id", id), categoryToDoc(updated)).toFuture(),
+        5.seconds
+      )
+      println(s"✅ Categoría actualizada en MongoDB: ${updated.name} (ID: ${id})")
       updated
     }
   }
@@ -142,14 +210,27 @@ object CategoryRepo {
     if (MediaRepo.all.exists(_.categoryId.contains(id)))
       throw new IllegalArgumentException("No se puede eliminar una categoría con productos")
 
-    val before = data.size
-    data = data.filterNot(_.id == id)
-    data.size < before
+    find(id) match {
+      case Some(category) =>
+        Await.result(
+          collection.updateOne(
+            equal("_id", id),
+            set("isActive", false)
+          ).toFuture(),
+          5.seconds
+        )
+        println(s"🗑️ Categoría eliminada (soft delete): ${category.name} (ID: ${id})")
+        true
+      case None => false
+    }
   }
 
   def search(query: String): Vector[Category] = {
     val q = query.toLowerCase.trim
     if (q.isEmpty) all
-    else data.filter(c => c.name.toLowerCase.contains(q) || c.description.toLowerCase.contains(q))
+    else {
+      val allCategories = all
+      allCategories.filter(c => c.name.toLowerCase.contains(q) || c.description.toLowerCase.contains(q))
+    }
   }
 }

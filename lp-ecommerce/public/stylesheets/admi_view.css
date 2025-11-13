@@ -1,3 +1,23 @@
+/* Override estilos oscuros globales */
+body {
+    background-color: #f8f9fa !important;
+    color: #333 !important;
+}
+
+.hero {
+    background: #f8f9fa !important;
+    min-height: auto !important;
+}
+
+.hero .overlay {
+    background: transparent !important;
+}
+
+/* Asegurar texto visible */
+h1, h2, h3, h4, h5, h6, p, span, label, div, td, th {
+    color: #333 !important;
+}
+
 /* Estilo general del layout de búsqueda */
 .container .search-layout {
     padding: 20px;

@@ -120,7 +120,14 @@ object AuthController {
       case Failure(e) => s"<h3>Error cargando vista de registro: ${e.getMessage}</h3>"
     }
 
-    HttpResponse.ok(html)
+    val response = HttpResponse.ok(html)
+    
+    // Si no hay sessionId en cookies, agregarlo
+    if (!request.cookies.contains("sessionId")) {
+      response.withCookie("sessionId", sessionId, maxAge = Some(86400))
+    } else {
+      response
+    }
   }
 
   /** POST /register */

@@ -1,18 +1,35 @@
 /* General styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f7fa;
+    background-color: #f4f7fa !important;
     margin: 0;
     padding: 0;
+    color: #333 !important; /* Asegurar texto oscuro */
+}
+
+/* Override fearless.css dark backgrounds */
+.hero {
+    background: #f4f7fa !important;
+    min-height: auto !important;
+}
+
+.hero .overlay {
+    background: transparent !important;
 }
 
 .user-account-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: #fff !important;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333 !important;
+}
+
+/* Asegurar que todo el texto sea visible */
+h1, h2, h3, h4, h5, h6, p, span, label, div {
+    color: #333 !important;
 }
 
 h2, p {

@@ -2,6 +2,12 @@ package models
 
 import java.security.MessageDigest
 import java.util.Base64
+import org.mongodb.scala._
+import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.Updates._
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import db.MongoConnection
 
 /**
  * Representa un usuario del sistema (cliente o administrador).
@@ -19,7 +25,7 @@ case class User(
 )
 
 /**
- * Repositorio en memoria para la gestión de usuarios.
+ * Repositorio con MongoDB para la gestión de usuarios.
  * Implementa autenticación, saldo y control de acceso.
  */
 object UserRepo {
@@ -38,35 +44,97 @@ object UserRepo {
     hashPassword(password) == hash
 
   // =====================================================
-  //  📦 Almacenamiento en memoria
+  //  📦 Acceso a la colección de MongoDB
   // =====================================================
 
-  private var seq: Long = 0L
-  private def nextId(): Long = { seq += 1; seq }
+  private val collection = MongoConnection.Collections.users
 
-  private var users: Vector[User] = Vector(
-    User(nextId(), "Admin", "admin@lpstudios.com", "999999999", hashPassword("admin123"), isAdmin = true)
-  )
+  // Generador de IDs
+  private def nextId(): Long = synchronized {
+    val docs = Await.result(collection.find().toFuture(), 5.seconds)
+    val maxId = if (docs.isEmpty) 0L else {
+      docs.map(doc => doc.getLong("_id").toLong).max
+    }
+    maxId + 1L
+  }
+
+  // =====================================================
+  //  🔄 Conversión Document ↔ User
+  // =====================================================
+
+  private def docToUser(doc: Document): User = {
+    User(
+      id = doc.getLong("_id"),
+      name = doc.getString("name"),
+      email = doc.getString("email"),
+      phone = doc.getString("phone"),
+      passwordHash = doc.getString("password"),
+      isAdmin = doc.getBoolean("isAdmin"),
+      isActive = doc.getBoolean("isActive"),
+      balance = BigDecimal(doc.getDouble("balance")),
+      totalSpent = BigDecimal(doc.getDouble("totalSpent"))
+    )
+  }
+
+  private def userToDoc(user: User): Document = {
+    Document(
+      "_id" -> user.id,
+      "name" -> user.name,
+      "email" -> user.email,
+      "phone" -> user.phone,
+      "password" -> user.passwordHash,
+      "isAdmin" -> user.isAdmin,
+      "isActive" -> user.isActive,
+      "balance" -> user.balance.toDouble,
+      "totalSpent" -> user.totalSpent.toDouble
+    )
+  }
 
   // =====================================================
   //  🔍 Consultas
   // =====================================================
 
-  def all: Vector[User] = users
+  def all: Vector[User] = {
+    val docs = Await.result(collection.find().toFuture(), 5.seconds)
+    docs.map(docToUser).toVector
+  }
 
-  def findByEmail(email: String): Option[User] =
-    users.find(_.email.equalsIgnoreCase(email.trim))
+  def findByEmail(email: String): Option[User] = {
+    val result = Await.result(
+      collection.find(equal("email", email.trim.toLowerCase)).toFuture(),
+      5.seconds
+    )
+    result.headOption.map(docToUser)
+  }
 
-  def findById(id: Long): Option[User] =
-    users.find(_.id == id)
+  def findById(id: Long): Option[User] = {
+    val result = Await.result(
+      collection.find(equal("_id", id)).toFuture(),
+      5.seconds
+    )
+    result.headOption.map(docToUser)
+  }
 
   // =====================================================
   //  ➕ Registro de usuario
   // =====================================================
 
   def add(name: String, email: String, phone: String, password: String, isAdmin: Boolean = false): User = synchronized {
-    val user = User(nextId(), name.trim, email.trim, phone.trim, hashPassword(password), isAdmin = isAdmin)
-    users :+= user
+    val user = User(
+      id = nextId(),
+      name = name.trim,
+      email = email.trim.toLowerCase,
+      phone = phone.trim,
+      passwordHash = hashPassword(password),
+      isAdmin = isAdmin
+    )
+    
+    Await.result(
+      collection.insertOne(userToDoc(user)).toFuture(),
+      5.seconds
+    )
+    
+    println(s"✅ Usuario creado en MongoDB: ${user.email} (ID: ${user.id})")
     user
   }
 
@@ -82,9 +150,18 @@ object UserRepo {
   // =====================================================
 
   def toggleActive(id: Long): Option[User] = synchronized {
-    users.find(_.id == id).map { user =>
+    findById(id).map { user =>
       val updated = user.copy(isActive = !user.isActive)
-      users = users.map(u => if (u.id == id) updated else u)
+      
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          set("isActive", updated.isActive)
+        ).toFuture(),
+        5.seconds
+      )
+      
+      println(s"✅ Usuario ${id} actualizado: isActive = ${updated.isActive}")
       updated
     }
   }
@@ -95,32 +172,56 @@ object UserRepo {
 
   /** Añadir saldo a un usuario (usado por admin o BalanceRequestRepo.approve) */
   def addBalance(id: Long, amount: BigDecimal): Option[User] = synchronized {
-    users.find(_.id == id).map { user =>
+    findById(id).map { user =>
       val updated = user.copy(balance = user.balance + amount)
-      users = users.map(u => if (u.id == id) updated else u)
+      
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          set("balance", updated.balance.toDouble)
+        ).toFuture(),
+        5.seconds
+      )
+      
+      println(s"💰 Saldo añadido a usuario ${id}: +$${amount} = $${updated.balance}")
       updated
     }
   }
 
   /** Descontar saldo tras una compra */
   def deductBalance(id: Long, amount: BigDecimal): Option[User] = synchronized {
-    users.find(_.id == id).flatMap { user =>
+    findById(id).flatMap { user =>
       if (user.balance >= amount) {
         val updated = user.copy(
           balance = user.balance - amount,
           totalSpent = user.totalSpent + amount
         )
-        users = users.map(u => if (u.id == id) updated else u)
+        
+        Await.result(
+          collection.updateOne(
+            equal("_id", id),
+            combine(
+              set("balance", updated.balance.toDouble),
+              set("totalSpent", updated.totalSpent.toDouble)
+            )
+          ).toFuture(),
+          5.seconds
+        )
+        
+        println(s"💸 Compra procesada usuario ${id}: -$${amount}, total gastado: $${updated.totalSpent}")
         Some(updated)
-      } else None
+      } else {
+        println(s"❌ Saldo insuficiente usuario ${id}: tiene $${user.balance}, necesita $${amount}")
+        None
+      }
     }
   }
 
   /** Consultar saldo actual */
   def getBalance(id: Long): Option[BigDecimal] =
-    users.find(_.id == id).map(_.balance)
+    findById(id).map(_.balance)
 
   /** Consultar total gastado (para descuento VIP) */
   def getTotalSpent(id: Long): Option[BigDecimal] =
-    users.find(_.id == id).map(_.totalSpent)
+    findById(id).map(_.totalSpent)
 }

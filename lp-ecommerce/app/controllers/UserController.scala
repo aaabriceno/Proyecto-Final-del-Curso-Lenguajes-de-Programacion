@@ -38,6 +38,7 @@ object UserController {
       case Right(user) =>
         val projectDir = System.getProperty("user.dir")
         val path = s"$projectDir/app/views/user_account.html"
+        val sessionId = request.cookies.getOrElse("sessionId", "")
         
         Try(Source.fromFile(path, "UTF-8").mkString) match {
           case Success(html) =>
@@ -48,6 +49,7 @@ object UserController {
               .replace("+123456789", escapeHtml(user.phone))
               .replace("$500.00", s"$$${user.balance}")
               .replace("$200.00", s"$$${user.totalSpent}")
+              .replace("<!-- CSRF_TOKEN_PLACEHOLDER -->", session.CsrfProtection.hiddenFieldHtml(sessionId))
             
             val response = HttpResponse.ok(updatedHtml)
             if (request.cookies.contains("sessionId")) {
@@ -137,14 +139,24 @@ object UserController {
   def createBalanceRequest(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
       case Right(user) =>
+        val csrfToken = request.formData.getOrElse("csrfToken", "")
+        val sessionId = request.cookies.getOrElse("sessionId", "")
+        
+        // 🔒 Validación CSRF obligatoria
+        if (!session.CsrfProtection.validateToken(sessionId, csrfToken))
+          return HttpResponse.redirect(
+            "/user/account?error=" + URLEncoder.encode("Token CSRF inválido", "UTF-8")
+          )
+        
         val amount = request.formData.get("amount").flatMap(_.toDoubleOption).getOrElse(0.0)
+        val paymentMethod = request.formData.getOrElse("payment_method", "transferencia")
 
         if (amount <= 0)
           return HttpResponse.redirect(
             "/user/account?error=" + URLEncoder.encode("Monto inválido", "UTF-8")
           )
 
-        BalanceRequestRepo.add(user.id, BigDecimal(amount), "transferencia")
+        BalanceRequestRepo.add(user.id, BigDecimal(amount), paymentMethod)
 
         HttpResponse.redirect(
           "/user/account?success=" + URLEncoder.encode(

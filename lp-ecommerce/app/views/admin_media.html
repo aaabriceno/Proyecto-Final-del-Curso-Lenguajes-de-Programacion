@@ -95,7 +95,7 @@
                 <tr>
                   <th>ID</th>
                   <th>Título</th>
-                  <th>Tipo</th>
+                  <th>Categoría</th>
                   <th>Precio</th>
                   <th>Rating ⭐</th>
                   <th>Descargas 📥</th>
@@ -180,7 +180,7 @@
           <tr>
             <td>${product.id}</td>
             <td><strong>${product.title}</strong></td>
-            <td><span class="badge bg-info">${product.mediaType}</span></td>
+            <td><span class="badge bg-secondary text-wrap text-start" style="max-width: 250px;">${product.categoryPath || 'Sin categoría'}</span></td>
             <td>$${product.price}</td>
             <td>${product.rating} ⭐</td>
             <td>${product.downloadCount} 📥</td>

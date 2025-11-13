@@ -167,8 +167,15 @@
         // Generar cards de productos
         grid.innerHTML = products.map(product => `
           <div class="col-12 col-sm-6 col-lg-4">
-            <div class="card bg-dark border-secondary h-100 shadow-sm">
-              <img src="https://via.placeholder.com/400x300/1a1a2e/eee?text=${encodeURIComponent(product.title)}" 
+            <div class="card bg-dark border-secondary h-100 shadow-sm position-relative">
+              ${product.hasPromotion ? `
+                <div class="position-absolute top-0 end-0 m-2">
+                  <span class="badge bg-danger fs-6 shadow">
+                    🔥 ${product.discountPercent}% OFF
+                  </span>
+                </div>
+              ` : ''}
+              <img src="${product.coverImage}" 
                    class="card-img-top" 
                    alt="${product.title}"
                    style="height: 200px; object-fit: cover;">
@@ -184,7 +191,14 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-semibold fs-5 text-success">$${product.price}</span>
+                  ${product.hasPromotion ? `
+                    <div>
+                      <span class="text-secondary text-decoration-line-through small d-block">Antes: $${product.price}</span>
+                      <span class="fw-bold fs-5 text-warning">Ahora: $${product.discountedPrice.toFixed(2)}</span>
+                    </div>
+                  ` : `
+                    <span class="fw-semibold fs-5 text-success">$${product.price}</span>
+                  `}
                   <div class="btn-group">
                     <a class="btn btn-outline-info btn-sm" href="/shop/${product.id}" title="Ver detalles">👁️</a>
                     <button class="btn btn-primary btn-sm ${product.stock <= 0 ? 'disabled' : ''}" 
@@ -212,9 +226,28 @@
       }
     }
     
-    function addToCart(productId) {
-      // TODO: Implementar agregar al carrito
-      alert(`Producto ${productId} agregado al carrito`);
+    async function addToCart(productId) {
+      try {
+        const response = await fetch('/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `mediaId=${productId}`,
+          redirect: 'follow'
+        });
+        
+        if (response.ok || response.redirected) {
+          alert(`✅ Producto ${productId} agregado al carrito`);
+          // NO redirigir automáticamente - el usuario puede seguir navegando
+        } else {
+          const text = await response.text();
+          alert(`❌ Error: ${text}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert(`❌ Error al agregar al carrito`);
+      }
     }
     
     // Cargar al inicio

@@ -1,3 +1,25 @@
+error id: file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/http/HttpServer.scala:java/net/InetAddress#getByName().
+file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/http/HttpServer.scala
+empty definition using pc, found symbol in pc: java/net/InetAddress#getByName().
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -java/net/InetAddress.getByName.
+	 -java/net/InetAddress.getByName#
+	 -java/net/InetAddress.getByName().
+	 -scala/jdk/CollectionConverters.InetAddress.getByName.
+	 -scala/jdk/CollectionConverters.InetAddress.getByName#
+	 -scala/jdk/CollectionConverters.InetAddress.getByName().
+	 -InetAddress.getByName.
+	 -InetAddress.getByName#
+	 -InetAddress.getByName().
+	 -scala/Predef.InetAddress.getByName.
+	 -scala/Predef.InetAddress.getByName#
+	 -scala/Predef.InetAddress.getByName().
+offset: 1862
+uri: file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/http/HttpServer.scala
+text:
+```scala
 package http
 
 import java.net.{ServerSocket, Socket, InetAddress, NetworkInterface}
@@ -51,7 +73,7 @@ object HttpServer {
     println()
 
     // Crear ServerSocket que acepta conexiones de cualquier IP (0.0.0.0)
-    Try(new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"))) match {
+    Try(new ServerSocket(PORT, 50, InetAddress.getByNam@@e("0.0.0.0"))) match {
       case scala.util.Success(socket) =>
         serverSocket = Some(socket)
         running = true
@@ -125,3 +147,10 @@ object HttpServer {
     }
   }
 }
+
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: java/net/InetAddress#getByName().

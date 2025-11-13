@@ -1,380 +1,310 @@
 // ============================================================
-// [IDF-0010] Editar y actualizar un contenido multimedia
+// Editar producto - Selector en cascada de categorías
 // ============================================================
+
+let allCategories = [];
+let currentProduct = null;
+
 document.addEventListener("DOMContentLoaded", () => {
-  const fileInput = document.getElementById("fileInput");
-  const fileNameSpan = document.getElementById("file-name");
-  const previewContainer = document.getElementById("preview-container");
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  // Extraer ID de la URL: /admin/media/3/edit -> 3
+  const pathParts = window.location.pathname.split('/');
+  const productId = pathParts[pathParts.length - 2]; // El ID está antes de "edit"
 
-  // ------------------------------------------------------------
-  // Cargar datos del contenido si hay un ID
-  // ------------------------------------------------------------
-  if (id) loadContentData(id);
+  if (!productId || isNaN(productId)) {
+    alert("Error: No se especificó un ID de producto válido");
+    window.location.href = "/admin/media";
+    return;
+  }
 
-  // ------------------------------------------------------------
-  // Vista previa de archivo nuevo
-  // ------------------------------------------------------------
-  fileInput.addEventListener("change", handleFilePreview);
-
-  // ------------------------------------------------------------
-  // Enviar datos del formulario
-  // ------------------------------------------------------------
-  document.getElementById("content-form").addEventListener("submit", e => {
-    e.preventDefault();
-    enviarFormulario(id);
+  // Cargar categorías primero
+  loadCategories().then(() => {
+    // Luego cargar datos del producto
+    loadProductData(productId);
+    // Configurar eventos de cascada
+    setupCascadeSelectors();
   });
 
-  // ------------------------------------------------------------
-  // Configurar botones de categorías y promociones
-  // ------------------------------------------------------------
-  setupPromoControls(id);
-  setupCategoryControls(id);
-  del_button(id);
+  // Manejar envío del formulario
+  document.getElementById("edit-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    saveProduct(productId);
+  });
 });
 
 // ============================================================
-// [IDF-0010-A] Cargar información del contenido por ID
+// Cargar todas las categorías
 // ============================================================
-function loadContentData(id) {
-  fetch("/get_content_by_id", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (!data) {
-        previewContainer.innerHTML = "<p>No se encontró el item.</p>";
-        return;
-      }
-
-      document.getElementById("content-type").value = data.type;
-      document.getElementById("content-title").value = data.title;
-      document.getElementById("content-author").value = data.author;
-
-      const priceStr = String(data.price);
-      document.getElementById("content-price-view").innerHTML = `Precio actual: ${priceStr}`;
-
-      const match = priceStr.match(/<s>(.*?)<\/s>/);
-      const cleanPrice = match && match[1] ? match[1] : priceStr.replace(/<[^>]*>/g, "");
-      document.getElementById("content-price").value = cleanPrice;
-
-      document.getElementById("content-category").value = data.category;
-      document.getElementById("content-description").value = data.description;
-      document.getElementById("send-eliminar").textContent = data.estado === "desactivado" ? "Restaurar" : "Eliminar";
-
-      fileNameSpan.textContent = `Archivo cargado: ${data.title}`;
-      renderPreview(data);
-    })
-    .catch(err => {
-      console.error("Error obteniendo el item:", err);
-      previewContainer.innerHTML = "<p>Error cargando el contenido.</p>";
+async function loadCategories() {
+  try {
+    const response = await fetch("/api/categories");
+    const data = await response.json();
+    allCategories = data.categories;
+    
+    // Llenar nivel 1 (raíz)
+    const level1Select = document.getElementById("level1-select");
+    const level1Categories = allCategories.filter(cat => cat.level === 0);
+    
+    level1Categories.forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat.id;
+      option.textContent = cat.name;
+      option.dataset.level = cat.level;
+      level1Select.appendChild(option);
     });
-}
-
-// ============================================================
-// [IDF-0010-B] Renderiza vista previa del contenido
-// ============================================================
-function renderPreview(data) {
-  previewContainer.innerHTML = "";
-  const { type, src } = data;
-  const media = document.createElement(type === "imagen" ? "img" : type);
-
-  media.src = src;
-  media.controls = type !== "imagen";
-  media.style.maxWidth = "300px";
-  media.style.maxHeight = "300px";
-  previewContainer.appendChild(media);
-}
-
-// ============================================================
-// [IDF-0010-C] Vista previa al seleccionar archivo nuevo
-// ============================================================
-function handleFilePreview() {
-  const file = this.files[0];
-  previewContainer.innerHTML = "";
-
-  if (!file) {
-    fileNameSpan.textContent = "Ningún archivo seleccionado";
-    return;
-  }
-
-  const fileType = file.type;
-  const url = URL.createObjectURL(file);
-  fileNameSpan.textContent = file.name;
-  document.getElementById("content-title").value = file.name.trim();
-
-  const contentTypeInput = document.getElementById("content-type");
-  const createMedia = (tag, controls = false) => {
-    const el = document.createElement(tag);
-    el.src = url;
-    el.controls = controls;
-    el.style.maxWidth = "300px";
-    el.style.maxHeight = "300px";
-    previewContainer.appendChild(el);
-  };
-
-  if (fileType.startsWith("image/")) {
-    contentTypeInput.value = "imagen";
-    createMedia("img");
-  } else if (fileType.startsWith("video/")) {
-    contentTypeInput.value = "video";
-    createMedia("video", true);
-  } else if (fileType.startsWith("audio/")) {
-    contentTypeInput.value = "audio";
-    createMedia("audio", true);
-  } else {
-    previewContainer.textContent = "Tipo de archivo no compatible para vista previa.";
+    
+  } catch (error) {
+    console.error("Error cargando categorías:", error);
+    alert("Error al cargar las categorías");
   }
 }
 
 // ============================================================
-// [IDF-0010-D] Enviar datos editados al servidor
+// Configurar selectores en cascada
 // ============================================================
-function enviarFormulario(id) {
-  const fields = ["content-type", "content-title", "content-author", "content-price", "content-description"];
-  const values = Object.fromEntries(fields.map(f => [f, document.getElementById(f).value.trim()]));
-
-  if (!id || Object.values(values).some(v => !v)) {
-    alert("Por favor, completa todos los campos sin dejar espacios en blanco.");
-    return;
-  }
-
-  if (isNaN(values["content-price"]) || Number(values["content-price"]) < 0) {
-    alert("Por favor, ingresa un precio válido (número positivo).");
-    return;
-  }
-
-  const formData = new FormData(document.getElementById("content-form"));
-  formData.append("id", id);
-
-  fetch("/update_content", { method: "POST", body: formData })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Contenido guardado correctamente.");
-        window.location.href = "admi_view.html";
+function setupCascadeSelectors() {
+  // Nivel 1 → Nivel 2
+  document.getElementById("level1-select").addEventListener("change", (e) => {
+    const parentId = parseInt(e.target.value);
+    if (parentId) {
+      fillLevelSelect("level2-select", parentId, "level2-container");
+      hideLevel("level3-container");
+      hideLevel("level4-container");
+      document.getElementById("final-category-id").value = "";
+    } else {
+      hideLevel("level2-container");
+      hideLevel("level3-container");
+      hideLevel("level4-container");
+      document.getElementById("final-category-id").value = "";
+    }
+  });
+  
+  // Nivel 2 → Nivel 3
+  document.getElementById("level2-select").addEventListener("change", (e) => {
+    const parentId = parseInt(e.target.value);
+    if (parentId) {
+      const hasChildren = fillLevelSelect("level3-select", parentId, "level3-container");
+      if (!hasChildren) {
+        // No hay nivel 3, esta es la categoría final
+        document.getElementById("final-category-id").value = parentId;
+        hideLevel("level3-container");
+        hideLevel("level4-container");
       } else {
-        alert(data.message || "Error al guardar el contenido.");
+        hideLevel("level4-container");
+        document.getElementById("final-category-id").value = "";
       }
-    })
-    .catch(err => console.error("Error:", err));
+    } else {
+      hideLevel("level3-container");
+      hideLevel("level4-container");
+      document.getElementById("final-category-id").value = "";
+    }
+  });
+  
+  // Nivel 3 → Nivel 4
+  document.getElementById("level3-select").addEventListener("change", (e) => {
+    const parentId = parseInt(e.target.value);
+    if (parentId) {
+      const hasChildren = fillLevelSelect("level4-select", parentId, "level4-container");
+      if (!hasChildren) {
+        // No hay nivel 4, esta es la categoría final
+        document.getElementById("final-category-id").value = parentId;
+        hideLevel("level4-container");
+      } else {
+        document.getElementById("final-category-id").value = "";
+      }
+    } else {
+      hideLevel("level4-container");
+      document.getElementById("final-category-id").value = "";
+    }
+  });
+  
+  // Nivel 4 (final)
+  document.getElementById("level4-select").addEventListener("change", (e) => {
+    const categoryId = e.target.value;
+    document.getElementById("final-category-id").value = categoryId;
+  });
 }
 
 // ============================================================
-// [IDF-0150] Eliminar / restaurar contenido
+// Llenar selector de nivel con hijos del padre
 // ============================================================
-function del_button(id) {
-  const btn = document.getElementById("send-eliminar");
-  if (!btn) return;
+function fillLevelSelect(selectId, parentId, containerId) {
+  const select = document.getElementById(selectId);
+  const container = document.getElementById(containerId);
+  
+  // Limpiar opciones anteriores
+  select.innerHTML = '<option value="">-- Selecciona --</option>';
+  
+  // Buscar categorías hijas
+  const children = allCategories.filter(cat => cat.parentId === parentId);
+  
+  if (children.length > 0) {
+    children.forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat.id;
+      option.textContent = cat.name;
+      select.appendChild(option);
+    });
+    
+    // Mostrar contenedor
+    container.style.display = "block";
+    return true; // Tiene hijos
+  } else {
+    // No tiene hijos, ocultar contenedor
+    container.style.display = "none";
+    return false; // No tiene hijos
+  }
+}
 
-  btn.addEventListener("click", () => {
-    if (!id) {
-      alert("No hay un contenido cargado para eliminar/restaurar.");
+// ============================================================
+// Ocultar nivel
+// ============================================================
+function hideLevel(containerId) {
+  const container = document.getElementById(containerId);
+  container.style.display = "none";
+  
+  // Limpiar select dentro del contenedor
+  const select = container.querySelector("select");
+  if (select) {
+    select.innerHTML = '<option value="">-- Selecciona --</option>';
+  }
+}
+
+// ============================================================
+// Cargar datos del producto y preseleccionar categoría
+// ============================================================
+async function loadProductData(productId) {
+  try {
+    const response = await fetch("/api/media");
+    const data = await response.json();
+    
+    const product = data.products.find(p => p.id === parseInt(productId));
+    
+    if (!product) {
+      alert("Producto no encontrado");
+      window.location.href = "/admin/media";
       return;
     }
-
-    fetch("/update_content_state", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          btn.textContent = data.estado ? "Restaurar" : "Eliminar";
-          alert(data.message || (data.estado ? "Contenido eliminado" : "Contenido restaurado"));
-        } else {
-          alert(data.message || "Error en la operación.");
-        }
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        alert("Error de conexión con el servidor.");
-      });
-  });
+    
+    currentProduct = product;
+    
+    // Rellenar formulario
+    document.getElementById("product-id").value = product.id;
+    document.getElementById("title").value = product.title;
+    document.getElementById("price").value = product.price;
+    document.getElementById("stock").value = product.stock;
+    document.getElementById("url").value = product.assetPath || "";
+    document.getElementById("description").value = product.description;
+    
+    // Mostrar categoría actual
+    document.getElementById("current-category-path").textContent = product.categoryPath || "Sin categoría";
+    
+    // Preseleccionar categoría en cascada
+    if (product.categoryId) {
+      preselectCategory(product.categoryId);
+    }
+    
+  } catch (error) {
+    console.error("Error cargando producto:", error);
+    alert("Error al cargar los datos del producto");
+  }
 }
 
 // ============================================================
-// [Promociones]
+// Preseleccionar categoría siguiendo la jerarquía
 // ============================================================
-function setupPromoControls(id) {
-  const promoBtn = document.getElementById("send-promocion");
-  const promoContainer = document.getElementById("promocion-container");
-
-  promoBtn.addEventListener("click", () => {
-    promoContainer.style.display = promoContainer.style.display === "none" ? "block" : "none";
-    button_info_promos();
-  });
-
-  document.getElementById("btn-agregar-promo").addEventListener("click", () => {
-    const form = document.getElementById("form-agregar-promo");
-    form.style.display = form.style.display === "none" ? "block" : "none";
-  });
-
-  document.getElementById("btn-guardar-promo").addEventListener("click", enviar_nueva_promocion);
-  document.getElementById("btn-usar-promo").addEventListener("click", () => designar_promocion(id));
+function preselectCategory(categoryId) {
+  // Obtener breadcrumb de la categoría
+  const category = allCategories.find(cat => cat.id === categoryId);
+  if (!category) return;
+  
+  const breadcrumb = getBreadcrumb(categoryId);
+  
+  // Seleccionar nivel por nivel
+  if (breadcrumb.length > 0) {
+    // Nivel 1
+    document.getElementById("level1-select").value = breadcrumb[0].id;
+    document.getElementById("level1-select").dispatchEvent(new Event("change"));
+    
+    setTimeout(() => {
+      if (breadcrumb.length > 1) {
+        // Nivel 2
+        document.getElementById("level2-select").value = breadcrumb[1].id;
+        document.getElementById("level2-select").dispatchEvent(new Event("change"));
+        
+        setTimeout(() => {
+          if (breadcrumb.length > 2) {
+            // Nivel 3
+            document.getElementById("level3-select").value = breadcrumb[2].id;
+            document.getElementById("level3-select").dispatchEvent(new Event("change"));
+            
+            setTimeout(() => {
+              if (breadcrumb.length > 3) {
+                // Nivel 4
+                document.getElementById("level4-select").value = breadcrumb[3].id;
+                document.getElementById("final-category-id").value = breadcrumb[3].id;
+              }
+            }, 100);
+          }
+        }, 100);
+      }
+    }, 100);
+  }
 }
 
-function button_info_promos() {
-  const promoSelect = document.getElementById("promo-select");
-
-  fetch("/get_promociones")
-    .then(res => res.json())
-    .then(data => {
-      promoSelect.innerHTML = `<option value="">Selecciona una promoción</option>`;
-      data.forEach(promo => {
-        const option = document.createElement("option");
-        option.value = promo.id;
-        option.textContent = `${promo.titulo_de_descuento} - Descuento: ${Math.round(promo.descuento * 100)}%`;
-        promoSelect.appendChild(option);
-      });
-    })
-    .catch(err => {
-      console.error("Error cargando promociones:", err);
-      alert("Error al obtener promociones.");
-    });
+// ============================================================
+// Obtener breadcrumb de una categoría
+// ============================================================
+function getBreadcrumb(categoryId) {
+  const breadcrumb = [];
+  let current = allCategories.find(cat => cat.id === categoryId);
+  
+  while (current) {
+    breadcrumb.unshift(current);
+    if (current.parentId) {
+      current = allCategories.find(cat => cat.id === current.parentId);
+    } else {
+      break;
+    }
+  }
+  
+  return breadcrumb;
 }
 
-function enviar_nueva_promocion() {
-  const titulo = document.getElementById("promo-title").value.trim();
-  const descuento = parseFloat(document.getElementById("promo-descuento").value);
-  const dias = parseInt(document.getElementById("promo-dias").value);
-
-  if (!titulo || isNaN(descuento) || isNaN(dias) || descuento < 0 || descuento > 100 || dias <= 0) {
-    alert("Completa correctamente todos los campos de promoción.");
+// ============================================================
+// Guardar cambios del producto
+// ============================================================
+async function saveProduct(productId) {
+  const categoryId = document.getElementById("final-category-id").value;
+  
+  if (!categoryId) {
+    alert("Por favor selecciona una categoría completa");
     return;
   }
-
-  fetch("/crear_promocion", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ titulo, descuento, dias })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Promoción creada con éxito");
-        button_info_promos();
-      } else {
-        alert(data.message || "Error al crear promoción");
-      }
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("Error de conexión al guardar la promoción.");
-    });
-}
-
-function designar_promocion(id) {
-  const promoSelect = document.getElementById("promo-select");
-  const selectedPromoId = promoSelect.value;
-  if (!selectedPromoId) return alert("Selecciona una promoción para usar.");
-  if (!id) return alert("Guarda el contenido antes de asignar una promoción.");
-
-  fetch("/asignar_promocion", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id_contenido: id, id_promocion: selectedPromoId })
-  })
-    .then(res => res.json())
-    .then(data => alert(data.success ? "Promoción asignada correctamente." : data.message || "Error al asignar promoción."))
-    .catch(err => console.error("Error:", err))
-    .finally(() => location.reload());
-}
-
-// ============================================================
-// [Categorías]
-// ============================================================
-function setupCategoryControls(id) {
-  const catBtn = document.getElementById("send-category");
-  const catContainer = document.getElementById("category-container");
-
-  catBtn.addEventListener("click", () => {
-    catContainer.style.display = catContainer.style.display === "none" ? "block" : "none";
-    mostrar_categorias_disponibles();
-  });
-
-  document.getElementById("btn-agregar-category").addEventListener("click", () => {
-    const form = document.getElementById("form-agregar-category");
-    form.style.display = form.style.display === "none" ? "block" : "none";
-  });
-
-  document.getElementById("btn-guardar-category").addEventListener("click", enviar_nueva_categoria);
-  document.getElementById("btn-usar-category").addEventListener("click", () => designar_categoria(id));
-}
-
-function mostrar_categorias_disponibles() {
-  const categorySelect = document.getElementById("category-select");
-
-  fetch("/get_categorys")
-    .then(res => res.json())
-    .then(data => {
-      categorySelect.innerHTML = `<option value="">Selecciona una Categoría</option>`;
-      data.forEach(cat => {
-        const option = document.createElement("option");
-        option.value = cat.id;
-        option.textContent = cat.category;
-        categorySelect.appendChild(option);
-      });
-    })
-    .catch(err => {
-      console.error("Error cargando categorias:", err);
-      alert("Error al obtener las categorias.");
-    });
-}
-
-async function enviar_nueva_categoria() {
-  const titulo = document.getElementById("category-title").value.trim();
-  const categorySelect = document.getElementById("category-select");
-  const id_padre = categorySelect.value || null;
-
-  if (!titulo) return alert("Completa correctamente el campo.");
-
+  
+  const formData = new FormData();
+  formData.append("title", document.getElementById("title").value);
+  formData.append("price", document.getElementById("price").value);
+  formData.append("stock", document.getElementById("stock").value);
+  formData.append("url", document.getElementById("url").value);
+  formData.append("description", document.getElementById("description").value);
+  formData.append("categoryId", categoryId);
+  formData.append("mediaType", "video"); // Valor por defecto
+  
   try {
-    const res = await fetch("/crear_category", {
+    const response = await fetch(`/admin/media/${productId}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ titulo, id_padre })
+      body: formData
     });
-
-    const data = await res.json();
-    if (data.success) {
-      alert("Categoría creada con éxito");
-      mostrar_categorias_disponibles();
+    
+    if (response.ok) {
+      alert("✅ Producto actualizado correctamente");
+      window.location.href = "/admin/media";
     } else {
-      alert(data.message || "Error al crear la categoría.");
+      alert("❌ Error al actualizar el producto");
     }
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Error de conexión al guardar la categoría.");
+    
+  } catch (error) {
+    console.error("Error guardando producto:", error);
+    alert("Error de conexión al guardar");
   }
-}
-
-function designar_categoria(id) {
-  const select = document.getElementById("category-select");
-  const selectedId = select.value;
-  if (!selectedId) return alert("Selecciona una categoría para usar.");
-  if (!id) return alert("Guarda el contenido antes de asignar la categoría.");
-
-  fetch("/asignar_category", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id_contenido: id, id_categoria: selectedId })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Categoría asignada correctamente.");
-        location.reload();
-      } else {
-        alert(data.message || "Error al asignar la categoría.");
-      }
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("Error al comunicar con el servidor.");
-    });
 }

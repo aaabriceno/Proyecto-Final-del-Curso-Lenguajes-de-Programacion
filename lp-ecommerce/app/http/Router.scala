@@ -30,13 +30,19 @@ object Router {
 
         // ---------- Tienda ----------
         case ("GET", "/shop")           => ShopController.shop(request)
-        case ("GET", p) if p.startsWith("/shop/") =>
+        case ("GET", p) if p.startsWith("/shop/") && !p.endsWith("/purchase") =>
           val id = Try(p.stripPrefix("/shop/").toLong).getOrElse(0L)
           ShopController.detail(id, request)
+        case ("POST", p) if p.startsWith("/shop/") && p.endsWith("/purchase") =>
+          val id = Try(p.stripPrefix("/shop/").stripSuffix("/purchase").toLong).getOrElse(0L)
+          ShopController.purchaseItem(id, request)
 
         // ---------- Carrito ----------
         case ("GET", "/cart")           => ShopController.viewCart(request)
         case ("POST", "/cart/clear")    => ShopController.clearCart(request)
+        case ("POST", "/cart/add") =>
+          val mediaId = request.formData.getOrElse("mediaId", "0").toLong
+          ShopController.addToCart(mediaId, request)
         case ("POST", p) if p.startsWith("/cart/add/") =>
           val id = Try(p.stripPrefix("/cart/add/").toLong).getOrElse(0L)
           ShopController.addToCart(id, request)
@@ -72,6 +78,7 @@ object Router {
         case ("GET", "/admin/media/new")    => AdminController.newMediaForm(request)
         case ("POST", "/admin/media")       => AdminController.createMedia(request)
         case ("GET", "/api/media")          => AdminController.mediaJson(request)
+        case ("GET", "/api/promotions/stats") => AdminController.promotionsStats(request)
         case ("GET", p) if p.startsWith("/admin/media/") && p.endsWith("/edit") =>
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.editMediaForm(id, request)
@@ -100,19 +107,27 @@ object Router {
 
         // ---------- Solicitudes de saldo ----------
         case ("GET", "/admin/balance/requests") => AdminController.balanceRequests(request)
-        case ("POST", p) if p.endsWith("/approve") =>
-          val id = Try(p.split("/")(4).toLong).getOrElse(0L)
+        case ("POST", p) if p.startsWith("/admin/balance/requests/") && p.endsWith("/approve") =>
+          val parts = p.split("/")
+          val id = Try(parts(4).toLong).getOrElse(0L)
           AdminController.approveBalanceRequest(id, request)
-        case ("POST", p) if p.endsWith("/reject") =>
-          val id = Try(p.split("/")(4).toLong).getOrElse(0L)
+        case ("POST", p) if p.startsWith("/admin/balance/requests/") && p.endsWith("/reject") =>
+          val parts = p.split("/")
+          val id = Try(parts(4).toLong).getOrElse(0L)
           AdminController.rejectBalanceRequest(id, request)
 
         // ---------- Estadísticas ----------
         case ("GET", "/admin/statistics") => AdminController.statistics(request)
 
         // ---------- Archivos estáticos ----------
-        case ("GET", p) if p.startsWith("/assets/") || p.startsWith("/styles/") || p.startsWith("/scripts/") =>
-          val relPath = p.stripPrefix("/assets/").stripPrefix("/styles/").stripPrefix("/scripts/")
+        case ("GET", p) if p.startsWith("/assets/") =>
+          val relPath = p.stripPrefix("/assets/")
+          HttpResponse.serveStaticFile(relPath)
+        case ("GET", p) if p.startsWith("/styles/") =>
+          val relPath = p.stripPrefix("/styles/")
+          HttpResponse.serveStaticFile(relPath)
+        case ("GET", p) if p.startsWith("/scripts/") =>
+          val relPath = p.stripPrefix("/scripts/")
           HttpResponse.serveStaticFile(relPath)
 
         // ---------- Rutas no encontradas ----------
