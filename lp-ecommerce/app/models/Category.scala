@@ -13,9 +13,10 @@ import scala.concurrent.duration._
 case class Category(
   id: Long,
   name: String,
-  parentId: Option[Long] = None, // None = categoría raíz
+  parentId: Option[Long] = None,      // None = categoría raíz
   description: String = "",
-  isActive: Boolean = true       // Soft delete
+  productType: String = "digital",    // "digital" o "hardware" - filtro por tipo de producto
+  isActive: Boolean = true            // Soft delete
 )
 
 /**
@@ -45,25 +46,40 @@ object CategoryRepo {
   }
 
   private def docToCategory(doc: Document): Category = {
+    val productType = try {
+      doc.getString("productType")
+    } catch {
+      case _: Exception => "digital"  // Default para backward compatibility
+    }
+    
     Category(
       id = doc.getLong("_id"),
       name = doc.getString("name"),
       parentId = getLongOpt(doc, "parentId"),
       description = doc.getString("description"),
+      productType = productType,
       isActive = doc.getBoolean("isActive")
     )
   }
 
   private def categoryToDoc(category: Category): Document = {
-    val doc = Document(
+    import org.mongodb.scala.bson.{BsonNull, BsonInt64}
+    
+    val baseDoc = Document(
       "_id" -> category.id,
       "name" -> category.name,
       "description" -> category.description,
+      "productType" -> category.productType,
       "isActive" -> category.isActive
     )
-    // Agregar parentId solo si existe
-    category.parentId.foreach(pid => doc.append("parentId", pid))
-    doc
+    
+    // Agregar parentId SIEMPRE (null si no tiene padre, Long si tiene)
+    val finalDoc = category.parentId match {
+      case Some(pid) => baseDoc + ("parentId" -> pid)  // ✅ Usa + en lugar de append
+      case None      => baseDoc + ("parentId" -> BsonNull())
+    }
+    
+    finalDoc
   }
 
   // ==============================

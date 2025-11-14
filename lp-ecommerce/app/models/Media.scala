@@ -8,8 +8,26 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 /**
- * Tipos de medios disponibles
+ * Tipos de producto según su naturaleza física
  */
+sealed trait ProductType { def asString: String }
+
+object ProductType {
+  case object Digital extends ProductType { val asString = "digital" }
+  case object Hardware extends ProductType { val asString = "hardware" }
+
+  def from(s: String): ProductType = s.toLowerCase match {
+    case "hardware" => Hardware
+    case _          => Digital  // Por defecto digital (backward compatibility)
+  }
+}
+
+/**
+ * OBSOLETO: MediaType ya no se usa en el modelo Media
+ * Antes: Clasificábamos productos como Image/Audio/Video
+ * Ahora: Usamos ProductType (Digital/Hardware) y la categoría define el tipo específico
+ */
+/*
 sealed trait MediaType { def asString: String }
 
 object MediaType {
@@ -24,6 +42,7 @@ object MediaType {
     case _       => Image
   }
 }
+*/
 
 /**
  * Representa un producto multimedia en venta.
@@ -32,19 +51,18 @@ case class Media(
   id: Long,
   title: String,
   description: String,
-  mtype: MediaType,
+  productType: ProductType,               // 🆕 Digital o Hardware
   price: BigDecimal,
   rating: Double,
-  categoryId: Option[Long] = None,     // Categoría asociada
-  assetPath: String,                   // Ruta del archivo (en /public/media/ o /public/images/)
-  coverImage: Option[String] = None,   // Imagen de portada (ruta a /assets/images/)
-  stock: Int = 0,                      // Stock disponible
-  promotionId: Option[Long] = None,    // ID de promoción asociada (si aplica)
-  isActive: Boolean = true             // Soft delete
+  categoryId: Option[Long] = None,        // Categoría asociada
+  assetPath: String,                      // Ruta del archivo (digital) o imagen (hardware)
+  stock: Int = 0,                         // Stock disponible
+  promotionId: Option[Long] = None,       // ID de promoción asociada (si aplica)
+  isActive: Boolean = true                // Soft delete
 ) {
 
   // Obtener imagen de portada o placeholder
-  def getCoverImageUrl: String = coverImage.getOrElse("/assets/images/placeholder.jpg")
+  def getCoverImageUrl: String = assetPath
 
   // ========= RELACIONES =========
 
@@ -133,12 +151,11 @@ object MediaRepo {
       id = doc.getLong("_id"),
       title = doc.getString("title"),
       description = doc.getString("description"),
-      mtype = MediaType.from(doc.getString("mtype")),
+      productType = ProductType.from(getStringOpt("productType").getOrElse("digital")),
       price = BigDecimal(doc.getDouble("price")),
       rating = doc.getDouble("rating"),
       categoryId = getLongOpt("categoryId"),
       assetPath = doc.getString("assetPath"),
-      coverImage = getStringOpt("coverImage"),
       stock = doc.getInteger("stock"),
       promotionId = getLongOpt("promotionId"),
       isActive = doc.getBoolean("isActive")
@@ -146,22 +163,31 @@ object MediaRepo {
   }
 
   private def mediaToDoc(media: Media): Document = {
+    // Crear documento base
     val doc = Document(
       "_id" -> media.id,
       "title" -> media.title,
       "description" -> media.description,
-      "mtype" -> media.mtype.asString,
+      "productType" -> media.productType.asString,
       "price" -> media.price.toDouble,
       "rating" -> media.rating,
       "assetPath" -> media.assetPath,
       "stock" -> media.stock,
       "isActive" -> media.isActive
     )
-    // Agregar campos opcionales solo si están presentes
-    media.categoryId.foreach(cid => doc.append("categoryId", cid))
-    media.promotionId.foreach(pid => doc.append("promotionId", pid))
-    media.coverImage.foreach(img => doc.append("coverImage", img))
-    doc
+    
+    // Agregar campos opcionales manualmente usando +
+    val withCategory = media.categoryId match {
+      case Some(cid) => doc + ("categoryId" -> cid)
+      case None => doc
+    }
+    
+    val withPromotion = media.promotionId match {
+      case Some(pid) => withCategory + ("promotionId" -> pid)
+      case None => withCategory
+    }
+    
+    withPromotion
   }
 
   // ========= CONSULTAS =========
@@ -199,14 +225,6 @@ object MediaRepo {
     }
   }
 
-  def filterByType(mtype: MediaType): Vector[Media] = {
-    val docs = Await.result(
-      collection.find(and(equal("mtype", mtype.asString), equal("isActive", true))).toFuture(),
-      5.seconds
-    )
-    docs.map(docToMedia).toVector.sortBy(-_.downloads)
-  }
-
   def filterByCategory(categoryId: Long): Vector[Media] = {
     val categoryIds = categoryId +: CategoryRepo.getAllDescendants(categoryId).map(_.id)
     val allMedia = Await.result(
@@ -219,7 +237,7 @@ object MediaRepo {
 
   def searchAdvanced(
     query: Option[String] = None,
-    mtype: Option[MediaType] = None,
+    productType: Option[ProductType] = None,
     categoryId: Option[Long] = None
   ): Vector[Media] = {
     val allMedia = Await.result(
@@ -229,7 +247,7 @@ object MediaRepo {
     
     var results = allMedia
 
-    mtype.foreach(t => results = results.filter(_.mtype == t))
+    productType.foreach(t => results = results.filter(_.productType == t))
     categoryId.foreach { cid =>
       val allIds = cid +: CategoryRepo.getAllDescendants(cid).map(_.id)
       results = results.filter(m => m.categoryId.exists(allIds.contains))
@@ -279,14 +297,6 @@ object MediaRepo {
   
   def totalDownloads: Int = DownloadRepo.totalDownloads
   
-  def countByType(mtype: MediaType): Int = {
-    val docs = Await.result(
-      collection.find(and(equal("mtype", mtype.asString), equal("isActive", true))).toFuture(),
-      5.seconds
-    )
-    docs.size
-  }
-  
   def topProducts(limit: Int = 5): Vector[Media] = {
     val allMedia = Await.result(
       collection.find(equal("isActive", true)).toFuture(),
@@ -298,11 +308,10 @@ object MediaRepo {
 
   // ========= CRUD ADMIN =========
 
-  def add(title: String, description: String, mtype: MediaType,
+  def add(title: String, description: String, productType: ProductType,
           price: BigDecimal, categoryId: Option[Long], assetPath: String,
-          coverImage: Option[String] = None,
           stock: Int = 0, promotionId: Option[Long] = None): Media = synchronized {
-    val media = Media(nextId(), title, description, mtype, price, 0.0, categoryId, assetPath, coverImage, stock, promotionId)
+    val media = Media(nextId(), title, description, productType, price, 0.0, categoryId, assetPath, stock, promotionId)
     Await.result(
       collection.insertOne(mediaToDoc(media)).toFuture(),
       5.seconds
@@ -311,19 +320,17 @@ object MediaRepo {
     media
   }
 
-  def update(id: Long, title: String, description: String, mtype: MediaType,
+  def update(id: Long, title: String, description: String, productType: ProductType,
              price: BigDecimal, categoryId: Option[Long], assetPath: String,
-             coverImage: Option[String] = None,
              stock: Int, promotionId: Option[Long] = None): Option[Media] = synchronized {
     find(id).map { oldMedia =>
       val updated = oldMedia.copy(
         title = title, 
         description = description,
-        mtype = mtype, 
+        productType = productType,
         price = price, 
         categoryId = categoryId,
         assetPath = assetPath,
-        coverImage = coverImage,
         stock = stock,
         promotionId = promotionId
       )

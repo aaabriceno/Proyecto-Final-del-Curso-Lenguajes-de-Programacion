@@ -17,11 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Cargar categorías primero
-  loadCategories().then(() => {
+  loadAllCategories().then(() => {
     // Luego cargar datos del producto
     loadProductData(productId);
     // Configurar eventos de cascada
     setupCascadeSelectors();
+    // Configurar evento de cambio de tipo de producto
+    setupProductTypeSelector();
   });
 
   // Manejar envío del formulario
@@ -32,7 +34,107 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================================================
-// Cargar todas las categorías
+// Cargar todas las categorías (sin filtrar)
+// ============================================================
+async function loadAllCategories() {
+  try {
+    const response = await fetch("/api/categories");
+    const data = await response.json();
+    allCategories = data.categories;
+    console.log(`📦 Cargadas ${allCategories.length} categorías totales`);
+  } catch (error) {
+    console.error("Error cargando categorías:", error);
+    alert("Error al cargar las categorías");
+  }
+}
+
+// ============================================================
+// Configurar selector de tipo de producto
+// ============================================================
+function setupProductTypeSelector() {
+  const productTypeSelect = document.getElementById("productType");
+  const mediaTypeContainer = document.getElementById("mediaType-container");
+  
+  productTypeSelect.addEventListener("change", (e) => {
+    const selectedType = e.target.value;
+    console.log(`🔄 Tipo de producto cambiado a: ${selectedType}`);
+    
+    if (selectedType === "digital") {
+      // Mostrar selector de mediaType solo para productos digitales
+      mediaTypeContainer.style.display = "block";
+      document.getElementById("content-type").required = true;
+      loadCategoriesByType("digital");
+    } else if (selectedType === "hardware") {
+      // Ocultar selector de mediaType para productos físicos
+      mediaTypeContainer.style.display = "none";
+      document.getElementById("content-type").required = false;
+      document.getElementById("content-type").value = "image"; // Default para hardware
+      loadCategoriesByType("hardware");
+    } else {
+      // Limpiar todos los selectores
+      mediaTypeContainer.style.display = "none";
+      clearAllSelectors();
+    }
+  });
+}
+
+// ============================================================
+// Cargar categorías filtradas por tipo de producto
+// ============================================================
+function loadCategoriesByType(productType) {
+  console.log(`🔍 Filtrando categorías por tipo: ${productType}`);
+  
+  // Filtrar categorías por productType
+  const filteredCategories = allCategories.filter(cat => cat.productType === productType);
+  console.log(`✅ Encontradas ${filteredCategories.length} categorías de tipo ${productType}`);
+  
+  // Limpiar todos los selectores primero
+  clearAllSelectors();
+  
+  // Llenar nivel 1 solo con categorías raíz del tipo seleccionado
+  const level1Select = document.getElementById("level1-select");
+  const level1Categories = filteredCategories.filter(cat => cat.level === 0);
+  
+  level1Categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat.id;
+    option.textContent = cat.name;
+    option.dataset.level = cat.level;
+    level1Select.appendChild(option);
+  });
+  
+  console.log(`📁 Cargadas ${level1Categories.length} categorías raíz en nivel 1`);
+}
+
+// ============================================================
+// Limpiar todos los selectores de categoría
+// ============================================================
+function clearAllSelectors() {
+  // Limpiar nivel 1
+  const level1Select = document.getElementById("level1-select");
+  level1Select.innerHTML = '<option value="">-- Selecciona nivel 1 --</option>';
+  
+  // Limpiar y ocultar nivel 2
+  const level2Select = document.getElementById("level2-select");
+  level2Select.innerHTML = '<option value="">-- Selecciona nivel 2 --</option>';
+  hideLevel("level2-container");
+  
+  // Limpiar y ocultar nivel 3
+  const level3Select = document.getElementById("level3-select");
+  level3Select.innerHTML = '<option value="">-- Selecciona nivel 3 --</option>';
+  hideLevel("level3-container");
+  
+  // Limpiar y ocultar nivel 4
+  const level4Select = document.getElementById("level4-select");
+  level4Select.innerHTML = '<option value="">-- Selecciona categoría final --</option>';
+  hideLevel("level4-container");
+  
+  // Limpiar campo oculto
+  document.getElementById("final-category-id").value = "";
+}
+
+// ============================================================
+// Cargar todas las categorías (DEPRECADO - usar loadAllCategories + loadCategoriesByType)
 // ============================================================
 async function loadCategories() {
   try {
@@ -195,12 +297,35 @@ async function loadProductData(productId) {
     document.getElementById("url").value = product.assetPath || "";
     document.getElementById("description").value = product.description;
     
+    // 🔥 NUEVO: Establecer productType y disparar evento para cargar categorías
+    const productType = product.productType || "digital"; // Default a digital si no existe
+    const mediaType = product.mediaType || "video"; // Default a video
+    
+    document.getElementById("productType").value = productType;
+    console.log(`📦 Producto cargado con tipo: ${productType}`);
+    
+    // Mostrar/ocultar mediaType según el tipo de producto
+    const mediaTypeContainer = document.getElementById("mediaType-container");
+    if (productType === "digital") {
+      mediaTypeContainer.style.display = "block";
+      document.getElementById("content-type").value = mediaType;
+      document.getElementById("content-type").required = true;
+    } else {
+      mediaTypeContainer.style.display = "none";
+      document.getElementById("content-type").required = false;
+    }
+    
+    // Cargar categorías filtradas por tipo
+    loadCategoriesByType(productType);
+    
     // Mostrar categoría actual
     document.getElementById("current-category-path").textContent = product.categoryPath || "Sin categoría";
     
-    // Preseleccionar categoría en cascada
+    // Preseleccionar categoría en cascada (con delay para que las categorías se carguen)
     if (product.categoryId) {
-      preselectCategory(product.categoryId);
+      setTimeout(() => {
+        preselectCategory(product.categoryId);
+      }, 300);
     }
     
   } catch (error) {
@@ -276,24 +401,59 @@ function getBreadcrumb(categoryId) {
 async function saveProduct(productId) {
   const categoryId = document.getElementById("final-category-id").value;
   
+  console.log("🔍 [DEBUG] Valores del formulario ANTES de validar:");
+  console.log(`  categoryId (desde final-category-id): '${categoryId}'`);
+  
   if (!categoryId) {
     alert("Por favor selecciona una categoría completa");
     return;
   }
   
-  const formData = new FormData();
-  formData.append("title", document.getElementById("title").value);
-  formData.append("price", document.getElementById("price").value);
-  formData.append("stock", document.getElementById("stock").value);
-  formData.append("url", document.getElementById("url").value);
-  formData.append("description", document.getElementById("description").value);
-  formData.append("categoryId", categoryId);
-  formData.append("mediaType", "video"); // Valor por defecto
+  // Obtener valores del formulario
+  const title = document.getElementById("title").value.trim();
+  const price = document.getElementById("price").value;
+  const stock = document.getElementById("stock").value;
+  const productType = document.getElementById("productType").value;
+  const url = document.getElementById("url").value.trim();
+  const description = document.getElementById("description").value.trim();
+  
+  // Crear URLSearchParams para enviar como form data normal
+  const formData = new URLSearchParams();
+  formData.append("title", title);
+  formData.append("price", price);
+  formData.append("stock", stock);
+  formData.append("productType", productType);
+  formData.append("url", url);
+  formData.append("description", description);
+  formData.append("categoryId", categoryId); // ✅ AGREGADO
+  
+  // Solo agregar mediaType si es producto Digital
+  if (productType === "digital") {
+    const mediaType = document.getElementById("content-type") ? 
+      document.getElementById("content-type").value : "video";
+    formData.append("mediaType", mediaType);
+    console.log(`  mediaType: ${mediaType} (producto digital)`);
+  } else {
+    // Para hardware, usar un valor por defecto que no afecte
+    formData.append("mediaType", "image");
+    console.log(`  mediaType: image (producto hardware - valor por defecto)`);
+  }
+  
+  console.log("📤 Actualizando producto...");
+  console.log(`  title: ${title}`);
+  console.log(`  price: ${price}`);
+  console.log(`  stock: ${stock}`);
+  console.log(`  productType: ${productType}`);
+  console.log(`  categoryId: ${categoryId}`);
+  console.log(`  url: ${url}`);
   
   try {
     const response = await fetch(`/admin/media/${productId}`, {
       method: "POST",
-      body: formData
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData.toString()
     });
     
     if (response.ok) {

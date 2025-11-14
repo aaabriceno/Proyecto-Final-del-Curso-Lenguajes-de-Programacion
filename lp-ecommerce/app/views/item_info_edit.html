@@ -71,6 +71,31 @@
             <label for="stock" class="form-label">Stock *</label>
             <input type="number" id="stock" name="stock" class="form-control" min="0" required>
           </div>
+
+          <!-- ===== SELECTOR DE TIPO DE PRODUCTO ===== -->
+          <div class="mb-3">
+            <label for="productType" class="form-label fw-bold">Tipo de Producto *</label>
+            <select id="productType" name="productType" class="form-select" required>
+              <option value="">-- Selecciona tipo --</option>
+              <option value="digital">💾 Digital (Descargable)</option>
+              <option value="hardware">🖥️ Hardware (Físico)</option>
+            </select>
+            <div class="form-text">
+              <i class="bi bi-info-circle"></i> 
+              <strong>Digital:</strong> Contenido multimedia descargable (música, videos, diseño).
+              <strong>Hardware:</strong> Productos físicos (smartphones, laptops, accesorios).
+            </div>
+          </div>
+
+          <!-- Tipo de Multimedia (solo para Digital) -->
+          <div class="mb-3" id="mediaType-container" style="display: none;">
+            <label for="content-type" class="form-label">Tipo de Contenido *</label>
+            <select id="content-type" name="mediaType" class="form-select">
+              <option value="image">Imagen</option>
+              <option value="audio">Audio</option>
+              <option value="video">Video</option>
+            </select>
+          </div>
           
           <div class="mb-3">
             <label for="url" class="form-label">URL del archivo</label>
