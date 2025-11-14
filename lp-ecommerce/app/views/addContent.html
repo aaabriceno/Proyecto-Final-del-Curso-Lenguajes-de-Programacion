@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LP Studios | Agregar Contenido</title>
+  <title>LP Studios | Crear Producto</title>
 
-  <!-- ===== Bootstrap Core ===== -->
+  <!-- ===== Bootstrap ===== -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <!-- ===== Estilos locales ===== -->
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
-  <link rel="stylesheet" href="/assets/stylesheets/addContent.css">
 </head>
 
 <body class="bg-dark text-light">
-  <!-- ===== NAVBAR ===== -->
+
+  <!-- ===== NAVBAR ADMIN ===== -->
   <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
-      <div class="d-flex gap-2">
-        <a class="btn btn-outline-danger btn-sm" href="/admin">
-          <i class="bi bi-person-gear me-1"></i> Admin
-        </a>
+      <div class="ms-auto d-flex gap-2">
+        <a class="btn btn-outline-danger btn-sm" href="/admin">👨‍💼 Admin</a>
         <a class="btn btn-outline-light btn-sm" href="/login">
           <i class="bi bi-box-arrow-right me-1"></i> Salir
         </a>
@@ -32,66 +30,141 @@
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="container py-5">
-    <h1 class="mb-4 fw-bold text-center">Agregar Nuevo Contenido</h1>
-
-    <form id="content-form" method="POST" action="/admin/media" enctype="multipart/form-data" class="mx-auto" style="max-width: 600px;">
-      <!-- Título -->
-      <div class="mb-3">
-        <label for="content-title" class="form-label">Título</label>
-        <input type="text" id="content-title" name="title" class="form-control" required>
+    <!-- ===== Header ===== -->
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="fw-bold">➕ Crear Nuevo Producto</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="/admin" class="text-white text-decoration-none">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/admin/media" class="text-white text-decoration-none">Productos</a>
+            </li>
+            <li class="breadcrumb-item active text-light" aria-current="page">Nuevo</li>
+          </ol>
+        </nav>
       </div>
+    </div>
 
-      <!-- Descripción -->
-      <div class="mb-3">
-        <label for="content-description" class="form-label">Descripción</label>
-        <textarea id="content-description" name="description" class="form-control" rows="3" placeholder="Describe brevemente el contenido..."></textarea>
+    <!-- ===== Formulario de Creación ===== -->
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">🆕 Agregar Nuevo Producto</h5>
       </div>
+      <div class="card-body">
+        <form id="content-form" method="POST" action="/admin/media">
+          
+          <div class="mb-3">
+            <label for="content-title" class="form-label">Título *</label>
+            <input type="text" id="content-title" name="title" class="form-control" required>
+          </div>
 
-      <!-- Precio -->
-      <div class="mb-3">
-        <label for="content-price" class="form-label">Precio (USD)</label>
-        <input type="number" id="content-price" name="price" class="form-control" step="0.01" min="0" required>
+          <div class="mb-3">
+            <label for="content-price" class="form-label">Precio ($) *</label>
+            <input type="number" id="content-price" name="price" class="form-control" step="0.01" min="0" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="content-stock" class="form-label">Stock *</label>
+            <input type="number" id="content-stock" name="stock" class="form-control" min="0" value="100" required>
+          </div>
+
+          <!-- ===== SELECTOR DE TIPO DE PRODUCTO ===== -->
+          <div class="mb-3">
+            <label for="productType" class="form-label fw-bold">Tipo de Producto *</label>
+            <select id="productType" name="productType" class="form-select" required>
+              <option value="">-- Selecciona tipo --</option>
+              <option value="digital">💾 Digital (Descargable)</option>
+              <option value="hardware">🖥️ Hardware (Físico)</option>
+            </select>
+            <div class="form-text">
+              <i class="bi bi-info-circle"></i> 
+              <strong>Digital:</strong> Contenido multimedia descargable (música, videos, diseño).
+              <strong>Hardware:</strong> Productos físicos (smartphones, laptops, accesorios).
+            </div>
+          </div>
+
+          <!-- Tipo de Multimedia (solo para Digital) -->
+          <div class="mb-3" id="mediaType-container" style="display: none;">
+            <label for="content-type" class="form-label">Tipo de Contenido *</label>
+            <select id="content-type" name="mediaType" class="form-select">
+              <option value="image">Imagen</option>
+              <option value="audio">Audio</option>
+              <option value="video">Video</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="content-url" class="form-label">URL del archivo</label>
+            <input type="text" id="content-url" name="url" class="form-control" placeholder="Ej: /media/audio/song.mp3">
+            <div class="form-text">Ruta del archivo multimedia (opcional)</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="content-description" class="form-label">Descripción</label>
+            <textarea id="content-description" name="description" class="form-control" rows="3" placeholder="Descripción del producto..."></textarea>
+          </div>
+
+          <!-- ===== SELECTOR EN CASCADA DE CATEGORÍAS ===== -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">Categoría *</label>
+            
+            <!-- Nivel 1: Raíz -->
+            <div class="mb-2">
+              <label for="level1-select" class="form-label small">Nivel 1:</label>
+              <select id="level1-select" class="form-select">
+                <option value="">-- Selecciona nivel 1 --</option>
+              </select>
+            </div>
+            
+            <!-- Nivel 2 -->
+            <div class="mb-2" id="level2-container" style="display: none;">
+              <label for="level2-select" class="form-label small">Nivel 2:</label>
+              <select id="level2-select" class="form-select">
+                <option value="">-- Selecciona nivel 2 --</option>
+              </select>
+            </div>
+            
+            <!-- Nivel 3 -->
+            <div class="mb-2" id="level3-container" style="display: none;">
+              <label for="level3-select" class="form-label small">Nivel 3:</label>
+              <select id="level3-select" class="form-select">
+                <option value="">-- Selecciona nivel 3 --</option>
+              </select>
+            </div>
+            
+            <!-- Nivel 4 (categoría final) -->
+            <div class="mb-2" id="level4-container" style="display: none;">
+              <label for="level4-select" class="form-label small">Categoría final:</label>
+              <select id="level4-select" class="form-select">
+                <option value="">-- Selecciona categoría final --</option>
+              </select>
+            </div>
+            
+            <input type="hidden" id="final-category-id" name="categoryId">
+            
+            <div class="form-text">
+              <i class="bi bi-info-circle"></i> 
+              Selecciona primero el <strong>tipo de producto</strong> para ver las categorías disponibles
+            </div>
+          </div>
+
+          <hr>
+
+          <!-- Botones -->
+          <div class="d-flex flex-wrap gap-2">
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-cloud-upload me-2"></i> Crear Producto
+            </button>
+            <a href="/admin/media" class="btn btn-secondary">
+              <i class="bi bi-x-circle me-2"></i> Cancelar
+            </a>
+          </div>
+        </form>
       </div>
-
-      <!-- Tipo -->
-      <div class="mb-3">
-        <label for="content-type" class="form-label">Tipo de Contenido</label>
-        <select id="content-type" name="mediaType" class="form-select" required>
-          <option value="image">Imagen</option>
-          <option value="audio">Audio</option>
-          <option value="video">Video</option>
-        </select>
-      </div>
-
-      <!-- Archivo -->
-      <div class="mb-4">
-        <label for="fileInput" class="form-label">Archivo</label>
-        <input type="file" id="fileInput" name="file" class="form-control" required accept="image/*,audio/*,video/*">
-        <small class="text-muted">Archivo seleccionado: <span id="file-name">Ninguno</span></small>
-        <div id="preview-container" class="mt-3"></div>
-      </div>
-
-      <!-- Stock (oculto, valor por defecto) -->
-      <input type="hidden" name="stock" value="100">
-
-      <!-- Categoría -->
-      <div class="mb-3">
-        <label for="category-select" class="form-label">Categoría</label>
-        <select id="category-select" name="categoryId" class="form-select">
-          <option value="">Sin categoría</option>
-        </select>
-      </div>
-
-      <!-- Botones -->
-      <div class="d-flex justify-content-between">
-        <a href="/admin/media" class="btn btn-secondary">
-          <i class="bi bi-arrow-left-circle me-1"></i> Cancelar
-        </a>
-        <button type="submit" class="btn btn-success">
-          <i class="bi bi-cloud-upload me-1"></i> Crear Contenido
-        </button>
-      </div>
-    </form>
+    </div>
   </main>
 
   <!-- ===== SCRIPTS ===== -->

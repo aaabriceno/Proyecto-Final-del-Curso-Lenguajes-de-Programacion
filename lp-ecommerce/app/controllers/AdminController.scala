@@ -103,69 +103,83 @@ object AdminController {
     import java.time.LocalDateTime
     val now = LocalDateTime.now()
     
-    val allMedia = Try(MediaRepo.all).getOrElse(Seq.empty)
-    val allPromotions = Try(PromotionRepo.all).getOrElse(Seq.empty)
-    
-    // Generar JSON manualmente (sin librerías externas)
-    val mediaJsonArray = allMedia.map { media =>
-      // Buscar promoción activa para este producto (por producto O por categoría)
-      val activePromotion = allPromotions.find { promo =>
-        val isActive = !promo.startDate.isAfter(now) && !promo.endDate.isBefore(now)
-        if (!isActive) false
-        else {
-          promo.targetType match {
-            case PromotionTarget.Product => promo.targetIds.contains(media.id)
-            case PromotionTarget.Category => 
-              media.categoryId.exists(catId => promo.targetIds.contains(catId))
-            case _ => false
+    try {
+      val allMedia = MediaRepo.all
+      val allPromotions = Try(PromotionRepo.all).getOrElse(Seq.empty)
+      
+      println(s"📦 [API] Cargando ${allMedia.size} productos para JSON")
+      
+      // Generar JSON manualmente (sin librerías externas)
+      val mediaJsonArray = allMedia.map { media =>
+        // Buscar promoción activa para este producto (por producto O por categoría)
+        val activePromotion = allPromotions.find { promo =>
+          val isActive = !promo.startDate.isAfter(now) && !promo.endDate.isBefore(now)
+          if (!isActive) false
+          else {
+            promo.targetType match {
+              case PromotionTarget.Product => promo.targetIds.contains(media.id)
+              case PromotionTarget.Category => 
+                media.categoryId.exists(catId => promo.targetIds.contains(catId))
+              case _ => false
+            }
           }
         }
-      }
+        
+        val (hasPromotion, discountPercent, discountedPrice) = activePromotion match {
+          case Some(promo) =>
+            val discount = promo.discountPercent
+            val newPrice = media.price * (100 - discount) / 100
+            (true, discount, newPrice)
+          case None =>
+            (false, 0, media.price)
+        }
+        
+        // Obtener ruta completa de la categoría (breadcrumb)
+        val categoryPath = media.categoryId match {
+          case Some(catId) =>
+            val breadcrumb = CategoryRepo.getBreadcrumb(catId)
+            escapeJson(breadcrumb.map(_.name).mkString(" > "))
+          case None => "Sin categoría"
+        }
+        
+        s"""{
+           |  "id": ${media.id},
+           |  "title": "${escapeJson(media.title)}",
+           |  "description": "${escapeJson(media.description)}",
+           |  "productType": "${media.productType.asString}",
+           |  "categoryId": ${media.categoryId.getOrElse("null")},
+           |  "categoryPath": "$categoryPath",
+           |  "assetPath": "${escapeJson(media.assetPath)}",
+           |  "price": ${media.price},
+           |  "rating": ${media.rating},
+           |  "downloadCount": ${media.downloads},
+           |  "stock": ${media.stock},
+           |  "coverImage": "${escapeJson(media.getCoverImageUrl)}",
+           |  "hasPromotion": $hasPromotion,
+           |  "discountPercent": $discountPercent,
+           |  "discountedPrice": $discountedPrice
+           |}""".stripMargin
+      }.mkString(",\n")
       
-      val (hasPromotion, discountPercent, discountedPrice) = activePromotion match {
-        case Some(promo) =>
-          val discount = promo.discountPercent
-          val newPrice = media.price * (100 - discount) / 100
-          (true, discount, newPrice)
-        case None =>
-          (false, 0, media.price)
-      }
+      val json = s"""{"products": [\n$mediaJsonArray\n]}"""
       
-      // Obtener ruta completa de la categoría (breadcrumb)
-      val categoryPath = media.categoryId match {
-        case Some(catId) =>
-          val breadcrumb = CategoryRepo.getBreadcrumb(catId)
-          escapeJson(breadcrumb.map(_.name).mkString(" > "))
-        case None => "Sin categoría"
-      }
-      
-      s"""{
-         |  "id": ${media.id},
-         |  "title": "${escapeJson(media.title)}",
-         |  "description": "${escapeJson(media.description)}",
-         |  "mediaType": "${media.mtype.asString}",
-         |  "categoryId": ${media.categoryId.getOrElse("null")},
-         |  "categoryPath": "$categoryPath",
-         |  "assetPath": "${escapeJson(media.assetPath)}",
-         |  "price": ${media.price},
-         |  "rating": ${media.rating},
-         |  "downloadCount": ${media.downloads},
-         |  "stock": ${media.stock},
-         |  "coverImage": "${media.getCoverImageUrl}",
-         |  "hasPromotion": $hasPromotion,
-         |  "discountPercent": $discountPercent,
-         |  "discountedPrice": $discountedPrice
-         |}""".stripMargin
-    }.mkString(",\n")
-    
-    val json = s"""{"products": [\n$mediaJsonArray\n]}"""
-    
-    HttpResponse(
-      status = 200,
-      statusText = "OK",
-      headers = Map("Content-Type" -> "application/json; charset=UTF-8"),
-      body = json
-    )
+      HttpResponse(
+        status = 200,
+        statusText = "OK",
+        headers = Map("Content-Type" -> "application/json; charset=UTF-8"),
+        body = json
+      )
+    } catch {
+      case e: Exception =>
+        println(s"❌ Error generando JSON de productos: ${e.getMessage}")
+        e.printStackTrace()
+        HttpResponse(
+          status = 500,
+          statusText = "Internal Server Error",
+          headers = Map("Content-Type" -> "application/json; charset=UTF-8"),
+          body = s"""{"error": "Error cargando productos: ${escapeJson(e.getMessage)}"}"""
+        )
+    }
   }
   
   /** Escapa JSON para prevenir errores de sintaxis */
@@ -179,7 +193,7 @@ object AdminController {
   /** GET /admin/media/new */
   def newMediaForm(request: HttpRequest): HttpResponse = {
     AuthController.requireAdmin(request) match {
-      case Right(_) => serveHtml("admin_media_form", request)
+      case Right(_) => serveHtml("addContent", request)
       case Left(res) => res
     }
   }
@@ -188,6 +202,12 @@ object AdminController {
   def createMedia(request: HttpRequest): HttpResponse = {
     AuthController.requireAdmin(request) match {
       case Right(_) =>
+        // 🔍 DEBUG: Ver headers y body crudo
+        println("🔍 [CREATE MEDIA] Headers recibidos:")
+        request.headers.foreach { case (key, value) => println(s"  $key: $value") }
+        println("🔍 [CREATE MEDIA] Body crudo:")
+        println(s"  ${request.body.getOrElse("(sin body)")}")
+        
         val data = request.formData
         
         // 🔍 DEBUG: Ver qué datos llegan del formulario
@@ -198,7 +218,7 @@ object AdminController {
         val desc = data.getOrElse("description", "")
         val price = data.get("price").flatMap(_.toDoubleOption).getOrElse(0.0)
         val catId = data.get("categoryId").flatMap(_.toLongOption)
-        val mtype = MediaType.from(data.getOrElse("mediaType", "video"))
+        val productType = ProductType.from(data.getOrElse("productType", "digital"))
         val url = data.getOrElse("url", "")
         val stock = data.get("stock").flatMap(_.toIntOption).getOrElse(0)
         val promotionId = data.get("promotionId").flatMap(_.toLongOption) // Opcional
@@ -206,13 +226,14 @@ object AdminController {
         println(s"🔍 [CREATE MEDIA] Valores parseados:")
         println(s"  title = '$title'")
         println(s"  price = $price")
-        println(s"  mediaType = ${data.get("mediaType")} → ${mtype.asString}")
+        println(s"  productType = ${data.get("productType")} → ${productType.asString}")
         println(s"  stock = $stock")
         println(s"  url = '$url'")
+        println(s"  categoryId = ${data.get("categoryId")} → $catId")
         println(s"  promotionId = $promotionId")
 
-        // MediaRepo.add(title, description, mtype, price, categoryId, assetPath, coverImage, stock, promotionId)
-        MediaRepo.add(title, desc, mtype, BigDecimal(price), catId, url, None, stock, promotionId)
+        // MediaRepo.add(title, description, productType, price, categoryId, assetPath, stock, promotionId)
+        MediaRepo.add(title, desc, productType, BigDecimal(price), catId, url, stock, promotionId)
         HttpResponse.redirect("/admin/media?success=Medio+creado+exitosamente")
       case Left(res) => res
     }
@@ -258,13 +279,23 @@ object AdminController {
         val desc = data.getOrElse("description", "")
         val price = data.get("price").flatMap(_.toDoubleOption).getOrElse(0.0)
         val catId = data.get("categoryId").flatMap(_.toLongOption)
-        val mtype = MediaType.from(data.getOrElse("mediaType", "video"))
+        val productType = ProductType.from(data.getOrElse("productType", "digital"))
         val url = data.getOrElse("url", "")
         val stock = data.get("stock").flatMap(_.toIntOption).getOrElse(0)
-        val promotionId = data.get("promotionId").flatMap(_.toLongOption) // Opcional
+        val promotionId = data.get("promotionId").flatMap(_.toLongOption)
 
-        // MediaRepo.update(id, title, description, mtype, price, categoryId, assetPath, coverImage, stock, promotionId)
-        MediaRepo.update(id, title, desc, mtype, BigDecimal(price), catId, url, None, stock, promotionId)
+        println(s"🔍 [UPDATE] Valores parseados:")
+        println(s"  id = $id")
+        println(s"  title = '$title'")
+        println(s"  price = $price")
+        println(s"  productType = ${data.get("productType")} → ${productType.asString}")
+        println(s"  stock = $stock")
+        println(s"  url = '$url'")
+        println(s"  categoryId = ${data.get("categoryId")} → $catId")
+        println(s"  promotionId = $promotionId")
+
+        // MediaRepo.update(id, title, description, productType, price, categoryId, assetPath, stock, promotionId)
+        MediaRepo.update(id, title, desc, productType, BigDecimal(price), catId, url, stock, promotionId)
         HttpResponse.redirect("/admin/media?success=Medio+actualizado")
       case Left(res) => res
     }
@@ -305,6 +336,7 @@ object AdminController {
              |  "name": "${escapeJson(cat.name)}",
              |  "parentId": ${cat.parentId.map(_.toString).getOrElse("null")},
              |  "description": "${escapeJson(cat.description)}",
+             |  "productType": "${escapeJson(cat.productType)}",
              |  "path": "${escapeJson(path)}",
              |  "level": $level
              |}""".stripMargin

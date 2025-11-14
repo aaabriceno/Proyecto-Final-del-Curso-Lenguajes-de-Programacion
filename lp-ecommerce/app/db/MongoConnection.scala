@@ -24,7 +24,7 @@ object MongoConnection {
   // Colecciones
   object Collections {
     val users: MongoCollection[Document] = database.getCollection("users")
-    val media: MongoCollection[Document] = database.getCollection("media")
+    val media: MongoCollection[Document] = database.getCollection("productos")  // Renombrado: media → productos
     val categories: MongoCollection[Document] = database.getCollection("categories")
     val carts: MongoCollection[Document] = database.getCollection("carts")
     val downloads: MongoCollection[Document] = database.getCollection("downloads")
@@ -64,10 +64,110 @@ object MongoConnection {
   }
   
   /**
+   * Migración: Renombrar colección 'media' a 'productos' y limpiar campos obsoletos
+   */
+  private def migrateMediaToProductos(): Unit = {
+    try {
+      // Verificar si existe la colección 'media' (vieja)
+      val collections = Await.result(database.listCollectionNames().toFuture(), 5.seconds)
+      
+      if (collections.contains("media")) {
+        println("🔄 Migrando colección 'media' → 'productos'...")
+        
+        // Renombrar colección
+        val mediaCollection = database.getCollection("media")
+        Await.result(
+          mediaCollection.renameCollection(MongoNamespace("lp_ecommerce", "productos")).toFuture(),
+          5.seconds
+        )
+        println("✅ Colección renombrada: 'media' → 'productos'")
+        
+        // Ahora trabajar con la colección 'productos'
+        val productosCollection = database.getCollection("productos")
+        
+        // 1. Eliminar campos obsoletos (mtype, coverImage)
+        println("🗑️  Eliminando campos obsoletos (mtype, coverImage)...")
+        Await.result(
+          productosCollection.updateMany(
+            Document(),
+            org.mongodb.scala.model.Updates.combine(
+              org.mongodb.scala.model.Updates.unset("mtype"),
+              org.mongodb.scala.model.Updates.unset("coverImage")
+            )
+          ).toFuture(),
+          5.seconds
+        )
+        
+        // 2. Agregar productType a productos que no lo tienen
+        println("📦 Agregando campo 'productType' a productos viejos...")
+        Await.result(
+          productosCollection.updateMany(
+            org.mongodb.scala.model.Filters.exists("productType", false),
+            org.mongodb.scala.model.Updates.set("productType", "digital")
+          ).toFuture(),
+          5.seconds
+        )
+        
+        println("✅ Migración completada exitosamente")
+        
+      } else if (collections.contains("productos")) {
+        println("✅ Colección 'productos' ya existe (migración previa)")
+        
+        // Verificar si hay campos obsoletos y eliminarlos
+        val productosCollection = database.getCollection("productos")
+        val sampleDoc = Await.result(productosCollection.find().first().toFuture(), 5.seconds)
+        
+        if (sampleDoc != null && (sampleDoc.containsKey("mtype") || sampleDoc.containsKey("coverImage"))) {
+          println("🗑️  Limpiando campos obsoletos de productos existentes...")
+          Await.result(
+            productosCollection.updateMany(
+              Document(),
+              org.mongodb.scala.model.Updates.combine(
+                org.mongodb.scala.model.Updates.unset("mtype"),
+                org.mongodb.scala.model.Updates.unset("coverImage")
+              )
+            ).toFuture(),
+            5.seconds
+          )
+          println("✅ Campos obsoletos eliminados")
+        }
+        
+        // Agregar productType a productos que no lo tienen
+        val countWithoutProductType = Await.result(
+          productosCollection.countDocuments(
+            org.mongodb.scala.model.Filters.exists("productType", false)
+          ).toFuture(),
+          5.seconds
+        )
+        
+        if (countWithoutProductType > 0) {
+          println(s"📦 Agregando 'productType' a $countWithoutProductType productos...")
+          Await.result(
+            productosCollection.updateMany(
+              org.mongodb.scala.model.Filters.exists("productType", false),
+              org.mongodb.scala.model.Updates.set("productType", "digital")
+            ).toFuture(),
+            5.seconds
+          )
+          println("✅ Campo 'productType' agregado")
+        }
+      }
+      
+    } catch {
+      case e: Exception =>
+        println(s"⚠️  Error durante migración: ${e.getMessage}")
+        // No detener la aplicación, solo advertir
+    }
+  }
+  
+  /**
    * Inicializa datos de ejemplo (solo si la BD está vacía)
    */
   def initializeData(): Unit = {
     println("🔍 Verificando si hay datos iniciales...")
+    
+    // ========= MIGRACIÓN: Renombrar colección 'media' a 'productos' =========
+    migrateMediaToProductos()
     
     val userCount = Await.result(
       Collections.users.countDocuments().toFuture(),

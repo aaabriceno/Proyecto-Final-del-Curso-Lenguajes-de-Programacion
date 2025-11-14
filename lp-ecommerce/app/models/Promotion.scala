@@ -18,13 +18,14 @@ sealed trait PromotionTarget { def asString: String }
 object PromotionTarget {
   case object Product extends PromotionTarget { val asString = "product" }
   case object Category extends PromotionTarget { val asString = "category" }
-  case object MediaType extends PromotionTarget { val asString = "mediatype" }
+  // OBSOLETO: MediaType ya no se usa (ahora usamos ProductType: digital/hardware)
+  // case object MediaType extends PromotionTarget { val asString = "mediatype" }
   case object All extends PromotionTarget { val asString = "all" }
 
   def from(s: String): PromotionTarget = s.toLowerCase match {
     case "product"    => Product
     case "category"   => Category
-    case "mediatype"  => MediaType
+    // case "mediatype"  => MediaType  // OBSOLETO
     case "all"        => All
     case _            => Product
   }
@@ -189,6 +190,9 @@ object PromotionRepo {
   }
 
   /** Promoción activa aplicable a un tipo de media */
+  // OBSOLETO: Ya no usamos MediaType (audio/video/image)
+  // Ahora usamos ProductType (digital/hardware) y las promociones se aplican por categoría
+  /*
   def getActiveForMediaType(mtype: MediaType): Option[Promotion] = {
     val typeId = mtype match {
       case MediaType.Image => 0L
@@ -200,12 +204,14 @@ object PromotionRepo {
       (p.targetType == PromotionTarget.MediaType && p.targetIds.contains(typeId))
     }
   }
+  */
 
   /** Determina la mejor promoción disponible para un producto */
   def getBestPromotionFor(media: Media): Option[Promotion] =
     getActiveForProduct(media.id)
       .orElse(media.categoryId.flatMap(getActiveForCategory))
-      .orElse(getActiveForMediaType(media.mtype))
+      // NOTA: Ya no usamos mediaType, ahora se usa productType (digital/hardware)
+      // Las promociones se aplican por categoría o producto específico
       .orElse(getActive.find(_.targetType == PromotionTarget.All))
 
   // =============================
