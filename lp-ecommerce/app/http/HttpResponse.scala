@@ -12,7 +12,8 @@ case class HttpResponse(
   status: Int,
   statusText: String,
   headers: Map[String, String],
-  body: String
+  body: String,
+  binaryBody: Option[Array[Byte]] = None
 ) {
 
   /** Convierte este objeto en una cadena HTTP válida lista para enviar por el socket */
@@ -27,11 +28,18 @@ case class HttpResponse(
 
     // Agregar Content-Length si no está definido
     if (!headers.contains("Content-Length")) {
-      sb.append(s"Content-Length: ${body.getBytes("UTF-8").length}\r\n")
+      val length = binaryBody match {
+        case Some(bytes) => bytes.length
+        case None => body.getBytes("UTF-8").length
+      }
+      sb.append(s"Content-Length: $length\r\n")
     }
 
     sb.append("\r\n") // Separador entre headers y body
-    sb.append(body)
+    // Para binarios, el body se envía por separado
+    if (binaryBody.isEmpty) {
+      sb.append(body)
+    }
     sb.toString()
   }
 
@@ -128,11 +136,12 @@ object HttpResponse {
    * @param path Ruta relativa (ejemplo: "stylesheets/main.css")
    */
   def serveStaticFile(path: String): HttpResponse = {
-    val file = new File(s"public/$path")
+    val decodedPath = java.net.URLDecoder.decode(path, "UTF-8")
+    val file = new File(s"public/$decodedPath")
     if (!file.exists() || !file.isFile)
-      return notFound(s"Archivo no encontrado: $path")
+      return notFound(s"Archivo no encontrado: $decodedPath")
 
-    val mimeType = detectMimeType(path)
+    val mimeType = detectMimeType(decodedPath)
 
     try {
       if (mimeType.startsWith("text/") || mimeType.contains("javascript") || mimeType.contains("json")) {
@@ -140,15 +149,12 @@ object HttpResponse {
         HttpResponse(200, "OK", Map("Content-Type" -> mimeType), content)
       } else {
         val bytes = Files.readAllBytes(file.toPath)
-        // Convertimos binarios a ISO-8859-1 (para evitar problemas en socket de texto)
         HttpResponse(
           200,
           "OK",
-          Map(
-            "Content-Type" -> mimeType,
-            "Content-Length" -> bytes.length.toString
-          ),
-          new String(bytes, "ISO-8859-1")
+          Map("Content-Type" -> mimeType),
+          "",  // body vacío
+          Some(bytes)  // binaryBody
         )
       }
     } catch {

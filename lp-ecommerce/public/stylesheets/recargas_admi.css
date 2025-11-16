@@ -1,3 +1,12 @@
+    background-color: #f4f8fb;
+    color: #222b45;
+    background-color: #e3eaf2;
+    color: #222b45;
+    background-color: #1976d2;
+    border-color: #1976d2;
+    color: #fff;
+    background-color: #00bcd4;
+    border-color: #00bcd4;
 /* Asegurar texto visible en panel de recargas */
 #recargas-container,
 #recargas-container * {

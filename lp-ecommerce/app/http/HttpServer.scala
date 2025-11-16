@@ -107,6 +107,12 @@ object HttpServer {
       val response = Router.route(request)
       writer.write(response.toHttpString)
       writer.flush()
+      
+      // Si hay binaryBody, enviarlo directamente como bytes
+      response.binaryBody.foreach { bytes =>
+        socket.getOutputStream.write(bytes)
+        socket.getOutputStream.flush()
+      }
 
     } catch {
       case e: Exception =>

@@ -3,7 +3,7 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f4f4f4;
+        background-color: #e3eaf2;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -29,7 +29,7 @@
     width: 100%;
     padding: 10px;
     margin: 5px 0 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #b6c3d1;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -55,7 +55,7 @@
 /* Efecto hover para el botón */
 #send-button:hover, #send-promocion:hover, #send-eliminar:hover, 
 #send-guardar:hover,#send-category:hover,#btn-agregar-category:hover {
-    background-color: #45a049;
+    background-color: #00bcd4;
 }
 
 /* Estilos para el mensaje de error */
@@ -76,8 +76,8 @@ u {
 /* Estilos para el contenedor de la página */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+        background-color: #f4f8fb;
+        color: #222b45;
     margin: 0;
     padding: 0;
 }

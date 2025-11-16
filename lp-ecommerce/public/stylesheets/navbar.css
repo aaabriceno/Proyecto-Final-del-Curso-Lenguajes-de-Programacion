@@ -1,8 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f2f2f2;
+    background-color: #e3eaf2 !important;
+    color: #222 !important;
 }
 
 h1 {
@@ -11,7 +12,7 @@ h1 {
 
 /* Estilos para la barra de navegación */
 header {
-    background-color: #333; /* Color de fondo */
+    background-color: #1976d2 !important; /* Azul tech */
     padding: 10px; /* Espacio interior */
 }
 
@@ -33,15 +34,17 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #fff; /* Color del texto */
-    text-decoration: none; /* Quitar subrayado de los enlaces */
-    padding: 5px 10px; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: background-color 0.3s; /* Transición de color de fondo */
+    color: #fff !important; /* Color del texto */
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+    background: #1976d2;
 }
 
 nav ul li a:hover {
-    background-color: #555; /* Color de fondo al pasar el mouse */
+    background: #00bcd4; /* Cian tech al hover */
+    color: #fff;
 }
 
 /* Estilos para la barra de búsqueda */
@@ -67,14 +70,14 @@ nav ul li form input[type="text"] {
 }
 
 nav ul li form button {
-    background-color: #555;
+    background-color: #1976d2;
     color: #fff;
     border: none;
     cursor: pointer;
 }
 
 nav ul li form button:hover {
-    background-color: #333;
+    background-color: #00bcd4;
 }
 
 /* Estilo para que los elementos después de la barra estén pegados a la derecha */
@@ -83,8 +86,8 @@ nav ul li form button:hover {
 /* navbar.css */
 header {
     width: 100%;
-    background-color: #333;
-    color: white;
+    background-color: #e3eaf2 !important;
+    color: #222 !important;
 }
 
 nav ul {
@@ -132,7 +135,7 @@ nav a {
     padding: 8px 16px;
     background-color: #04AA6D;
     border: none;
-    color: white;
+    color: #fff !important;
     cursor: pointer;
 }
 
@@ -153,7 +156,7 @@ nav a {
 }
 
 #recargas-btn:hover,#logout-btn:hover,#logo-btn:hover {
-    background-color: #555;
+    background-color: #e3eaf2 !important;
 }
 
 .filter-checkboxes {
@@ -171,7 +174,7 @@ nav a {
 }
 
 #search-results {
-    background-color: #f4f4f4;
+    background-color: #fff !important;
     padding: 20px;
 }
 
@@ -191,7 +194,7 @@ nav a {
 
 .clear-search-btn {
     margin-left: 5px;
-    background-color: #ccc;
+    background-color: #fff !important;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
@@ -199,7 +202,7 @@ nav a {
 }
 
 .clear-search-btn:hover {
-    background-color: #999;
+    background-color: #e3eaf2 !important;
 }
 
 

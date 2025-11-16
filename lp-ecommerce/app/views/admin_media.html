@@ -13,6 +13,11 @@
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
 </head>
 
+<style>
+</style>
+</style>
+</head>
+
 <body class="bg-dark text-light">
 
   <!-- ===== NAVBAR ADMIN ===== -->
@@ -82,16 +87,16 @@
 
       <!-- ===== Tabla de productos ===== -->
       <div class="card shadow-sm border-0">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">📦 Total de productos: 0</h5>
-          <button class="btn btn-sm btn-outline-light disabled">
-            <i class="bi bi-arrow-repeat me-1"></i> Actualizar
-          </button>
-        </div>
+          <div class="card-header d-flex justify-content-between align-items-center" style="background: #1976d2; color: #fff;">
+            <h5 class="mb-0">📦 Total de productos: 0</h5>
+            <button class="btn btn-sm btn-outline-light disabled" style="color: #1976d2; border-color: #1976d2; background: #fff;">
+              <i class="bi bi-arrow-repeat me-1"></i> Actualizar
+            </button>
+          </div>
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle mb-0">
-              <thead class="table-secondary text-dark">
+            <table class="table align-middle mb-0" style="background: #e3eaf2; color: #222b45;">
+              <thead style="background: #f4f8fb; color: #1976d2;">
                 <tr>
                   <th>ID</th>
                   <th>Título</th>
@@ -170,9 +175,9 @@
       if (products.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" class="text-center text-muted py-4">
-              No hay productos disponibles 😴
-            </td>
+                    <td colspan="8" class="text-center py-4" style="color: #1976d2;">
+                      No hay productos disponibles 😴
+                    </td>
           </tr>
         `;
       } else {
