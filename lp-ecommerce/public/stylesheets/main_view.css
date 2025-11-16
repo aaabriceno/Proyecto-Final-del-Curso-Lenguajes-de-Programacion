@@ -8,13 +8,13 @@
     margin: 0 10px;
     border: none;
     cursor: pointer;
-    background-color: #333;
+    background-color: #1976d2;
     color: #fff;
     border-radius: 5px;
 }
 
 .content-buttons button:hover, .buy-button:hover,.gift-button:hover, .send-gift:hover, .rate-button:hover  {
-    background-color: #555;
+    background-color: #00bcd4;
 }
 
 .container {
@@ -54,15 +54,15 @@
 label[for="content-filter"] {
     font-family: 'Segoe UI', sans-serif;
     font-size: 16px;
-    color: #000000;
+    color: #222b45;
     margin-right: 10px;
 }
 
 /* Estilo del select */
 #content-filter {
-    background-color: #333;
-    color: #ffffff;
-    border: 1px solid #444;
+    background-color: #e3eaf2;
+    color: #222b45;
+    border: 1px solid #b6c3d1;
     border-radius: 5px;
     padding: 8px 12px;
     font-size: 15px;
@@ -71,8 +71,8 @@ label[for="content-filter"] {
 }
 
 #content-filter:hover {
-    border-color: #555;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    border-color: #1976d2;
+    box-shadow: 0 0 5px #1976d233;
 }
 
 .search-actions {

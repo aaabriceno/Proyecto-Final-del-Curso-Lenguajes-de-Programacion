@@ -11,14 +11,79 @@
 
   <!-- ===== Estilos locales ===== -->
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
+  <style>
+    body {
+      background: #e3eaf2 !important;
+      color: #222 !important;
+    }
+    main.container, .card {
+      background: #e3eaf2 !important;
+      color: #222 !important;
+    }
+    .card-header {
+      background: #e3eaf2 !important;
+      color: #1976d2 !important;
+    }
+    .navbar, .navbar.bg-dark {
+      background: #e3eaf2 !important;
+      color: #1976d2 !important;
+    }
+    .navbar .navbar-brand, .navbar .nav-link, .navbar .btn {
+      color: #1976d2 !important;
+    }
+    .breadcrumb {
+      background: transparent !important;
+      color: #1976d2 !important;
+    }
+    .breadcrumb-item a, .breadcrumb-item.active {
+      color: #1976d2 !important;
+    }
+    h1, h5, h2, h3, h4 {
+      color: #1976d2 !important;
+    }
+    /* El fondo de la tarjeta ahora es azul celeste claro para mejor contraste */
+    .card-header {
+      background: #e3eaf2 !important;
+      color: #1976d2 !important;
+    }
+    .btn-warning {
+      background: #ffe082 !important;
+      color: #1976d2 !important;
+      border-color: #ffe082 !important;
+    }
+    .btn-danger {
+      background: #d32f2f !important;
+      color: #fff !important;
+      border-color: #d32f2f !important;
+    }
+    .btn-secondary {
+      background: #b6c3d1 !important;
+      color: #222 !important;
+      border-color: #b6c3d1 !important;
+    }
+    /* Botones de la navbar SIEMPRE fondo azul y texto blanco */
+    .navbar .btn, .navbar .btn-outline-light, .navbar .btn-outline-danger {
+      background: #1976d2 !important;
+      color: #fff !important;
+      border-color: #1976d2 !important;
+    }
+    .navbar .btn-outline-danger {
+      background: #d32f2f !important;
+      border-color: #d32f2f !important;
+    }
+    .navbar .btn:hover, .navbar .btn-outline-light:hover, .navbar .btn-outline-danger:hover {
+      filter: brightness(0.9);
+      color: #fff !important;
+    }
+  </style>
 </head>
 
-<body class="bg-dark text-light">
+<body>
 
   <!-- ===== NAVBAR ADMIN ===== -->
-  <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+  <nav class="navbar border-bottom shadow-sm">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
+      <a class="navbar-brand fw-semibold" href="/" style="color: #1976d2 !important;">LP Studios</a>
       <div class="ms-auto d-flex gap-2">
         <a class="btn btn-outline-danger btn-sm" href="/admin">👨‍💼 Admin</a>
         <a class="btn btn-outline-light btn-sm" href="/login">
@@ -36,12 +101,12 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a href="/admin" class="text-white text-decoration-none">Dashboard</a>
+              <a href="/admin" class="text-decoration-none" style="color: #1976d2 !important;">Dashboard</a>
             </li>
             <li class="breadcrumb-item">
-              <a href="/admin/media" class="text-white text-decoration-none">Productos</a>
+              <a href="/admin/media" class="text-decoration-none" style="color: #1976d2 !important;">Productos</a>
             </li>
-            <li class="breadcrumb-item active text-light" aria-current="page">Vista</li>
+            <li class="breadcrumb-item active" aria-current="page" style="color: #1976d2 !important;">Vista</li>
           </ol>
         </nav>
       </div>
@@ -49,10 +114,10 @@
 
     <!-- ===== CARD DETALLE ===== -->
     <div class="card border-0 shadow-sm">
-      <div class="card-header bg-danger text-white">
+      <div class="card-header">
         <h5 class="mb-0"><i class="bi bi-info-circle-fill me-2"></i> Información del Producto (Admin)</h5>
       </div>
-      <div class="card-body bg-dark text-light">
+      <div class="card-body">
         <div class="row">
           <div class="col-md-6">
             <p><strong>ID:</strong> 1</p>

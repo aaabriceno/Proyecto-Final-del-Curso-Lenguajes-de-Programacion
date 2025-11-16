@@ -53,26 +53,17 @@ async function loadAllCategories() {
 // ============================================================
 function setupProductTypeSelector() {
   const productTypeSelect = document.getElementById("productType");
-  const mediaTypeContainer = document.getElementById("mediaType-container");
   
   productTypeSelect.addEventListener("change", (e) => {
     const selectedType = e.target.value;
     console.log(`🔄 Tipo de producto cambiado a: ${selectedType}`);
     
     if (selectedType === "digital") {
-      // Mostrar selector de mediaType solo para productos digitales
-      mediaTypeContainer.style.display = "block";
-      document.getElementById("content-type").required = true;
       loadCategoriesByType("digital");
     } else if (selectedType === "hardware") {
-      // Ocultar selector de mediaType para productos físicos
-      mediaTypeContainer.style.display = "none";
-      document.getElementById("content-type").required = false;
-      document.getElementById("content-type").value = "image"; // Default para hardware
       loadCategoriesByType("hardware");
     } else {
       // Limpiar todos los selectores
-      mediaTypeContainer.style.display = "none";
       clearAllSelectors();
     }
   });
@@ -299,21 +290,9 @@ async function loadProductData(productId) {
     
     // 🔥 NUEVO: Establecer productType y disparar evento para cargar categorías
     const productType = product.productType || "digital"; // Default a digital si no existe
-    const mediaType = product.mediaType || "video"; // Default a video
     
     document.getElementById("productType").value = productType;
     console.log(`📦 Producto cargado con tipo: ${productType}`);
-    
-    // Mostrar/ocultar mediaType según el tipo de producto
-    const mediaTypeContainer = document.getElementById("mediaType-container");
-    if (productType === "digital") {
-      mediaTypeContainer.style.display = "block";
-      document.getElementById("content-type").value = mediaType;
-      document.getElementById("content-type").required = true;
-    } else {
-      mediaTypeContainer.style.display = "none";
-      document.getElementById("content-type").required = false;
-    }
     
     // Cargar categorías filtradas por tipo
     loadCategoriesByType(productType);
@@ -427,18 +406,6 @@ async function saveProduct(productId) {
   formData.append("description", description);
   formData.append("categoryId", categoryId); // ✅ AGREGADO
   
-  // Solo agregar mediaType si es producto Digital
-  if (productType === "digital") {
-    const mediaType = document.getElementById("content-type") ? 
-      document.getElementById("content-type").value : "video";
-    formData.append("mediaType", mediaType);
-    console.log(`  mediaType: ${mediaType} (producto digital)`);
-  } else {
-    // Para hardware, usar un valor por defecto que no afecte
-    formData.append("mediaType", "image");
-    console.log(`  mediaType: image (producto hardware - valor por defecto)`);
-  }
-  
   console.log("📤 Actualizando producto...");
   console.log(`  title: ${title}`);
   console.log(`  price: ${price}`);
@@ -467,4 +434,92 @@ async function saveProduct(productId) {
     console.error("Error guardando producto:", error);
     alert("Error de conexión al guardar");
   }
+}
+
+// ============================================================
+// EXPLORADOR DE ARCHIVOS
+// ============================================================
+
+// Variable para rastrear la ruta actual
+let currentPath = [];
+
+// ============================================================
+// Cargar archivos al abrir el modal
+// ============================================================
+document.getElementById("browse-btn").addEventListener("click", () => {
+  loadFiles([]);
+});
+
+// ============================================================
+// Cargar lista de archivos
+// ============================================================
+async function loadFiles(path) {
+  currentPath = path;
+  
+  try {
+    const response = await fetch("/api/files/list");
+    const data = await response.json();
+    
+    const fileList = document.getElementById("file-list");
+    fileList.innerHTML = "";
+    
+    // Filtrar archivos por la ruta actual
+    const filteredFiles = data.files.filter(file => {
+      const filePathParts = file.path.split("/");
+      return filePathParts.length === (path.length + 1) && 
+             filePathParts.slice(0, path.length).join("/") === path.join("/");
+    });
+    
+    // Agregar botón "atrás" si no estamos en raíz
+    if (path.length > 0) {
+      const backItem = document.createElement("button");
+      backItem.className = "list-group-item list-group-item-action d-flex align-items-center";
+      backItem.innerHTML = '<i class="bi bi-arrow-left me-2"></i> ..';
+      backItem.onclick = () => loadFiles(path.slice(0, -1));
+      fileList.appendChild(backItem);
+    }
+    
+    // Agregar archivos/carpetas
+    filteredFiles.forEach(file => {
+      const item = document.createElement("button");
+      item.className = "list-group-item list-group-item-action d-flex align-items-center";
+      
+      const icon = file.type === "folder" ? 
+        '<i class="bi bi-folder me-2 text-warning"></i>' : 
+        '<i class="bi bi-file-earmark-image me-2 text-success"></i>';
+      
+      item.innerHTML = `${icon} ${file.name}`;
+      
+      if (file.type === "folder") {
+        item.onclick = () => loadFiles([...path, file.name]);
+      } else {
+        item.onclick = () => selectFile(file.path);
+      }
+      
+      fileList.appendChild(item);
+    });
+    
+    if (filteredFiles.length === 0) {
+      fileList.innerHTML = '<div class="text-center text-muted py-4">No hay archivos en esta carpeta</div>';
+    }
+    
+  } catch (error) {
+    console.error("Error cargando archivos:", error);
+    document.getElementById("file-list").innerHTML = 
+      '<div class="text-center text-danger py-4">Error al cargar archivos</div>';
+  }
+}
+
+// ============================================================
+// Seleccionar archivo
+// ============================================================
+function selectFile(filePath) {
+  const fullPath = `/assets/images/${filePath}`;
+  document.getElementById("url").value = fullPath;
+  
+  // Cerrar modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById("fileBrowserModal"));
+  modal.hide();
+  
+  console.log(`📁 Archivo seleccionado: ${fullPath}`);
 }

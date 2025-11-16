@@ -11,9 +11,64 @@
 
   <!-- ===== Estilos locales ===== -->
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
+  <style>
+    body.bg-light {
+      background: #f6eee3 !important;
+    }
+    .card.bg-dark, .card-header.bg-primary, .card-body, .border-secondary, .card {
+      background: #f3e3c3 !important;
+      color: #5a3e1b !important;
+      border-color: #e0c9a6 !important;
+    }
+    .card-header.bg-primary {
+      background: #d2b48c !important;
+      color: #5a3e1b !important;
+    }
+    .form-label, .category-link, .text-light, .card-title.text-white {
+      color: #5a3e1b !important;
+    }
+    .btn-primary, .btn-outline-info {
+      background: #b6894a !important;
+      border-color: #b6894a !important;
+      color: #fff !important;
+    }
+    .btn-primary:hover, .btn-outline-info:hover {
+      background: #a6783a !important;
+      border-color: #a6783a !important;
+    }
+    .list-group-item {
+      background: #f3e3c3 !important;
+      color: #5a3e1b !important;
+      border: none !important;
+    }
+    .list-group-item.active {
+      background: #b6894a !important;
+      color: #fff !important;
+    }
+    .badge.bg-info {
+      background: #b6894a !important;
+      color: #fff !important;
+    }
+    .badge.bg-success {
+      background: #7c9a5b !important;
+    }
+    .badge.bg-danger {
+      background: #c97a5a !important;
+    }
+    .alert-info {
+      background: #f6eee3 !important;
+      color: #5a3e1b !important;
+      border-color: #e0c9a6 !important;
+    }
+    .alert-danger {
+      background: #fbeee6 !important;
+      color: #a94442 !important;
+      border-color: #e0c9a6 !important;
+    }
+  </style>
 </head>
 
-<body class="bg-dark text-light">
+<body class="bg-light text-dark">
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
@@ -40,23 +95,9 @@
           </div>
           <div class="card-body">
             <!-- Búsqueda -->
-            <form method="GET" class="mb-4">
+            <div class="mb-4">
               <label class="form-label fw-bold">Buscar</label>
-              <input type="text" class="form-control form-control-sm" name="q" placeholder="Buscar productos...">
-              <button type="submit" class="btn btn-primary btn-sm w-100 mt-2">Buscar</button>
-            </form>
-
-            <hr class="border-secondary">
-
-            <!-- Filtro por tipo -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">Tipo</label>
-              <div class="list-group mb-4">
-                <a href="/shop" class="list-group-item list-group-item-action active">📚 Todos</a>
-                <a href="/shop?type=image" class="list-group-item list-group-item-action">🖼️ Imágenes</a>
-                <a href="/shop?type=audio" class="list-group-item list-group-item-action">🎵 Audio</a>
-                <a href="/shop?type=video" class="list-group-item list-group-item-action">🎬 Video</a>
-              </div>
+              <input type="text" id="search-input" class="form-control form-control-sm" placeholder="Buscar productos...">
             </div>
 
             <hr class="border-secondary">
@@ -64,20 +105,7 @@
             <!-- Filtro por categoría -->
             <div>
               <label class="form-label fw-bold">Categorías</label>
-              <div class="list-group">
-                <a href="/shop" class="list-group-item list-group-item-action active">
-                  📂 Todas <span class="badge bg-secondary float-end">0</span>
-                </a>
-                <a href="/shop?category=1" class="list-group-item list-group-item-action">
-                  📁 Música <span class="badge bg-secondary float-end">10</span>
-                </a>
-                <a href="/shop?category=2" class="list-group-item list-group-item-action">
-                  📁 Videos <span class="badge bg-secondary float-end">5</span>
-                </a>
-                <a href="/shop?category=3" class="list-group-item list-group-item-action">
-                  📁 Imágenes <span class="badge bg-secondary float-end">8</span>
-                </a>
-              </div>
+              <div id="categories-tree"></div>
             </div>
           </div>
         </div>
@@ -87,7 +115,17 @@
       <section class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h2>Catálogo</h2>
-          <span class="text-muted">Mostrando 1 producto(s)</span>
+          <div class="d-flex gap-2 align-items-center">
+            <select id="sort-select" class="form-select form-select-sm" style="width: auto;">
+              <option value="downloads-desc">Más comprados</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+              <option value="name-asc">Nombre: A-Z</option>
+              <option value="name-desc">Nombre: Z-A</option>
+              <option value="rating-desc">Mejor calificados</option>
+            </select>
+            <span class="text-muted">Mostrando <span id="product-count">0</span> producto(s)</span>
+          </div>
         </div>
 
         <!-- Mensaje de info si no hay productos -->
@@ -143,27 +181,123 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
+    let categories = [];
+    
+    // Función para obtener descendientes de una categoría
+    function getDescendants(catId, cats) {
+      const descendants = [];
+      const children = cats.filter(c => c.parentId === catId);
+      for (const child of children) {
+        descendants.push(child.id);
+        descendants.push(...getDescendants(child.id, cats));
+      }
+      return descendants;
+    }
+    
+    // Función para renderizar el árbol de categorías (solo flecha y nombre clickable)
+    function renderTree(parentId = null, level = 0) {
+      const children = categories.filter(c => c.parentId === parentId);
+      if (children.length === 0 && level === 0) {
+        return '<div class="text-muted small">No hay categorías disponibles</div>';
+      }
+      return children.map(cat => {
+        const hasChildren = categories.some(c => c.parentId === cat.id);
+        const indent = level * 20;
+        return `
+          <div class="d-flex align-items-center mb-1" style="margin-left: ${indent}px;">
+            ${hasChildren ? `<i class="bi bi-chevron-right me-2 toggle-icon" data-cat="${cat.id}" style="cursor:pointer;"></i>` : '<span class="me-2" style="width:16px;"></span>'}
+            <span class="category-link text-light" data-cat="${cat.id}" style="cursor:pointer;">${cat.name}</span>
+          </div>
+          <div class="children" id="children-${cat.id}" style="display:none;"></div>
+        `;
+      }).join('');
+    }
+
+    async function loadCategories() {
+      try {
+        const response = await fetch('/api/categories');
+        if (!response.ok) throw new Error('No se pudo cargar categorías');
+        const data = await response.json();
+        console.log('Respuesta de /api/categories:', data); // DEBUG
+        categories = Array.isArray(data.categories) ? data.categories : [];
+        const treeHtml = renderTree();
+        document.getElementById('categories-tree').innerHTML = treeHtml;
+      } catch (error) {
+        document.getElementById('categories-tree').innerHTML = '<div class="text-danger small">Error al cargar categorías</div>';
+        categories = [];
+        console.error('Error cargando categorías:', error);
+      }
+    }
+
+    // Evento para expandir/collapse subcategorías dinámicamente
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('toggle-icon')) {
+        const catId = parseInt(e.target.getAttribute('data-cat'));
+        const childrenDiv = document.getElementById('children-' + catId);
+        if (childrenDiv.style.display === 'none' || childrenDiv.style.display === '') {
+          // Renderizar hijos solo al expandir
+          childrenDiv.innerHTML = renderTree(catId, (parseInt(e.target.parentElement.style.marginLeft)||0)/20 + 1);
+          childrenDiv.style.display = 'block';
+          e.target.classList.remove('bi-chevron-right');
+          e.target.classList.add('bi-chevron-down');
+        } else {
+          childrenDiv.style.display = 'none';
+          e.target.classList.remove('bi-chevron-down');
+          e.target.classList.add('bi-chevron-right');
+        }
+      }
+      // Filtrar productos al hacer clic en el nombre de la categoría
+      if (e.target.classList.contains('category-link')) {
+        const catId = parseInt(e.target.getAttribute('data-cat'));
+        selectedCategoryId = catId;
+        loadProducts();
+      }
+    });
+    
+    // Variable global para la categoría seleccionada
+    let selectedCategoryId = null;
+
     // Cargar productos dinámicamente
     async function loadProducts() {
       try {
+        await loadCategories();
         const response = await fetch('/api/media');
         const data = await response.json();
-        const products = data.products;
-        
+        let products = data.products || [];
+        const query = document.getElementById('search-input').value.toLowerCase();
+        // Filtrar productos por búsqueda
+        if (query) {
+          products = products.filter(p => 
+            p.title.toLowerCase().includes(query) || 
+            p.description.toLowerCase().includes(query)
+          );
+        }
+        // Filtrar productos por categoría seleccionada
+        if (selectedCategoryId) {
+          const categoryIds = new Set();
+          categoryIds.add(selectedCategoryId);
+          getDescendants(selectedCategoryId, categories).forEach(id => categoryIds.add(id));
+          products = products.filter(p => categoryIds.has(p.categoryId));
+        }
+        // Ordenar productos
+        const sortSelect = document.getElementById('sort-select');
+        const sortBy = sortSelect.value;
+        sortProducts(products, sortBy);
         const grid = document.getElementById('products-grid');
-        
+        const countSpan = document.getElementById('product-count');
         if (products.length === 0) {
           grid.innerHTML = `
             <div class="col-12">
               <div class="alert alert-info">
                 <i class="bi bi-info-circle me-2"></i>
-                No hay productos disponibles en este momento.
+                No se encontraron productos con los filtros aplicados.
+                <a href="/shop" class="alert-link">Ver todos</a>
               </div>
             </div>
           `;
+          countSpan.textContent = '0';
           return;
         }
-        
         // Generar cards de productos
         grid.innerHTML = products.map(product => `
           <div class="col-12 col-sm-6 col-lg-4">
@@ -181,15 +315,13 @@
                    style="height: 200px; object-fit: cover;">
               <div class="card-body">
                 <h5 class="card-title text-white">${product.title}</h5>
-                <p class="card-text small text-muted">ID: ${product.id}</p>
-
+                <p class="card-text small text-muted">${product.description.substring(0, 50)}${product.description.length > 50 ? '...' : ''}</p>
                 <div class="mb-2">
                   <span class="badge ${product.stock > 0 ? 'bg-success' : 'bg-danger'}">
-                    ${product.stock > 0 ? `✅ Disponible (${product.stock} unidades)` : '❌ Agotado'}
+                    ${product.stock > 0 ? `✅ Disponible (${product.stock})` : '❌ Agotado'}
                   </span>
                   <span class="badge bg-info">${product.mediaType}</span>
                 </div>
-
                 <div class="d-flex justify-content-between align-items-center">
                   ${product.hasPromotion ? `
                     <div>
@@ -209,13 +341,8 @@
             </div>
           </div>
         `).join('');
-        
-        // Actualizar contador
-        document.querySelector('.d-flex.justify-content-between span').textContent = 
-          `Mostrando ${products.length} producto(s)`;
-          
+        countSpan.textContent = products.length;
       } catch (error) {
-        console.error('Error cargando productos:', error);
         document.getElementById('products-grid').innerHTML = `
           <div class="col-12">
             <div class="alert alert-danger">
@@ -223,6 +350,31 @@
             </div>
           </div>
         `;
+        console.error('Error cargando productos:', error);
+      }
+    }
+    
+    function sortProducts(products, sortBy) {
+      switch (sortBy) {
+        case 'price-asc':
+          products.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-desc':
+          products.sort((a, b) => b.price - a.price);
+          break;
+        case 'name-asc':
+          products.sort((a, b) => a.title.localeCompare(b.title));
+          break;
+        case 'name-desc':
+          products.sort((a, b) => b.title.localeCompare(a.title));
+          break;
+        case 'rating-desc':
+          products.sort((a, b) => b.rating - a.rating);
+          break;
+        case 'downloads-desc':
+        default:
+          products.sort((a, b) => b.downloadCount - a.downloadCount);
+          break;
       }
     }
     
@@ -238,8 +390,7 @@
         });
         
         if (response.ok || response.redirected) {
-          alert(`✅ Producto ${productId} agregado al carrito`);
-          // NO redirigir automáticamente - el usuario puede seguir navegando
+          alert(`✅ Producto agregado al carrito`);
         } else {
           const text = await response.text();
           alert(`❌ Error: ${text}`);
@@ -251,7 +402,40 @@
     }
     
     // Cargar al inicio
-    window.addEventListener('DOMContentLoaded', loadProducts);
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProducts();
+      
+      // Cambiar ordenamiento
+      document.getElementById('sort-select').addEventListener('change', loadProducts);
+      
+      // Buscar en tiempo real
+      document.getElementById('search-input').addEventListener('input', loadProducts);
+    });
+    
+    // Event listeners para expandir/colapsar categorías
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('toggle-icon')) {
+        const childrenDiv = e.target.parentElement.querySelector('.children');
+        if (childrenDiv) {
+          if (childrenDiv.style.display === 'none' || childrenDiv.style.display === '') {
+            childrenDiv.style.display = 'block';
+            e.target.classList.remove('bi-chevron-right');
+            e.target.classList.add('bi-chevron-down');
+          } else {
+            childrenDiv.style.display = 'none';
+            e.target.classList.remove('bi-chevron-down');
+            e.target.classList.add('bi-chevron-right');
+          }
+        }
+      }
+    });
+    
+    // Event listener para checkboxes de categorías
+    document.addEventListener('change', e => {
+      if (e.target.type === 'checkbox' && e.target.closest('#categories-tree')) {
+        loadProducts();
+      }
+    });
   </script>
 </body>
 </html>

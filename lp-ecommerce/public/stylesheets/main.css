@@ -1,0 +1,46 @@
+
+/* Paleta tech global */
+:root {
+	--color-bg-main: #f4f8fb;
+	--color-bg-card: #e3eaf2;
+	--color-primary: #1976d2;
+	--color-accent: #00bcd4;
+	--color-accent2: #7c4dff;
+	--color-success: #00e676;
+	--color-text-main: #222b45;
+	--color-text-light: #fff;
+	--color-border: #b6c3d1;
+}
+
+body, html {
+	background: var(--color-bg-main);
+	color: var(--color-text-main);
+	font-family: 'Montserrat', Arial, sans-serif;
+}
+
+a {
+	color: var(--color-primary);
+	text-decoration: none;
+}
+a:hover {
+	color: var(--color-accent2);
+}
+
+button, .btn, input[type="submit"] {
+	background: var(--color-primary);
+	color: var(--color-text-light);
+	border: none;
+	border-radius: 6px;
+	transition: background 0.2s;
+}
+button:hover, .btn:hover, input[type="submit"]:hover {
+	background: var(--color-accent);
+}
+
+table {
+	background: var(--color-bg-card);
+	color: var(--color-text-main);
+}
+th, td {
+	color: var(--color-text-main) !important;
+}

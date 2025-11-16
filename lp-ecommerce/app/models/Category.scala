@@ -182,12 +182,12 @@ object CategoryRepo {
     println(s"🗑️  Todas las categorías eliminadas")
   }
 
-  def add(name: String, parentId: Option[Long], description: String = ""): Category = synchronized {
+  def add(name: String, parentId: Option[Long], description: String = "", productType: String = "digital"): Category = synchronized {
     parentId.foreach { pid =>
       require(find(pid).isDefined, s"Categoría padre $pid no existe")
     }
 
-    val category = Category(nextId(), name, parentId, description)
+    val category = Category(nextId(), name, parentId, description, productType)
     Await.result(
       collection.insertOne(categoryToDoc(category)).toFuture(),
       5.seconds
@@ -229,13 +229,10 @@ object CategoryRepo {
     find(id) match {
       case Some(category) =>
         Await.result(
-          collection.updateOne(
-            equal("_id", id),
-            set("isActive", false)
-          ).toFuture(),
+          collection.deleteOne(equal("_id", id)).toFuture(),
           5.seconds
         )
-        println(s"🗑️ Categoría eliminada (soft delete): ${category.name} (ID: ${id})")
+        println(s"🗑️ Categoría eliminada completamente: ${category.name} (ID: ${id})")
         true
       case None => false
     }

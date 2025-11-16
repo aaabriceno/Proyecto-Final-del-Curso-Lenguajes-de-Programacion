@@ -274,3 +274,91 @@ async function saveProduct() {
     alert("❌ Error de conexión");
   }
 }
+
+// ============================================================
+// EXPLORADOR DE ARCHIVOS
+// ============================================================
+
+// Variable para rastrear la ruta actual
+let currentPath = [];
+
+// ============================================================
+// Cargar archivos al abrir el modal
+// ============================================================
+document.getElementById("browse-btn").addEventListener("click", () => {
+  loadFiles([]);
+});
+
+// ============================================================
+// Cargar lista de archivos
+// ============================================================
+async function loadFiles(path) {
+  currentPath = path;
+  
+  try {
+    const response = await fetch("/api/files/list");
+    const data = await response.json();
+    
+    const fileList = document.getElementById("file-list");
+    fileList.innerHTML = "";
+    
+    // Filtrar archivos por la ruta actual
+    const filteredFiles = data.files.filter(file => {
+      const filePathParts = file.path.split("/");
+      return filePathParts.length === (path.length + 1) && 
+             filePathParts.slice(0, path.length).join("/") === path.join("/");
+    });
+    
+    // Agregar botón "atrás" si no estamos en raíz
+    if (path.length > 0) {
+      const backItem = document.createElement("button");
+      backItem.className = "list-group-item list-group-item-action d-flex align-items-center";
+      backItem.innerHTML = '<i class="bi bi-arrow-left me-2"></i> ..';
+      backItem.onclick = () => loadFiles(path.slice(0, -1));
+      fileList.appendChild(backItem);
+    }
+    
+    // Agregar archivos/carpetas
+    filteredFiles.forEach(file => {
+      const item = document.createElement("button");
+      item.className = "list-group-item list-group-item-action d-flex align-items-center";
+      
+      const icon = file.type === "folder" ? 
+        '<i class="bi bi-folder me-2 text-warning"></i>' : 
+        '<i class="bi bi-file-earmark-image me-2 text-success"></i>';
+      
+      item.innerHTML = `${icon} ${file.name}`;
+      
+      if (file.type === "folder") {
+        item.onclick = () => loadFiles([...path, file.name]);
+      } else {
+        item.onclick = () => selectFile(file.path);
+      }
+      
+      fileList.appendChild(item);
+    });
+    
+    if (filteredFiles.length === 0) {
+      fileList.innerHTML = '<div class="text-center text-muted py-4">No hay archivos en esta carpeta</div>';
+    }
+    
+  } catch (error) {
+    console.error("Error cargando archivos:", error);
+    document.getElementById("file-list").innerHTML = 
+      '<div class="text-center text-danger py-4">Error al cargar archivos</div>';
+  }
+}
+
+// ============================================================
+// Seleccionar archivo
+// ============================================================
+function selectFile(filePath) {
+  const fullPath = `/assets/images/${filePath}`;
+  document.getElementById("content-url").value = fullPath;
+  
+  // Cerrar modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById("fileBrowserModal"));
+  modal.hide();
+  
+  console.log(`📁 Archivo seleccionado: ${fullPath}`);
+}

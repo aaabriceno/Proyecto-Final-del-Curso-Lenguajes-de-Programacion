@@ -98,7 +98,12 @@
           
           <div class="mb-3">
             <label for="content-url" class="form-label">URL del archivo</label>
-            <input type="text" id="content-url" name="url" class="form-control" placeholder="Ej: /media/audio/song.mp3">
+            <div class="input-group">
+              <input type="text" id="content-url" name="url" class="form-control" placeholder="Ej: /assets/images/digital/games/action/imagen.jpg">
+              <button type="button" class="btn btn-outline-secondary" id="browse-btn" data-bs-toggle="modal" data-bs-target="#fileBrowserModal">
+                <i class="bi bi-folder2-open"></i> Buscar
+              </button>
+            </div>
             <div class="form-text">Ruta del archivo multimedia (opcional)</div>
           </div>
 
@@ -172,3 +177,23 @@
   <script src="/assets/javascripts/addContent.js"></script>
 </body>
 </html>
+
+<!-- ===== MODAL EXPLORADOR DE ARCHIVOS ===== -->
+<div class="modal fade" id="fileBrowserModal" tabindex="-1" aria-labelledby="fileBrowserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="fileBrowserModalLabel">Seleccionar Archivo de Imagen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="file-list" class="list-group">
+          <!-- Los archivos se cargarán aquí -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

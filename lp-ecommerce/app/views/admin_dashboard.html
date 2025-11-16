@@ -13,20 +13,85 @@
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
 </head>
 
-<body class="bg-dark text-light">
+<style>
+  body {
+    background: #e3eaf2 !important;
+    color: #222 !important;
+  }
+  .navbar, .navbar.bg-dark, .card-header.bg-dark {
+    background: #e3eaf2 !important;
+    color: #1976d2 !important;
+  }
+  .navbar .navbar-brand, .navbar .nav-link, .navbar .btn {
+    color: #1976d2 !important;
+  }
+  .card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    border: none !important;
+    color: #222 !important;
+  }
+  .card-title, h1, h3, h5, h2, h4 {
+    color: #1976d2 !important;
+  }
+  .btn-primary, .btn-success, .btn-danger, .btn-info {
+    background: #1976d2 !important;
+    border: none !important;
+    color: #fff !important;
+  }
+  .btn-primary:hover, .btn-success:hover, .btn-danger:hover, .btn-info:hover {
+    background: #1565c0 !important;
+  }
+  .breadcrumb {
+    background: transparent !important;
+    color: #1976d2 !important;
+  }
+  .table-dark {
+    background: #e3eaf2 !important;
+    color: #1976d2 !important;
+  }
+  .table-dark th, .table-dark td {
+    background: #fff !important;
+    color: #222 !important;
+  }
+  .text-light, .navbar .text-light, .breadcrumb-item.active {
+    color: #1976d2 !important;
+  }
+  .bg-dark {
+    background: #e3eaf2 !important;
+    color: #1976d2 !important;
+  }
+  .shadow-sm {
+    box-shadow: 0 2px 8px #b6c3d133 !important;
+  }
+  .badge.bg-danger {
+    background: #d32f2f !important;
+  }
+  .btn-outline-light, .btn-outline-danger, .btn-outline-warning {
+    color: #1976d2 !important;
+    border-color: #1976d2 !important;
+  }
+  .btn-outline-light:hover, .btn-outline-danger:hover, .btn-outline-warning:hover {
+    background: #1976d2 !important;
+    color: #fff !important;
+  }
+</style>
+</head>
+
+<body>
 
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+  <nav class="navbar border-bottom shadow-sm">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
+      <a class="navbar-brand fw-semibold" href="/" style="color: #1976d2 !important;">LP Studios</a>
       <div class="ms-auto d-flex gap-2">
-        <a class="btn btn-outline-light btn-sm" href="/shop">🛒 Tienda</a>
-        <a class="btn btn-outline-warning btn-sm position-relative" href="/admin/balance/requests">
+        <a class="btn btn-outline-light btn-sm" href="/shop" style="background: #1976d2; color: #fff; border-color: #1976d2;">🛒 Tienda</a>
+        <a class="btn btn-outline-danger btn-sm position-relative" href="/admin/balance/requests" style="background: #d32f2f; color: #fff; border-color: #d32f2f;">
           <i class="bi bi-bell-fill"></i> Solicitudes
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">5</span>
         </a>
-        <a class="btn btn-outline-danger btn-sm" href="/admin">👨‍💼 Admin</a>
-        <a class="btn btn-outline-light btn-sm" href="/logout">
+        <a class="btn btn-outline-danger btn-sm" href="/admin" style="background: #d32f2f; color: #fff; border-color: #d32f2f;">👨‍💼 Admin</a>
+        <a class="btn btn-outline-light btn-sm" href="/logout" style="background: #1976d2; color: #fff; border-color: #1976d2;">
           <i class="bi bi-box-arrow-right me-1"></i> Salir
         </a>
       </div>
@@ -52,7 +117,7 @@
             <div class="card-body text-center">
               <h5 class="card-title">👥 Usuarios</h5>
               <h2>0</h2>
-              <a href="/admin/users" class="text-white text-decoration-none">Ver todos →</a>
+              <a href="/admin/users" class="text-decoration-none" style="color: #1976d2;">Ver todos →</a>
             </div>
           </div>
         </div>
@@ -62,7 +127,7 @@
             <div class="card-body text-center">
               <h5 class="card-title">🎬 Productos</h5>
               <h2>0</h2>
-              <a href="/admin/media" class="text-white text-decoration-none">Gestionar →</a>
+              <a href="/admin/media" class="text-decoration-none" style="color: #1976d2;">Gestionar →</a>
             </div>
           </div>
         </div>
@@ -154,7 +219,7 @@
         <div class="col">
           <h3 class="fw-bold">⭐ Productos más descargados</h3>
           <div class="table-responsive">
-            <table class="table table-dark table-striped align-middle">
+            <table class="table align-middle" style="background: #e3eaf2; color: #222b45;">
               <thead>
                 <tr>
                   <th>Título</th>
@@ -166,7 +231,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td colspan="5" class="text-center text-muted py-3">No hay productos disponibles</td>
+                  <td colspan="5" class="text-center py-3" style="color: #1976d2;">No hay productos disponibles</td>
                 </tr>
               </tbody>
             </table>

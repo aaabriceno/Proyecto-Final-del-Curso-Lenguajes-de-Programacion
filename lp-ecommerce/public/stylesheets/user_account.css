@@ -1,15 +1,15 @@
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7fa !important;
+html, body {
+    min-height: 100vh;
+    background: #e3eaf2 !important;
+    color: #222 !important;
+    font-family: 'Montserrat', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: #333 !important; /* Asegurar texto oscuro */
 }
 
 /* Override fearless.css dark backgrounds */
 .hero {
-    background: #f4f7fa !important;
+    background: #e3eaf2 !important;
     min-height: auto !important;
 }
 
@@ -23,13 +23,16 @@ body {
     padding: 20px;
     background-color: #fff !important;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #333 !important;
+    box-shadow: 0 4px 8px #b6c3d133;
+    color: #222 !important;
 }
 
-/* Asegurar que todo el texto sea visible */
-h1, h2, h3, h4, h5, h6, p, span, label, div {
-    color: #333 !important;
+
+h1, h2, h3, h4, h5, h6 {
+    color: #1976d2 !important;
+}
+p, span, label, div {
+    color: #222 !important;
 }
 
 h2, p {
@@ -48,7 +51,7 @@ h2, p {
 
 #email {
     font-size: 16px;
-    color: #555;
+    color: #1976d2;
 }
 
 /* User options */
@@ -59,17 +62,19 @@ h2, p {
 }
 
 #user-list .clickable-item {
-    background-color: #f1f1f1;
+    background-color: #e3eaf2;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #b6c3d1;
     margin: 5px 0;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    color: #222 !important;
 }
 
 #user-list .clickable-item:hover {
-    background-color: #e2e2e2;
+    background-color: #1976d2;
+    color: #fff !important;
 }
 
 /* Action buttons */
@@ -86,19 +91,21 @@ button {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background: #1976d2;
+    color: #fff !important;
 }
 
 button:hover {
-    background-color: #0056b3;
-    color: white;
+    background-color: #00bcd4;
+    color: #222 !important;
 }
 
 /* Balance form */
 #balance-form, #withdraw-form {
-    background-color: #f9f9f9;
+    background-color: #fff;
     padding: 20px;
     border-radius: 6px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px #b6c3d133;
 }
 
 #balance-form h3, #withdraw-form h3 {
@@ -124,12 +131,13 @@ button:hover {
 }
 
 #balance-form button, #withdraw-form button{
-    background-color: #28a745;
-    color: white;
+    background-color: #00e676;
+    color: #222 !important;
 }
 
 #balance-form button:hover, #withdraw-form button:hover {
-    background-color: #218838;
+    background-color: #1976d2;
+    color: #fff !important;
 }
 
 /* Responsive styles */
@@ -171,13 +179,14 @@ button:hover {
 
 .recarga-item button {
     padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #00e676;
+    color: #222 !important;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
 .recarga-item button:hover {
-    background-color: #45a049;
+    background-color: #1976d2;
+    color: #fff !important;
 }

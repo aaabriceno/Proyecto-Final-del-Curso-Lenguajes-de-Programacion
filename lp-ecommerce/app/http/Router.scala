@@ -79,6 +79,7 @@ object Router {
         case ("POST", "/admin/media")       => AdminController.createMedia(request)
         case ("GET", "/api/media")          => AdminController.mediaJson(request)
         case ("GET", "/api/promotions/stats") => AdminController.promotionsStats(request)
+        case ("GET", "/api/files/list")       => AdminController.listFiles(request)
         case ("GET", p) if p.startsWith("/admin/media/") && p.endsWith("/edit") =>
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.editMediaForm(id, request)

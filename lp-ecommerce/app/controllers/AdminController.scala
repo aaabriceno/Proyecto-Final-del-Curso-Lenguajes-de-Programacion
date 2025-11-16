@@ -142,11 +142,19 @@ object AdminController {
           case None => "Sin categoría"
         }
         
+        val mediaType = media.assetPath.split('.').lastOption match {
+          case Some(ext) if Set("jpg", "jpeg", "png", "gif", "webp").contains(ext.toLowerCase) => "image"
+          case Some(ext) if Set("mp3", "wav", "flac").contains(ext.toLowerCase) => "audio"
+          case Some(ext) if Set("mp4", "avi", "mov").contains(ext.toLowerCase) => "video"
+          case _ => "file"
+        }
+        
         s"""{
            |  "id": ${media.id},
            |  "title": "${escapeJson(media.title)}",
            |  "description": "${escapeJson(media.description)}",
            |  "productType": "${media.productType.asString}",
+           |  "mediaType": "$mediaType",
            |  "categoryId": ${media.categoryId.getOrElse("null")},
            |  "categoryPath": "$categoryPath",
            |  "assetPath": "${escapeJson(media.assetPath)}",
@@ -324,7 +332,7 @@ object AdminController {
     AuthController.requireAdmin(request) match {
       case Right(_) =>
         val allCategories = Try(CategoryRepo.all).getOrElse(Seq.empty)
-        
+        println(s"[API] /api/categories - total: ${allCategories.size}")
         // Generar JSON con breadcrumb (ruta completa) para cada categoría
         val categoriesJsonArray = allCategories.map { cat =>
           val breadcrumb = CategoryRepo.getBreadcrumb(cat.id)
@@ -332,17 +340,19 @@ object AdminController {
           val level = breadcrumb.length - 1
           
           s"""{
-             |  "id": ${cat.id},
-             |  "name": "${escapeJson(cat.name)}",
-             |  "parentId": ${cat.parentId.map(_.toString).getOrElse("null")},
-             |  "description": "${escapeJson(cat.description)}",
-             |  "productType": "${escapeJson(cat.productType)}",
-             |  "path": "${escapeJson(path)}",
-             |  "level": $level
+             |  \"id\": ${cat.id},
+             |  \"name\": \"${escapeJson(cat.name)}\",
+             |  \"parentId\": ${if (cat.parentId.isEmpty || cat.parentId.contains(0L)) "null" else cat.parentId.get},
+             |  \"description\": \"${escapeJson(cat.description)}\",
+             |  \"productType\": \"${escapeJson(cat.productType)}\",
+             |  \"path\": \"${escapeJson(path)}\",
+             |  \"level\": $level
              |}""".stripMargin
         }.mkString(",\n")
-        
-        val json = s"""{"categories": [\n$categoriesJsonArray\n]}"""
+        val json = s"""{"categories": [
+$categoriesJsonArray
+]}"""
+        println(s"[API] /api/categories JSON: $json")
         
         HttpResponse(
           status = 200,
@@ -361,8 +371,9 @@ object AdminController {
         val data = request.formData
         val name = data.getOrElse("name", "")
         val desc = data.getOrElse("description", "")
-        val parent = data.get("parentId").flatMap(_.toLongOption)
-        CategoryRepo.add(name, parent, desc)
+        val parent = data.get("parent_id").flatMap(_.toLongOption)
+        val productType = parent.flatMap(CategoryRepo.find).map(_.productType).getOrElse("digital")
+        CategoryRepo.add(name, parent, desc, productType)
         HttpResponse.redirect("/admin/categories?success=Categoria+creada")
       case Left(res) => res
     }
@@ -783,6 +794,53 @@ object AdminController {
           "inactive": $inactive,
           "total": ${allPromotions.size}
         }"""
+        
+        HttpResponse(
+          status = 200,
+          statusText = "OK",
+          headers = Map("Content-Type" -> "application/json; charset=UTF-8"),
+          body = json
+        )
+      case Left(res) => res
+    }
+  }
+
+  /** GET /api/files/list - API JSON para listar archivos en public/images/ */
+  def listFiles(request: HttpRequest): HttpResponse = {
+    AuthController.requireAdmin(request) match {
+      case Right(_) =>
+        val imagesDir = new java.io.File("public/images")
+        
+        def listFilesRecursively(dir: java.io.File, basePath: String = ""): Seq[Map[String, String]] = {
+          if (!dir.exists() || !dir.isDirectory) return Seq.empty
+          
+          val files = dir.listFiles()
+          if (files == null) return Seq.empty
+          
+          files.flatMap { file =>
+            val relativePath = if (basePath.isEmpty) file.getName else s"$basePath/${file.getName}"
+            
+            if (file.isDirectory) {
+              // Agregar la carpeta
+              Map("name" -> file.getName, "type" -> "folder", "path" -> relativePath) +: 
+              listFilesRecursively(file, relativePath)
+            } else {
+              // Solo archivos de imagen
+              val ext = file.getName.toLowerCase
+              if (ext.endsWith(".jpg") || ext.endsWith(".jpeg") || ext.endsWith(".png") || 
+                  ext.endsWith(".gif") || ext.endsWith(".webp")) {
+                Seq(Map("name" -> file.getName, "type" -> "file", "path" -> relativePath))
+              } else {
+                Seq.empty
+              }
+            }
+          }
+        }
+        
+        val fileList = listFilesRecursively(imagesDir)
+        val json = s"""{"files": ${fileList.map { f =>
+          s"""{"name": "${escapeJson(f("name"))}", "type": "${f("type")}", "path": "${escapeJson(f("path"))}"}"""
+        }.mkString("[", ",", "]")}}"""
         
         HttpResponse(
           status = 200,

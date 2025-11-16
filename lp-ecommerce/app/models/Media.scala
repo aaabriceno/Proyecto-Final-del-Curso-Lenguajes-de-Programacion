@@ -55,14 +55,14 @@ case class Media(
   price: BigDecimal,
   rating: Double,
   categoryId: Option[Long] = None,        // Categoría asociada
-  assetPath: String,                      // Ruta del archivo (digital) o imagen (hardware)
+  assetPath: String,                      // Ruta del archivo/imagen de portada
   stock: Int = 0,                         // Stock disponible
   promotionId: Option[Long] = None,       // ID de promoción asociada (si aplica)
   isActive: Boolean = true                // Soft delete
 ) {
 
-  // Obtener imagen de portada o placeholder
-  def getCoverImageUrl: String = assetPath
+  // Obtener imagen de portada desde assetPath
+  def getCoverImageUrl: String = if (assetPath.startsWith("/assets/")) assetPath else s"/assets/$assetPath"
 
   // ========= RELACIONES =========
 

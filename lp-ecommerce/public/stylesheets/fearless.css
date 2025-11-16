@@ -1,14 +1,82 @@
+table {
+  background: #fff !important;
+  color: #222 !important;
+}
+th, td {
+  color: #222 !important;
+}
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
 html, body { 
-  height: 100%; 
-  background-color: #f8f9fa; /* Fondo claro por defecto */
-  color: #333; /* Texto oscuro por defecto */
+  height: 100%;
+  background-color: #e3eaf2 !important; /* Fondo azul claro universal */
+  color: #222 !important; /* Texto neutro universal */
 }
 body { 
-  margin: 0; 
-  font-family: 'Montserrat', Arial, sans-serif; 
+  margin: 0;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
+
+/* Paleta tech principal */
+:root {
+  --color-bg-main: #e3eaf2;
+  --color-bg-card: #fff;
+  --color-primary: #1976d2;
+  --color-accent: #00bcd4;
+  --color-accent2: #7c4dff;
+  --color-success: #00e676;
+  --color-text-main: #222;
+  --color-text-light: #fff;
+  --color-border: #b6c3d1;
+}
+
+/* Tarjetas y contenedores */
+.card, .container, .search-layout, .search-container {
+  background: #fff !important;
+  color: #222 !important;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px #b6c3d133;
+}
+
+/* Tablas */
+.btn, button, input[type="submit"] {
+  background: var(--color-primary) !important;
+  color: var(--color-text-light) !important;
+  border: none !important;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.btn:hover, button:hover, input[type="submit"]:hover {
+  background: var(--color-accent) !important;
+}
+
+/* Enlaces */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-accent2);
+}
+
+/* Tablas */
+
+
+/* Mensajes de error */
+.text-danger, .error, #error-message {
+  color: #d32f2f !important;
+}
+
+/* Fondo hero y overlays */
+.hero-home, .hero {
+  background: var(--color-bg-main) !important;
+  color: var(--color-text-main) !important;
+}
+.hero-home .overlay, .hero .overlay {
+  background: rgba(25, 118, 210, 0.08) !important;
+}
+
 
 /* Solo aplicar hero en la página de inicio */
 .hero-home {
@@ -27,8 +95,8 @@ body {
 
 /* Para otras páginas, fondo claro */
 .hero {
-  background: #f8f9fa;
-  color: #333;
+  background: #fff !important;
+  color: #222 !important;
   min-height: auto;
 }
 .hero .overlay {
