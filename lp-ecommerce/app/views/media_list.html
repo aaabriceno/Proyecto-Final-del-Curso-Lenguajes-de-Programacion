@@ -75,9 +75,7 @@
     <div class="container">
       <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
       <div class="ms-auto d-flex gap-2">
-        <a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
-        <a class="btn btn-outline-light btn-sm" href="/login">🔑 Login</a>
-        <a class="btn btn-warning btn-sm text-dark" href="/register">🧾 Registro</a>
+        <!-- NAVBAR_BUTTONS -->
       </div>
     </div>
   </nav>
@@ -320,7 +318,7 @@
                   <span class="badge ${product.stock > 0 ? 'bg-success' : 'bg-danger'}">
                     ${product.stock > 0 ? `✅ Disponible (${product.stock})` : '❌ Agotado'}
                   </span>
-                  <span class="badge bg-info">${product.mediaType}</span>
+                  <span class="badge bg-info">${product.productType === 'hardware' ? 'Hardware' : 'Digital'}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                   ${product.hasPromotion ? `

@@ -1,7 +1,7 @@
 package http
 
 import java.io.File
-import java.nio.file.{Files, Paths}
+import java.nio.file.Files
 import scala.io.Source
 
 /**
@@ -72,6 +72,25 @@ object HttpResponse {
 
   def json(jsonString: String): HttpResponse =
     HttpResponse(200, "OK", Map("Content-Type" -> "application/json; charset=UTF-8"), jsonString)
+
+  def json(data: Map[String, Any]): HttpResponse =
+    json(200, data)
+
+  def json(status: Int, data: Map[String, Any]): HttpResponse = {
+    val jsonBody = data.map { case (k, v) =>
+      val value = v match {
+        case s: String => s"\"${escapeJson(s)}\""
+        case b: Boolean => b.toString
+        case n: Int => n.toString
+        case n: Long => n.toString
+        case n: Double => n.toString
+        case other => s"\"${escapeJson(other.toString)}\""
+      }
+      s"\"${escapeJson(k)}\":$value"
+    }.mkString("{", ",", "}")
+
+    HttpResponse(status, defaultStatusText(status), Map("Content-Type" -> "application/json; charset=UTF-8"), jsonBody)
+  }
 
   def css(content: String): HttpResponse =
     HttpResponse(200, "OK", Map("Content-Type" -> "text/css; charset=UTF-8"), content)
@@ -181,4 +200,22 @@ object HttpResponse {
       case Some("webm")  => "video/webm"
       case _             => "application/octet-stream"
     }
+
+  private def escapeJson(value: String): String =
+    value
+      .replace("\\", "\\\\")
+      .replace("\"", "\\\"")
+      .replace("\n", "\\n")
+      .replace("\r", "\\r")
+
+  private def defaultStatusText(status: Int): String = status match {
+    case 200 => "OK"
+    case 201 => "Created"
+    case 400 => "Bad Request"
+    case 401 => "Unauthorized"
+    case 403 => "Forbidden"
+    case 404 => "Not Found"
+    case 500 => "Internal Server Error"
+    case _   => "OK"
+  }
 }

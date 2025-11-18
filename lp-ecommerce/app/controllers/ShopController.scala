@@ -1,51 +1,16 @@
 package controllers
 
 import http.{HttpRequest, HttpResponse}
-import models.{MediaRepo, CategoryRepo, PromotionRepo, PromotionTarget}
+import java.net.URLEncoder
+import models.{MediaRepo, CategoryRepo, PromotionRepo, PromotionTarget, CartRepo, DownloadRepo, UserRepo, Media, User}
 import session.SessionManager
 import scala.io.Source
 import scala.util.{Try, Success, Failure}
+import scala.math.BigDecimal.RoundingMode
 
 /**
  * Controlador de la Tienda (Shop)
  */
-
-// Carrito temporal por sesión
-case class SessionCart(items: Map[Long, Int] = Map.empty) {
-  def total: BigDecimal = items.map { case (id, qty) =>
-    MediaRepo.find(id).map(_.price * qty).getOrElse(BigDecimal(0))
-  }.sum
-
-  def isEmpty: Boolean = items.isEmpty
-}
-
-object SessionCartRepo {
-  private var carts = Map[String, SessionCart]()
-
-  def get(sessionId: String): SessionCart =
-    carts.getOrElse(sessionId, SessionCart())
-
-  def add(sessionId: String, media: models.Media, qty: Int): Unit = {
-    val cart = get(sessionId)
-    val updated = cart.copy(items = cart.items.updated(
-      media.id, cart.items.getOrElse(media.id, 0) + qty
-    ))
-    carts += sessionId -> updated
-  }
-
-  def remove(sessionId: String, id: Long): Unit = {
-    val cart = get(sessionId)
-    carts += sessionId -> cart.copy(items = cart.items - id)
-  }
-
-  def updateQuantity(sessionId: String, id: Long, qty: Int): Unit = {
-    val cart = get(sessionId)
-    carts += sessionId -> cart.copy(items = cart.items.updated(id, qty))
-  }
-
-  def clear(sessionId: String): Unit =
-    carts -= sessionId
-}
 
 object ShopController {
 
@@ -103,12 +68,7 @@ object ShopController {
         
         Try(Source.fromFile(path, "UTF-8").mkString) match {
           case Success(html) =>
-            // Reemplazar los botones del navbar
-            val updatedHtml = html.replace(
-              """<a class="btn btn-outline-light btn-sm" href="/login">🔑 Login</a>
-        <a class="btn btn-warning btn-sm text-dark" href="/register">🧾 Registro</a>""",
-              navbarButtons
-            )
+            val updatedHtml = html.replace("<!-- NAVBAR_BUTTONS -->", navbarButtons)
             
             val response = HttpResponse.ok(updatedHtml)
             if (request.cookies.contains("sessionId")) {
@@ -238,63 +198,86 @@ object ShopController {
      .replace(">", "&gt;")
      .replace("\"", "&quot;")
 
+  private def formatMoney(amount: BigDecimal): String =
+    f"$$${amount}%.2f"
+
+  private def formatDiscount(amount: BigDecimal): String =
+    if (amount <= 0) "$0.00" else s"-${formatMoney(amount)}"
+
+  private case class PricingResult(unitPrice: BigDecimal, discountPerUnit: BigDecimal)
+
+  private def calculatePricing(media: Media, user: User): PricingResult = {
+    val basePrice = media.activePromotion.map(_.applyDiscount(media.price)).getOrElse(media.price)
+    val vipPrice =
+      if (media.activePromotion.isEmpty && user.totalSpent >= 100)
+        (basePrice * BigDecimal(0.80)).setScale(2, RoundingMode.HALF_UP)
+      else
+        basePrice.setScale(2, RoundingMode.HALF_UP)
+
+    val discountPerUnit = (media.price - vipPrice).max(BigDecimal(0)).setScale(2, RoundingMode.HALF_UP)
+    PricingResult(vipPrice, discountPerUnit)
+  }
+
   /** GET /cart */
   def viewCart(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
       case Right(user) =>
-        val sessionId = request.cookies.getOrElse("sessionId", "")
-        val cart = SessionCartRepo.get(sessionId)
-        
         val html = serveHtml("cart", request).body
-        
-        // Inyectar datos del carrito
-        val hasItems = !cart.isEmpty
-        val cartItemsHtml = if (hasItems) {
-          cart.items.map { case (mediaId, qty) =>
-            MediaRepo.find(mediaId).map { media =>
-              val subtotal = media.price * qty
-              s"""
+        val cartItems = CartRepo.entriesWithMedia(user.id)
+        val hasItems = cartItems.nonEmpty
+        val subtotalAmount = cartItems.map { case (entry, media) => media.price * entry.quantity }.sum
+        val discountAmount = BigDecimal(0)
+        val totalToPay = subtotalAmount - discountAmount
+
+        val cartRows = if (hasItems) {
+          cartItems.map { case (entry, media) =>
+            val subtotal = media.price * entry.quantity
+            s"""
               <tr>
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="ms-2">
-                      <h6 class="mb-0">${media.title}</h6>
-                      <small class="text-muted">${media.description.take(50)}...</small>
+                      <h6 class="mb-0">${escapeHtml(media.title)}</h6>
+                      <small class="text-muted">${escapeHtml(media.description.take(50))}...</small>
                     </div>
                   </div>
                 </td>
-                <td class="text-center align-middle">$$${media.price}</td>
+                <td class="text-center align-middle">${formatMoney(media.price)}</td>
                 <td class="text-center align-middle">
                   <form method="POST" action="/cart/update/${media.id}" class="d-inline">
                     <div class="input-group input-group-sm">
-                      <input type="number" name="quantity" class="form-control text-center" value="${qty}" min="1" max="${media.stock}">
+                      <input type="number" name="quantity" class="form-control text-center" value="${entry.quantity}" min="1" max="${media.stock}">
                       <button type="submit" class="btn btn-sm btn-secondary">✓</button>
                     </div>
                   </form>
                 </td>
                 <td class="text-center align-middle"><span class="badge bg-success">${media.stock}</span></td>
-                <td class="text-end align-middle"><strong>$$${subtotal}</strong></td>
+                <td class="text-end align-middle"><strong>${formatMoney(subtotal)}</strong></td>
                 <td class="text-center align-middle">
                   <form method="POST" action="/cart/remove/${media.id}" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
                   </form>
                 </td>
               </tr>
-              """
-            }.getOrElse("")
+            """
           }.mkString("\n")
-        } else ""
-        
-        val totalPrice = cart.total
-        val itemCount = cart.items.size
-        
+        } else {
+          """
+          <tr>
+            <td colspan="6" class="text-center text-muted">Tu carrito está vacío.</td>
+          </tr>
+          """
+        }
+
         val updatedHtml = html
           .replace("const hasItems = false;", s"const hasItems = ${hasItems};")
-          .replace("📦 Productos en tu carrito (2)", s"📦 Productos en tu carrito ($itemCount)")
-          .replace("<!-- Ejemplo Producto -->", cartItemsHtml)
-          .replace("$180.00", s"$$$totalPrice")
-          .replace("💵 Tu saldo actual: <strong>$500.00</strong>", s"💵 Tu saldo actual: <strong>$$${user.balance}</strong>")
-        
+          .replace("__ITEM_COUNT__", cartItems.size.toString)
+          .replace("<!-- CART_ROWS -->", cartRows)
+          .replace("__SUBTOTAL__", formatMoney(subtotalAmount))
+          .replace("__DISCOUNT__", formatDiscount(discountAmount))
+          .replace("__TOTAL__", formatMoney(totalToPay))
+          .replace("__BALANCE__", formatMoney(user.balance))
+
         HttpResponse(200, "OK", Map("Content-Type" -> "text/html; charset=UTF-8"), updatedHtml)
       case Left(resp) => resp
     }
@@ -303,14 +286,10 @@ object ShopController {
   /** POST /cart/add/:id */
   def addToCart(id: Long, request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
-        MediaRepo.find(id) match {
-          case Some(media) =>
-            val sessionId = request.cookies.getOrElse("sessionId", "")
-            SessionCartRepo.add(sessionId, media, 1)
-            HttpResponse.redirect("/cart?success=Producto+agregado+al+carrito")
-          case None =>
-            HttpResponse.redirect("/shop?error=Producto+no+encontrado")
+      case Right(user) =>
+        CartRepo.addOrIncrement(user.id, id, 1) match {
+          case Right(_) => HttpResponse.redirect("/cart?success=Producto+agregado+al+carrito")
+          case Left(error) => HttpResponse.redirect("/shop?error=" + java.net.URLEncoder.encode(error, "UTF-8"))
         }
       case Left(resp) => resp
     }
@@ -319,9 +298,8 @@ object ShopController {
   /** POST /cart/remove/:id */
   def removeFromCart(id: Long, request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
-        val sessionId = request.cookies.getOrElse("sessionId", "")
-        SessionCartRepo.remove(sessionId, id)
+      case Right(user) =>
+        CartRepo.remove(user.id, id)
         HttpResponse.redirect("/cart?success=Producto+eliminado")
       case Left(resp) => resp
     }
@@ -330,10 +308,9 @@ object ShopController {
   /** POST /cart/update/:id */
   def updateCartQuantity(id: Long, request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
+      case Right(user) =>
         val qty = request.formData.get("quantity").flatMap(_.toIntOption).getOrElse(1)
-        val sessionId = request.cookies.getOrElse("sessionId", "")
-        SessionCartRepo.updateQuantity(sessionId, id, qty)
+        CartRepo.setQuantity(user.id, id, qty)
         HttpResponse.redirect("/cart")
       case Left(resp) => resp
     }
@@ -342,9 +319,8 @@ object ShopController {
   /** POST /cart/clear */
   def clearCart(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
-        val sessionId = request.cookies.getOrElse("sessionId", "")
-        SessionCartRepo.clear(sessionId)
+      case Right(user) =>
+        CartRepo.clear(user.id)
         HttpResponse.redirect("/cart?success=Carrito+vaciado")
       case Left(resp) => resp
     }
@@ -353,10 +329,9 @@ object ShopController {
   /** GET /purchase */
   def purchasePage(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
-        val sessionId = request.cookies.getOrElse("sessionId", "")
-        val cart = SessionCartRepo.get(sessionId)
-        if (cart.isEmpty)
+      case Right(user) =>
+        val cartItems = CartRepo.entriesWithMedia(user.id)
+        if (cartItems.isEmpty)
           HttpResponse.redirect("/cart?error=El+carrito+est%C3%A1+vac%C3%ADo")
         else
           serveHtml("purchase_page", request)
@@ -367,14 +342,64 @@ object ShopController {
   /** POST /purchase */
   def processPurchase(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) =>
-        val sessionId = request.cookies.getOrElse("sessionId", "")
-        val cart = SessionCartRepo.get(sessionId)
-        if (cart.isEmpty)
+      case Right(user) =>
+        val cartItems = CartRepo.entriesWithMedia(user.id)
+        if (cartItems.isEmpty)
           HttpResponse.redirect("/cart?error=El+carrito+est%C3%A1+vac%C3%ADo")
         else {
-          SessionCartRepo.clear(sessionId)
-          HttpResponse.redirect("/shop?success=Compra+realizada+exitosamente")
+          cartItems.find { case (_, media) => media.isOutOfStock } match {
+            case Some((_, media)) =>
+              HttpResponse.redirect("/cart?error=" + URLEncoder.encode(s"${media.title} no tiene stock suficiente", "UTF-8"))
+            case None =>
+              val pricingData = cartItems.map { case (entry, media) =>
+                val pricing = calculatePricing(media, user)
+                val originalTotal = media.price * entry.quantity
+                val finalTotal = pricing.unitPrice * entry.quantity
+                (entry, media, pricing, originalTotal, finalTotal)
+              }
+
+              val totalOriginal = pricingData.map(_._4).foldLeft(BigDecimal(0))(_ + _)
+              val totalFinal = pricingData.map(_._5).foldLeft(BigDecimal(0))(_ + _)
+              val discountAmount = (totalOriginal - totalFinal).max(BigDecimal(0)).setScale(2, RoundingMode.HALF_UP)
+
+              def completePurchase(userAfterCharge: User): HttpResponse = {
+                val processed = scala.collection.mutable.ListBuffer.empty[(Long, Int)]
+                val result = pricingData.foldLeft[Either[String, Unit]](Right(())) {
+                  case (Left(err), _) => Left(err)
+                  case (Right(_), (entry, media, pricing, _, _)) =>
+                    MediaRepo.reduceStock(media.id, entry.quantity) match {
+                      case Right(_) =>
+                        processed += media.id -> entry.quantity
+                        val lineDiscount = (pricing.discountPerUnit * BigDecimal(entry.quantity)).setScale(2, RoundingMode.HALF_UP)
+                        DownloadRepo.add(user.id, media.id, entry.quantity, media.price, lineDiscount)
+                        Right(())
+                      case Left(errorMsg) =>
+                        Left(errorMsg)
+                    }
+                }
+
+                result match {
+                  case Left(errorMsg) =>
+                    processed.foreach { case (mediaId, qty) => MediaRepo.addStock(mediaId, qty) }
+                    if (totalFinal > 0) UserRepo.refundBalance(user.id, totalFinal)
+                    HttpResponse.redirect("/cart?error=" + URLEncoder.encode(s"No se pudo completar la compra: $errorMsg", "UTF-8"))
+                  case Right(_) =>
+                    CartRepo.clear(user.id)
+                    val successMsg = s"Compra realizada por ${formatMoney(totalFinal)}. Descuento aplicado: ${formatMoney(discountAmount)}"
+                    HttpResponse.redirect("/shop?success=" + URLEncoder.encode(successMsg, "UTF-8"))
+                }
+              }
+
+              if (totalFinal > 0) {
+                UserRepo.deductBalance(user.id, totalFinal) match {
+                  case Some(updatedUser) => completePurchase(updatedUser)
+                  case None =>
+                    HttpResponse.redirect("/cart?error=" + URLEncoder.encode("Saldo insuficiente para completar la compra", "UTF-8"))
+                }
+              } else {
+                completePurchase(user)
+              }
+          }
         }
       case Left(resp) => resp
     }

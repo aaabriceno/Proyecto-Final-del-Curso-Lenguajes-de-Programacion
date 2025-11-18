@@ -217,6 +217,21 @@ object UserRepo {
     }
   }
 
+  def refundBalance(id: Long, amount: BigDecimal): Option[User] = synchronized {
+    findById(id).map { user =>
+      val updated = user.copy(balance = user.balance + amount)
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          set("balance", updated.balance.toDouble)
+        ).toFuture(),
+        5.seconds
+      )
+      println(s"↩️ Reembolso aplicado a usuario ${id}: +$${amount}")
+      updated
+    }
+  }
+
   /** Consultar saldo actual */
   def getBalance(id: Long): Option[BigDecimal] =
     findById(id).map(_.balance)
