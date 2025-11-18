@@ -1,7 +1,14 @@
 package models
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneId, Instant}
 import java.util.UUID
+import org.mongodb.scala.Document
+import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.bson.{BsonInt64, BsonInt32, BsonDouble, BsonString, BsonDateTime}
+import db.MongoConnection
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.util.Try
 
 /**
  * Representa una compra o descarga realizada por un usuario.
@@ -25,34 +32,98 @@ case class Download(
  */
 object DownloadRepo {
 
-  private var downloads: Vector[Download] = Vector(
-    Download(1, 1, 1, 1, 9.99, 0, 9.99, LocalDateTime.now().minusDays(5), UUID.randomUUID().toString),
-    Download(2, 1, 3, 2, 14.99, 0, 29.98, LocalDateTime.now().minusDays(3), UUID.randomUUID().toString),
-    Download(3, 1, 2, 1, 4.00, 0.80, 3.20, LocalDateTime.now().minusDays(1), UUID.randomUUID().toString)
-  )
+  private val collection = MongoConnection.Collections.downloads
 
-  private var nextId: Long = downloads.map(_.id).maxOption.getOrElse(0L) + 1L
+  private def readLong(doc: Document, field: String): Long = doc.get(field) match {
+    case Some(value: BsonInt64)   => value.getValue
+    case Some(value: BsonInt32)   => value.getValue.toLong
+    case Some(value: BsonDouble)  => value.getValue.toLong
+    case Some(value: BsonString)  => value.getValue.toLongOption.getOrElse(0L)
+    case Some(value: BsonDateTime)=> value.getValue
+    case _                        => 0L
+  }
+
+  private def nextId(): Long = synchronized {
+    val doc = Await.result(
+      collection.find().sort(Document("_id" -> -1)).first().toFuture(),
+      5.seconds
+    )
+
+    val currentMax = Option(doc).map(d => readLong(d, "_id")).getOrElse(0L)
+    currentMax + 1L
+  }
+
+  private def toEpoch(ldt: LocalDateTime): Long =
+    ldt.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
+
+  private def fromEpoch(epoch: Long): LocalDateTime =
+    LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault())
+
+  private def docToDownload(doc: Document): Download = {
+    val downloadDateEpoch = readLong(doc, "downloadDate")
+    Download(
+      id = readLong(doc, "_id"),
+      userId = readLong(doc, "userId"),
+      mediaId = readLong(doc, "mediaId"),
+      quantity = doc.getInteger("quantity"),
+      price = BigDecimal(doc.getDouble("price")),
+      discount = BigDecimal(doc.getDouble("discount")),
+      finalPrice = BigDecimal(doc.getDouble("finalPrice")),
+      downloadDate = fromEpoch(downloadDateEpoch),
+      uniqueCode = doc.getString("uniqueCode")
+    )
+  }
+
+  private def downloadToDoc(download: Download): Document = {
+    Document(
+      "_id" -> download.id,
+      "userId" -> download.userId,
+      "mediaId" -> download.mediaId,
+      "quantity" -> download.quantity,
+      "price" -> download.price.toDouble,
+      "discount" -> download.discount.toDouble,
+      "finalPrice" -> download.finalPrice.toDouble,
+      "downloadDate" -> toEpoch(download.downloadDate),
+      "uniqueCode" -> download.uniqueCode
+    )
+  }
 
   // ==============================
   // CONSULTAS BÁSICAS
   // ==============================
 
-  def all: Vector[Download] = downloads.sortBy(_.downloadDate)(Ordering[LocalDateTime].reverse)
+  def all: Vector[Download] = {
+    val docs = Await.result(collection.find().toFuture(), 5.seconds)
+    docs.map(docToDownload).toVector.sortBy(_.downloadDate)(Ordering[LocalDateTime].reverse)
+  }
 
-  def findById(id: Long): Option[Download] =
-    downloads.find(_.id == id)
+  def findById(id: Long): Option[Download] = {
+    val docs = Await.result(collection.find(equal("_id", id)).first().toFuture(), 5.seconds)
+    Option(docs).map(docToDownload)
+  }
 
-  def findByUserId(userId: Long): Vector[Download] =
-    downloads.filter(_.userId == userId).sortBy(_.downloadDate)(Ordering[LocalDateTime].reverse)
+  def findByUserId(userId: Long): Vector[Download] = {
+    val docs = Await.result(collection.find(equal("userId", userId)).toFuture(), 5.seconds)
+    docs.map(docToDownload).toVector.sortBy(_.downloadDate)(Ordering[LocalDateTime].reverse)
+  }
 
-  def findByMediaId(mediaId: Long): Vector[Download] =
-    downloads.filter(_.mediaId == mediaId)
+  def findByMediaId(mediaId: Long): Vector[Download] = {
+    val docs = Await.result(collection.find(equal("mediaId", mediaId)).toFuture(), 5.seconds)
+    docs.map(docToDownload).toVector
+  }
 
-  def findByCode(code: String): Option[Download] =
-    downloads.find(_.uniqueCode == code)
+  def findByCode(code: String): Option[Download] = {
+    val docs = Await.result(collection.find(equal("uniqueCode", code)).first().toFuture(), 5.seconds)
+    Option(docs).map(docToDownload)
+  }
 
-  def userHasDownloaded(userId: Long, mediaId: Long): Boolean =
-    downloads.exists(d => d.userId == userId && d.mediaId == mediaId)
+  def userHasDownloaded(userId: Long, mediaId: Long): Boolean = {
+    val count = Await.result(
+      collection.countDocuments(and(equal("userId", userId), equal("mediaId", mediaId))).toFuture(),
+      5.seconds
+    )
+    count > 0
+  }
 
   // ==============================
   // CREACIÓN / AGREGADO
@@ -67,12 +138,12 @@ object DownloadRepo {
     discount: BigDecimal = 0
   ): Download = synchronized {
     val totalPrice = price * quantity
-    val finalPrice = totalPrice - discount
+    val finalPrice = (totalPrice - discount).max(BigDecimal(0))
     val uniqueCode = UUID.randomUUID().toString
+    val now = LocalDateTime.now()
 
-    val newDownload = Download(nextId, userId, mediaId, quantity, price, discount, finalPrice, LocalDateTime.now(), uniqueCode)
-    downloads :+= newDownload
-    nextId += 1
+    val newDownload = Download(nextId(), userId, mediaId, quantity, price, discount, finalPrice, now, uniqueCode)
+    Await.result(collection.insertOne(downloadToDoc(newDownload)).toFuture(), 5.seconds)
     newDownload
   }
 
@@ -82,27 +153,26 @@ object DownloadRepo {
 
   /** Ingresos totales (de todas las descargas) */
   def totalRevenue: BigDecimal =
-    downloads.map(_.finalPrice).sum
+    all.map(_.finalPrice).sum
 
   /** Total de unidades descargadas (suma de cantidades) */
   def totalDownloads: Int =
-    downloads.map(_.quantity).sum
+    all.map(_.quantity).sum
 
   /** Total de transacciones realizadas */
-  def totalPurchases: Int =
-    downloads.size
+  def totalPurchases: Int = all.size
 
   /** Ingresos generados por un usuario */
   def revenueByUser(userId: Long): BigDecimal =
-    downloads.filter(_.userId == userId).map(_.finalPrice).sum
+    findByUserId(userId).map(_.finalPrice).sum
 
   /** Cantidad total de descargas por usuario */
   def downloadsByUser(userId: Long): Int =
-    downloads.filter(_.userId == userId).map(_.quantity).sum
+    findByUserId(userId).map(_.quantity).sum
 
   /** Top compradores (por ingreso total) */
   def topBuyers(limit: Int = 10): Vector[(Long, BigDecimal)] = {
-    downloads
+    all
       .groupBy(_.userId)
       .view
       .mapValues(_.map(_.finalPrice).sum)
@@ -113,9 +183,9 @@ object DownloadRepo {
 
   /** Cantidad total de descargas por producto */
   def downloadsByMedia(mediaId: Long): Int =
-    downloads.filter(_.mediaId == mediaId).map(_.quantity).sum
+    findByMediaId(mediaId).map(_.quantity).sum
 
   /** Ingresos totales generados por un producto */
   def revenueByMedia(mediaId: Long): BigDecimal =
-    downloads.filter(_.mediaId == mediaId).map(_.finalPrice).sum
+    findByMediaId(mediaId).map(_.finalPrice).sum
 }

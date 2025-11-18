@@ -142,19 +142,11 @@ object AdminController {
           case None => "Sin categoría"
         }
         
-        val mediaType = media.assetPath.split('.').lastOption match {
-          case Some(ext) if Set("jpg", "jpeg", "png", "gif", "webp").contains(ext.toLowerCase) => "image"
-          case Some(ext) if Set("mp3", "wav", "flac").contains(ext.toLowerCase) => "audio"
-          case Some(ext) if Set("mp4", "avi", "mov").contains(ext.toLowerCase) => "video"
-          case _ => "file"
-        }
-        
         s"""{
            |  "id": ${media.id},
            |  "title": "${escapeJson(media.title)}",
            |  "description": "${escapeJson(media.description)}",
            |  "productType": "${media.productType.asString}",
-           |  "mediaType": "$mediaType",
            |  "categoryId": ${media.categoryId.getOrElse("null")},
            |  "categoryPath": "$categoryPath",
            |  "assetPath": "${escapeJson(media.assetPath)}",
@@ -329,7 +321,7 @@ object AdminController {
 
   /** GET /api/categories - API JSON para obtener todas las categorías */
   def categoriesJson(request: HttpRequest): HttpResponse = {
-    AuthController.requireAdmin(request) match {
+    AuthController.requireAuth(request) match {
       case Right(_) =>
         val allCategories = Try(CategoryRepo.all).getOrElse(Seq.empty)
         println(s"[API] /api/categories - total: ${allCategories.size}")

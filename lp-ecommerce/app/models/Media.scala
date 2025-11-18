@@ -395,4 +395,14 @@ object MediaRepo {
       case None => false
     }
   }
+
+  def updateRating(mediaId: Long, rating: Double): Unit = synchronized {
+    Await.result(
+      collection.updateOne(
+        equal("_id", mediaId),
+        set("rating", rating)
+      ).toFuture(),
+      5.seconds
+    )
+  }
 }

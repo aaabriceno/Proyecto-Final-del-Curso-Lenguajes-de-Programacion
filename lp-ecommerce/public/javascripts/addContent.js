@@ -38,25 +38,14 @@ async function loadAllCategories() {
 // ============================================================
 function setupProductTypeSelector() {
   const productTypeSelect = document.getElementById("productType");
-  const mediaTypeContainer = document.getElementById("mediaType-container");
   
   productTypeSelect.addEventListener("change", (e) => {
     const selectedType = e.target.value;
     console.log(`🔄 Tipo de producto cambiado a: ${selectedType}`);
     
-    if (selectedType === "digital") {
-      // Mostrar selector de mediaType solo para productos digitales
-      mediaTypeContainer.style.display = "block";
-      document.getElementById("content-type").required = true;
-      loadCategoriesByType("digital");
-    } else if (selectedType === "hardware") {
-      // Ocultar selector de mediaType para productos físicos
-      mediaTypeContainer.style.display = "none";
-      document.getElementById("content-type").required = false;
-      document.getElementById("content-type").value = "image"; // Default para hardware
-      loadCategoriesByType("hardware");
+    if (selectedType === "digital" || selectedType === "hardware") {
+      loadCategoriesByType(selectedType);
     } else {
-      mediaTypeContainer.style.display = "none";
       clearAllSelectors();
     }
   });
@@ -231,7 +220,6 @@ async function saveProduct() {
   const price = document.getElementById("content-price").value;
   const stock = document.getElementById("content-stock").value;
   const productType = document.getElementById("productType").value;
-  const mediaType = document.getElementById("content-type").value;
   const url = document.getElementById("content-url").value.trim();
   const description = document.getElementById("content-description").value.trim();
   
@@ -241,7 +229,6 @@ async function saveProduct() {
   formData.append("price", price);
   formData.append("stock", stock);
   formData.append("productType", productType);
-  formData.append("mediaType", mediaType);
   formData.append("url", url);
   formData.append("description", description);
   formData.append("categoryId", categoryId);
@@ -251,7 +238,6 @@ async function saveProduct() {
   console.log(`  price: ${price}`);
   console.log(`  stock: ${stock}`);
   console.log(`  productType: ${productType}`);
-  console.log(`  mediaType: ${mediaType}`);
   console.log(`  categoryId: ${categoryId}`);
   
   try {

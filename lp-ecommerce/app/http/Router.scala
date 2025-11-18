@@ -65,6 +65,16 @@ object Router {
         case ("GET", "/user/transactions")=> UserController.transactions(request)
         case ("GET", "/user/balance/request")  => UserController.balanceRequestForm(request)
         case ("POST", "/user/balance/request") => UserController.createBalanceRequest(request)
+        case ("GET", "/user/ratings") => RatingController.userRatings(request)
+        case ("GET", "/user/gifts")   => GiftController.list(request)
+        case ("POST", "/rate_content") => RatingController.rate(request)
+        case ("GET", p) if p.startsWith("/media/") && p.endsWith("/ratings") =>
+          val id = Try(p.stripPrefix("/media/").stripSuffix("/ratings").toLong).getOrElse(0L)
+          RatingController.mediaStats(id, request)
+        case ("POST", "/gift_content") => GiftController.send(request)
+        case ("POST", p) if p.startsWith("/gifts/") && p.endsWith("/claim") =>
+          val id = Try(p.split("/")(2).toLong).getOrElse(0L)
+          GiftController.claim(id, request)
 
         // ---------- Administración ----------
         case ("GET", "/admin")              => AdminController.dashboard(request)
@@ -119,6 +129,10 @@ object Router {
 
         // ---------- Estadísticas ----------
         case ("GET", "/admin/statistics") => AdminController.statistics(request)
+        case ("POST", "/admin/rankings/generate") => RankingController.generateSnapshots(request)
+        case ("GET", "/api/rankings/top-products") => RankingController.topProducts(request)
+        case ("GET", "/api/rankings/top-rated") => RankingController.topRated(request)
+        case ("GET", "/get_downloads_ranking") => RankingController.topUsers(request)
 
         // ---------- Archivos estáticos ----------
         case ("GET", p) if p.startsWith("/assets/") =>

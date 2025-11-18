@@ -1,93 +1,145 @@
 package models
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneId, Instant}
+import org.mongodb.scala.Document
+import org.mongodb.scala.model.Filters._
+import org.mongodb.scala.model.ReplaceOptions
+import db.MongoConnection
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
-/** Representa un ítem dentro del carrito */
-case class CartItem(
-  id: Long,
+case class CartEntry(
   userId: Long,
   mediaId: Long,
   quantity: Int,
-  dateAdded: LocalDateTime
+  dateAdded: LocalDateTime = LocalDateTime.now()
 )
 
-/** Repositorio in-memory para manejar carritos */
 object CartRepo {
 
-  private var cartItems: Vector[CartItem] = Vector.empty
-  private var nextId: Long = 1L
+  private val collection = MongoConnection.Collections.carts
 
-  /** Agregar item al carrito (o actualizar cantidad si ya existe) */
-  def addOrUpdate(userId: Long, mediaId: Long, quantity: Int): Either[String, CartItem] = synchronized {
+  private def key(userId: Long, mediaId: Long): String = s"${userId}_${mediaId}"
+
+  private def toEpoch(ldt: LocalDateTime): Long =
+    ldt.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
+
+  private def fromEpoch(epoch: Long): LocalDateTime =
+    LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault())
+
+  private def docToEntry(doc: Document): CartEntry = {
+    CartEntry(
+      userId = doc.getLong("userId"),
+      mediaId = doc.getLong("mediaId"),
+      quantity = doc.getInteger("quantity"),
+      dateAdded = fromEpoch(doc.getLong("dateAdded"))
+    )
+  }
+
+  private def entryToDoc(entry: CartEntry): Document = {
+    Document(
+      "_id" -> key(entry.userId, entry.mediaId),
+      "userId" -> entry.userId,
+      "mediaId" -> entry.mediaId,
+      "quantity" -> entry.quantity,
+      "dateAdded" -> toEpoch(entry.dateAdded)
+    )
+  }
+
+  def entriesForUser(userId: Long): Vector[CartEntry] = {
+    val docs = Await.result(
+      collection.find(equal("userId", userId)).toFuture(),
+      5.seconds
+    )
+    docs.map(docToEntry).toVector.sortBy(_.dateAdded)
+  }
+
+  def entriesWithMedia(userId: Long): Vector[(CartEntry, Media)] =
+    entriesForUser(userId).flatMap { entry =>
+      MediaRepo.find(entry.mediaId).map(media => (entry, media))
+    }
+
+  def addOrIncrement(userId: Long, mediaId: Long, quantity: Int): Either[String, CartEntry] = synchronized {
     if (quantity <= 0)
       Left("La cantidad debe ser mayor a 0")
     else {
       MediaRepo.find(mediaId) match {
         case None => Left("Producto no encontrado")
         case Some(_) =>
-          cartItems.find(i => i.userId == userId && i.mediaId == mediaId) match {
-            case Some(existing) =>
-              val updated = existing.copy(quantity = existing.quantity + quantity)
-              cartItems = cartItems.map(i => if (i.id == existing.id) updated else i)
-              Right(updated)
-
-            case None =>
-              val newItem = CartItem(nextId, userId, mediaId, quantity, LocalDateTime.now())
-              cartItems :+= newItem
-              nextId += 1
-              Right(newItem)
+          val existingDoc = Await.result(
+            collection.find(equal("_id", key(userId, mediaId))).first().toFuture(),
+            5.seconds
+          )
+          val existing = Option(existingDoc).map(docToEntry)
+          val entry = existing match {
+            case Some(e) => e.copy(quantity = e.quantity + quantity)
+            case None    => CartEntry(userId, mediaId, quantity, LocalDateTime.now())
           }
+
+          Await.result(
+            collection.replaceOne(
+              equal("_id", key(userId, mediaId)),
+              entryToDoc(entry),
+              ReplaceOptions().upsert(true)
+            ).toFuture(),
+            5.seconds
+          )
+
+          Right(entry)
       }
     }
   }
 
-  /** Actualizar cantidad de un item existente */
-  def updateQuantity(itemId: Long, userId: Long, newQuantity: Int): Either[String, CartItem] = synchronized {
-    if (newQuantity <= 0)
-      Left("La cantidad debe ser mayor a 0")
-    else {
-      cartItems.find(i => i.id == itemId && i.userId == userId) match {
-        case None => Left("Item no encontrado en tu carrito")
-        case Some(item) =>
-          val updated = item.copy(quantity = newQuantity)
-          cartItems = cartItems.map(i => if (i.id == itemId) updated else i)
-          Right(updated)
+  def setQuantity(userId: Long, mediaId: Long, quantity: Int): Either[String, CartEntry] = synchronized {
+    if (quantity <= 0) {
+      remove(userId, mediaId)
+      Left("Cantidad inválida")
+    } else {
+      val existing = find(userId, mediaId)
+      val entry = existing match {
+        case Some(e) => e.copy(quantity = quantity)
+        case None    => CartEntry(userId, mediaId, quantity, LocalDateTime.now())
       }
+
+      Await.result(
+        collection.replaceOne(
+          equal("_id", key(userId, mediaId)),
+          entryToDoc(entry),
+          ReplaceOptions().upsert(true)
+        ).toFuture(),
+        5.seconds
+      )
+
+      Right(entry)
     }
   }
 
-  /** Eliminar un ítem del carrito */
-  def remove(itemId: Long, userId: Long): Boolean = synchronized {
-    val initialSize = cartItems.size
-    cartItems = cartItems.filterNot(i => i.id == itemId && i.userId == userId)
-    cartItems.size < initialSize
+  def find(userId: Long, mediaId: Long): Option[CartEntry] = {
+    val doc = Await.result(
+      collection.find(equal("_id", key(userId, mediaId))).first().toFuture(),
+      5.seconds
+    )
+    Option(doc).map(docToEntry)
   }
 
-  /** Obtener carrito completo de un usuario */
-  def getByUser(userId: Long): Vector[(CartItem, Media)] = synchronized {
-    cartItems
-      .filter(_.userId == userId)
-      .sortBy(_.dateAdded)
-      .flatMap(item => MediaRepo.find(item.mediaId).map(media => (item, media)))
+  def remove(userId: Long, mediaId: Long): Boolean = synchronized {
+    val result = Await.result(
+      collection.deleteOne(equal("_id", key(userId, mediaId))).toFuture(),
+      5.seconds
+    )
+    result.getDeletedCount > 0
   }
 
-  /** Limpiar carrito de un usuario */
-  def clearByUser(userId: Long): Unit = synchronized {
-    cartItems = cartItems.filterNot(_.userId == userId)
+  def clear(userId: Long): Unit = synchronized {
+    Await.result(
+      collection.deleteMany(equal("userId", userId)).toFuture(),
+      5.seconds
+    )
   }
 
-  /** Calcular el total del carrito */
-  def getTotal(userId: Long): BigDecimal = synchronized {
-    getByUser(userId).map { case (item, media) => media.price * item.quantity }.sum
-  }
+  def total(userId: Long): BigDecimal =
+    entriesWithMedia(userId).map { case (entry, media) => media.price * entry.quantity }.sum
 
-  /** Contar total de unidades en el carrito */
-  def countItems(userId: Long): Int = synchronized {
-    cartItems.filter(_.userId == userId).map(_.quantity).sum
-  }
-
-  /** Buscar un ítem por ID */
-  def findById(itemId: Long): Option[CartItem] = synchronized {
-    cartItems.find(_.id == itemId)
-  }
+  def itemCount(userId: Long): Int =
+    entriesForUser(userId).map(_.quantity).sum
 }
