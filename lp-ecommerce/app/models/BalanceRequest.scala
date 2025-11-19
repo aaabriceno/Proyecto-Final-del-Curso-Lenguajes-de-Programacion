@@ -191,6 +191,7 @@ object BalanceRequestRepo {
     findById(id).filter(_.status == RequestStatus.Pending).map { request =>
       // Agregar saldo al usuario
       UserRepo.addBalance(request.userId, request.amount)
+      TopUpRepo.create(request.userId, adminId, request.amount, Some(request.id))
 
       val updated = request.copy(
         status = RequestStatus.Approved,

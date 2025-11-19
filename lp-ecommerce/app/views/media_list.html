@@ -96,6 +96,9 @@
             <div class="mb-4">
               <label class="form-label fw-bold">Buscar</label>
               <input type="text" id="search-input" class="form-control form-control-sm" placeholder="Buscar productos...">
+              <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" onclick="clearFilters()">
+                Limpiar filtros
+              </button>
             </div>
 
             <hr class="border-secondary">
@@ -255,6 +258,13 @@
     // Variable global para la categoría seleccionada
     let selectedCategoryId = null;
 
+    function clearFilters() {
+      selectedCategoryId = null;
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.value = '';
+      loadProducts();
+    }
+
     // Cargar productos dinámicamente
     async function loadProducts() {
       try {
@@ -262,6 +272,7 @@
         const response = await fetch('/api/media');
         const data = await response.json();
         let products = data.products || [];
+        const isAdmin = data.isAdmin || false;
         const query = document.getElementById('search-input').value.toLowerCase();
         // Filtrar productos por búsqueda
         if (query) {
@@ -297,7 +308,12 @@
           return;
         }
         // Generar cards de productos
-        grid.innerHTML = products.map(product => `
+        grid.innerHTML = products.map(product => {
+          const adminAction = isAdmin
+            ? `<a class="btn btn-warning btn-sm" href="/admin/media/${product.id}/edit" title="Editar producto">✏️</a>`
+            : `<button class="btn btn-primary btn-sm ${product.stock <= 0 ? 'disabled' : ''}" 
+                      onclick="addToCart(${product.id})">🛒</button>`;
+          return `
           <div class="col-12 col-sm-6 col-lg-4">
             <div class="card bg-dark border-secondary h-100 shadow-sm position-relative">
               ${product.hasPromotion ? `
@@ -329,16 +345,15 @@
                   ` : `
                     <span class="fw-semibold fs-5 text-success">$${product.price}</span>
                   `}
-                  <div class="btn-group">
-                    <a class="btn btn-outline-info btn-sm" href="/shop/${product.id}" title="Ver detalles">👁️</a>
-                    <button class="btn btn-primary btn-sm ${product.stock <= 0 ? 'disabled' : ''}" 
-                            onclick="addToCart(${product.id})">🛒</button>
-                  </div>
+                   <div class="btn-group">
+                     <a class="btn btn-outline-info btn-sm" href="/shop/${product.id}" title="Ver detalles">👁️</a>
+                      ${adminAction}
+                    </div>
                 </div>
               </div>
             </div>
           </div>
-        `).join('');
+        `}).join('');
         countSpan.textContent = products.length;
       } catch (error) {
         document.getElementById('products-grid').innerHTML = `

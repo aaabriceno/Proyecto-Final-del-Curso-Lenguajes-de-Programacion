@@ -95,6 +95,22 @@ object GiftController {
                   MediaRepo.reduceStock(media.id, 1) match {
                     case Right(_) =>
                       val gift = GiftRepo.create(user.id, recipient.id, media.id, media.price, finalPrice, discount, message)
+                      TransactionRepo.create(
+                        transactionType = TransactionType.GiftSent,
+                        fromUserId = Some(user.id),
+                        toUserId = Some(recipient.id),
+                        mediaId = Some(media.id),
+                        quantity = 1,
+                        grossAmount = media.price,
+                        discount = discount,
+                        referenceId = Some(gift.id),
+                        notes = message.filter(_.nonEmpty)
+                      )
+                      NotificationRepo.create(
+                        recipient.id,
+                        s"${user.name} te regaló ${media.title}",
+                        NotificationType.GiftReceived
+                      )
                       HttpResponse.json(200, Map("success" -> true, "giftId" -> gift.id))
                     case Left(errorMsg) =>
                       UserRepo.refundBalance(user.id, finalPrice)
@@ -124,7 +140,20 @@ object GiftController {
             GiftRepo.markClaimed(id)
             MediaRepo.find(gift.mediaId).foreach { media =>
               val discount = (gift.originalPrice - gift.pricePaid).max(BigDecimal(0))
-              DownloadRepo.add(user.id, media.id, 1, gift.originalPrice, discount)
+              TransactionRepo.create(
+                transactionType = TransactionType.GiftClaimed,
+                fromUserId = Some(user.id),
+                toUserId = Some(gift.fromUserId),
+                mediaId = Some(gift.mediaId),
+                quantity = 1,
+                grossAmount = gift.originalPrice,
+                discount = discount,
+                referenceId = Some(gift.id),
+                notes = Some("Regalo reclamado")
+              )
+              if (media.productType == ProductType.Digital) {
+                DownloadRepo.add(user.id, media.id, 1, gift.originalPrice, discount)
+              }
             }
             HttpResponse.json(200, Map("success" -> true))
           case None =>
