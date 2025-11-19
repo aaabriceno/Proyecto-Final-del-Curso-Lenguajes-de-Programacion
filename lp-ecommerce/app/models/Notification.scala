@@ -11,12 +11,14 @@ object NotificationType {
   case object BalanceApproved extends NotificationType { val asString = "balance_approved" }
   case object BalanceRejected extends NotificationType { val asString = "balance_rejected" }
   case object PurchaseSuccess extends NotificationType { val asString = "purchase_success" }
+  case object GiftReceived extends NotificationType { val asString = "gift_received" }
   case object Info extends NotificationType { val asString = "info" }
 
   def from(s: String): NotificationType = s.toLowerCase match {
     case "balance_approved" => BalanceApproved
     case "balance_rejected" => BalanceRejected
     case "purchase_success" => PurchaseSuccess
+    case "gift_received"     => GiftReceived
     case _                  => Info
   }
 }

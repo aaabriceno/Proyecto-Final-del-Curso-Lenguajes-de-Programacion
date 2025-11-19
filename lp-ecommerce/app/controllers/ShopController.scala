@@ -2,7 +2,7 @@ package controllers
 
 import http.{HttpRequest, HttpResponse}
 import java.net.URLEncoder
-import models.{MediaRepo, CategoryRepo, PromotionRepo, PromotionTarget, CartRepo, DownloadRepo, UserRepo, Media, User}
+import models.{MediaRepo, CategoryRepo, PromotionRepo, PromotionTarget, CartRepo, DownloadRepo, UserRepo, Media, User, TransactionRepo, TransactionType, ProductType, OrderRepo, OrderItem}
 import session.SessionManager
 import scala.io.Source
 import scala.util.{Try, Success, Failure}
@@ -135,18 +135,26 @@ object ShopController {
                  <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
             }
             
-            // Botón de compra (usuario logueado) - con precio final
-            val purchaseButton = s"""
-              <form method="POST" action="/shop/${media.id}/purchase" class="mb-3">
-                <button type="submit" class="btn btn-primary btn-lg w-100 ${if (media.stock <= 0) "disabled" else ""}">
-                  <i class="bi bi-cart-plus me-2"></i>Comprar ahora ($$${finalPrice})
+            val actionBlock =
+              if (user.isAdmin) {
+                s"""
+                <a href="/admin/media/${media.id}/edit" class="btn btn-warning w-100 mb-3">
+                  <i class="bi bi-pencil-square me-2"></i>Editar producto
+                </a>
+                """
+              } else {
+                s"""
+                <form method="POST" action="/shop/${media.id}/purchase" class="mb-3">
+                  <button type="submit" class="btn btn-primary btn-lg w-100 ${if (media.stock <= 0) "disabled" else ""}">
+                    <i class="bi bi-cart-plus me-2"></i>Comprar ahora ($$${finalPrice})
+                  </button>
+                </form>
+                
+                <button onclick="addToCart(${media.id})" class="btn btn-success w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}">
+                  <i class="bi bi-cart me-2"></i>Agregar al carrito
                 </button>
-              </form>
-              
-              <button onclick="addToCart(${media.id})" class="btn btn-success w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}">
-                <i class="bi bi-cart me-2"></i>Agregar al carrito
-              </button>
-            """
+                """
+              }
 
             val projectDir = System.getProperty("user.dir")
             val path = s"$projectDir/app/views/media_detail.html"
@@ -155,21 +163,8 @@ object ShopController {
               case Success(html) =>
                 // Reemplazar navbar, botón de compra y datos del producto
                 val updatedHtml = html
-                  .replace(
-                    """<a class="btn btn-outline-light btn-sm" href="/login">
-          🔑 Login
-        </a>
-        <a class="btn btn-warning btn-sm text-dark" href="/register">
-          🧾 Registro
-        </a>""",
-                    navbarButtons
-                  )
-                  .replace(
-                    """<a href="/login" class="btn btn-primary btn-lg w-100 mb-3">
-          <i class="bi bi-box-arrow-in-right me-2"></i>Inicia sesión para comprar
-        </a>""",
-                    purchaseButton
-                  )
+                  .replace("<!-- NAVBAR_PLACEHOLDER -->", navbarButtons)
+                  .replace("<!-- CTA_PLACEHOLDER -->", actionBlock)
                   .replace("/assets/images/placeholder.jpg", media.getCoverImageUrl)
                   .replace("🎵 Nombre del Producto", escapeHtml(media.title))
                   .replace("$99.99", priceDisplay)
@@ -205,6 +200,43 @@ object ShopController {
     if (amount <= 0) "$0.00" else s"-${formatMoney(amount)}"
 
   private case class PricingResult(unitPrice: BigDecimal, discountPerUnit: BigDecimal)
+
+  private def registerTransaction(
+    transactionType: TransactionType,
+    fromUserId: Option[Long],
+    toUserId: Option[Long],
+    media: Media,
+    quantity: Int,
+    grossAmount: BigDecimal,
+    discount: BigDecimal,
+    referenceId: Option[Long] = None,
+    note: Option[String] = None,
+    orderId: Option[Long] = None
+  ): Unit = {
+    TransactionRepo.create(
+      transactionType = transactionType,
+      fromUserId = fromUserId,
+      toUserId = toUserId,
+      mediaId = Some(media.id),
+      quantity = quantity,
+      grossAmount = grossAmount,
+      discount = discount,
+      referenceId = referenceId,
+      notes = note.filter(_.nonEmpty),
+      orderId = orderId
+    )
+  }
+
+  private def registerDigitalDownload(
+    media: Media,
+    userId: Long,
+    quantity: Int,
+    lineDiscount: BigDecimal
+  ): Unit = {
+    if (media.productType == ProductType.Digital) {
+      DownloadRepo.add(userId, media.id, quantity, media.price, lineDiscount)
+    }
+  }
 
   private def calculatePricing(media: Media, user: User): PricingResult = {
     val basePrice = media.activePromotion.map(_.applyDiscount(media.price)).getOrElse(media.price)
@@ -364,6 +396,7 @@ object ShopController {
 
               def completePurchase(userAfterCharge: User): HttpResponse = {
                 val processed = scala.collection.mutable.ListBuffer.empty[(Long, Int)]
+                val processedItems = scala.collection.mutable.ListBuffer.empty[(Media, Int, BigDecimal)]
                 val result = pricingData.foldLeft[Either[String, Unit]](Right(())) {
                   case (Left(err), _) => Left(err)
                   case (Right(_), (entry, media, pricing, _, _)) =>
@@ -371,7 +404,7 @@ object ShopController {
                       case Right(_) =>
                         processed += media.id -> entry.quantity
                         val lineDiscount = (pricing.discountPerUnit * BigDecimal(entry.quantity)).setScale(2, RoundingMode.HALF_UP)
-                        DownloadRepo.add(user.id, media.id, entry.quantity, media.price, lineDiscount)
+                        processedItems += ((media, entry.quantity, lineDiscount))
                         Right(())
                       case Left(errorMsg) =>
                         Left(errorMsg)
@@ -384,6 +417,34 @@ object ShopController {
                     if (totalFinal > 0) UserRepo.refundBalance(user.id, totalFinal)
                     HttpResponse.redirect("/cart?error=" + URLEncoder.encode(s"No se pudo completar la compra: $errorMsg", "UTF-8"))
                   case Right(_) =>
+                    val orderItems = processedItems.toVector.map { case (media, quantity, lineDiscount) =>
+                      val gross = media.price * quantity
+                      OrderItem(
+                        mediaId = media.id,
+                        title = media.title,
+                        quantity = quantity,
+                        unitPrice = media.price,
+                        discount = lineDiscount,
+                        netAmount = (gross - lineDiscount).max(BigDecimal(0)),
+                        productType = media.productType
+                      )
+                    }
+                    val order = OrderRepo.create(user.id, orderItems)
+                    processedItems.foreach { case (media, quantity, lineDiscount) =>
+                      registerTransaction(
+                        transactionType = TransactionType.Purchase,
+                        fromUserId = Some(user.id),
+                        toUserId = None,
+                        media = media,
+                        quantity = quantity,
+                        grossAmount = media.price * quantity,
+                        discount = lineDiscount,
+                        referenceId = None,
+                        note = Some("Compra carrito"),
+                        orderId = Some(order.id)
+                      )
+                      registerDigitalDownload(media, user.id, quantity, lineDiscount)
+                    }
                     CartRepo.clear(user.id)
                     val successMsg = s"Compra realizada por ${formatMoney(totalFinal)}. Descuento aplicado: ${formatMoney(discountAmount)}"
                     HttpResponse.redirect("/shop?success=" + URLEncoder.encode(successMsg, "UTF-8"))
@@ -411,37 +472,48 @@ object ShopController {
       case Right(user) =>
         MediaRepo.find(id) match {
           case Some(media) =>
-            // Calcular precio final con promoción si aplica (por producto O por categoría)
-            import java.time.LocalDateTime
-            val now = LocalDateTime.now()
-            val activePromotion = PromotionRepo.all.find { promo =>
-              val isActive = !promo.startDate.isAfter(now) && !promo.endDate.isBefore(now)
-              if (!isActive) false
-              else {
-                promo.targetType match {
-                  case PromotionTarget.Product => promo.targetIds.contains(media.id)
-                  case PromotionTarget.Category => 
-                    media.categoryId.exists(catId => promo.targetIds.contains(catId))
-                  case _ => false
-                }
-              }
-            }
-            
-            val finalPrice = activePromotion match {
-              case Some(promo) =>
-                val discount = promo.discountPercent
-                media.price * (100 - discount) / 100
-              case None =>
-                media.price
-            }
-            
-            models.UserRepo.deductBalance(user.id, finalPrice) match {
+            if (media.isOutOfStock)
+              return HttpResponse.redirect(s"/shop/${id}?error=Sin+stock+disponible")
+
+            val pricing = calculatePricing(media, user)
+            val quantity = 1
+            val lineDiscount = (pricing.discountPerUnit * BigDecimal(quantity)).setScale(2, RoundingMode.HALF_UP)
+            val finalPrice = pricing.unitPrice * quantity
+
+            UserRepo.deductBalance(user.id, finalPrice) match {
               case Some(updatedUser) =>
-                // TODO: Registrar transacción en TransactionRepo cuando esté implementado
-                // TODO: Agregar media a UserDownloads cuando esté implementado
-                HttpResponse.redirect(s"/shop/${id}?success=Compra+realizada.+Nuevo+saldo:+$$${updatedUser.balance}")
+                MediaRepo.reduceStock(media.id, quantity) match {
+                  case Right(_) =>
+                    val orderItem = OrderItem(
+                      mediaId = media.id,
+                      title = media.title,
+                      quantity = quantity,
+                      unitPrice = media.price,
+                      discount = lineDiscount,
+                      netAmount = (media.price * quantity - lineDiscount).max(BigDecimal(0)),
+                      productType = media.productType
+                    )
+                    val order = OrderRepo.create(user.id, Vector(orderItem))
+                    registerTransaction(
+                      transactionType = TransactionType.Purchase,
+                      fromUserId = Some(user.id),
+                      toUserId = None,
+                      media = media,
+                      quantity = quantity,
+                      grossAmount = media.price * quantity,
+                      discount = lineDiscount,
+                      referenceId = None,
+                      note = Some("Compra directa"),
+                      orderId = Some(order.id)
+                    )
+                    registerDigitalDownload(media, user.id, quantity, lineDiscount)
+                    HttpResponse.redirect(s"/shop/${id}?success=Compra+realizada.+Nuevo+saldo:+$$${updatedUser.balance}")
+                  case Left(errorMsg) =>
+                    UserRepo.refundBalance(user.id, finalPrice)
+                    HttpResponse.redirect(s"/shop/${id}?error=" + URLEncoder.encode(errorMsg, "UTF-8"))
+                }
               case None =>
-                HttpResponse.redirect(s"/shop/${id}?error=Saldo+insuficiente.+Necesitas+$$${media.price},+tienes+$$${user.balance}")
+                HttpResponse.redirect(s"/shop/${id}?error=Saldo+insuficiente.+Necesitas+$$${finalPrice},+tienes+$$${user.balance}")
             }
           case None =>
             HttpResponse.redirect("/shop?error=Producto+no+encontrado")

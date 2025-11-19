@@ -62,6 +62,7 @@ object Router {
         case ("GET", "/user/info")        => UserController.info(request)
         case ("POST", "/user/info")       => UserController.updateInfo(request)
         case ("GET", "/user/downloads")   => UserController.downloads(request)
+        case ("GET", "/user/orders")      => UserController.orders(request)
         case ("GET", "/user/transactions")=> UserController.transactions(request)
         case ("GET", "/user/balance/request")  => UserController.balanceRequestForm(request)
         case ("POST", "/user/balance/request") => UserController.createBalanceRequest(request)

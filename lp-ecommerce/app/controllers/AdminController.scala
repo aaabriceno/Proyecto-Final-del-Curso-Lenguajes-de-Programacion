@@ -2,6 +2,7 @@ package controllers
 
 import http.{HttpRequest, HttpResponse}
 import models._
+import services.AnalyticsService
 import scala.util.{Try, Success, Failure}
 import java.nio.file.{Files, Paths}
 import scala.io.Source
@@ -34,7 +35,42 @@ object AdminController {
   /** GET /admin */
   def dashboard(request: HttpRequest): HttpResponse = {
     AuthController.requireAdmin(request) match {
-      case Right(_) => serveHtml("admin_dashboard", request)
+      case Right(_) =>
+        val projectDir = System.getProperty("user.dir")
+        val path = Paths.get(projectDir, "app", "views", "admin_dashboard.html")
+        Try(Files.readString(path)) match {
+          case Success(template) =>
+            val users = UserRepo.all
+            val totalUsers = users.size
+            val totalAdmins = users.count(_.isAdmin)
+            val totalProducts = MediaRepo.all.size
+            val promotions = Try(PromotionRepo.all).getOrElse(Seq.empty)
+            import java.time.LocalDateTime
+            val now = LocalDateTime.now()
+            val activePromos = promotions.count(p => !p.startDate.isAfter(now) && !p.endDate.isBefore(now))
+            val upcomingPromos = promotions.count(_.startDate.isAfter(now))
+
+        val topRows = buildTopPurchasesRows()
+
+        val replacements = Map(
+          "__TOTAL_USERS__" -> totalUsers.toString,
+          "__TOTAL_PRODUCTS__" -> totalProducts.toString,
+          "__TOTAL_ADMINS__" -> totalAdmins.toString,
+          "__PROMO_ACTIVE__" -> activePromos.toString,
+          "__PROMO_UPCOMING__" -> upcomingPromos.toString,
+          "<!-- TOP_PURCHASES_ROWS -->" -> topRows,
+          "\"products\": [" -> s""""products": [""",
+          "\"isAdmin\": false" -> "\"isAdmin\": true"
+        )
+
+            val filled = replacePlaceholders(template, replacements)
+            val response = HttpResponse.ok(filled)
+            if (request.cookies.contains("sessionId"))
+              response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
+            else response
+          case Failure(e) =>
+            HttpResponse.notFound(s"No se pudo cargar el dashboard: ${e.getMessage}")
+        }
       case Left(res) => res
     }
   }
@@ -161,7 +197,8 @@ object AdminController {
            |}""".stripMargin
       }.mkString(",\n")
       
-      val json = s"""{"products": [\n$mediaJsonArray\n]}"""
+      val isAdminFlag = AuthController.getCurrentUser(request).flatMap(UserRepo.findByEmail).exists(_.isAdmin)
+      val json = s"""{"products": [\n$mediaJsonArray\n], "isAdmin": $isAdminFlag}"""
       
       HttpResponse(
         status = 200,
@@ -189,6 +226,38 @@ object AdminController {
      .replace("\n", "\\n")
      .replace("\r", "\\r")
      .replace("\t", "\\t")
+
+  private def escapeHtml(s: String): String =
+    s.replace("&", "&amp;")
+     .replace("<", "&lt;")
+     .replace(">", "&gt;")
+     .replace("\"", "&quot;")
+     .replace("'", "&#x27;")
+
+  private def formatMoney(amount: BigDecimal): String =
+    f"$$${amount}%.2f"
+
+  private def replacePlaceholders(template: String, replacements: Map[String, String]): String =
+    replacements.foldLeft(template) { case (acc, (key, value)) => acc.replace(key, value) }
+
+  private def buildTopPurchasesRows(): String = {
+    val topProducts = AnalyticsService.topPurchasedMedia(5)
+    if (topProducts.isEmpty) {
+      """<tr><td colspan="5" class="text-center py-3" style="color:#1976d2;">Aún no hay compras registradas</td></tr>"""
+    } else {
+      topProducts.map { case (media, quantity, revenue) =>
+        s"""
+           |<tr>
+           |  <td>${escapeHtml(media.title)}</td>
+           |  <td>${media.productType.asString.capitalize}</td>
+           |  <td>${formatMoney(media.price)}</td>
+           |  <td>${media.rating}</td>
+           |  <td><strong>$quantity</strong></td>
+           |</tr>
+         """.stripMargin
+      }.mkString
+    }
+  }
 
   /** GET /admin/media/new */
   def newMediaForm(request: HttpRequest): HttpResponse = {
@@ -262,14 +331,6 @@ object AdminController {
     }
   }
   
-  /** Escapa HTML para prevenir XSS */
-  private def escapeHtml(s: String): String =
-    s.replace("&", "&amp;")
-     .replace("<", "&lt;")
-     .replace(">", "&gt;")
-     .replace("\"", "&quot;")
-     .replace("'", "&#x27;")
-
   /** POST /admin/media/:id */
   def updateMedia(id: Long, request: HttpRequest): HttpResponse = {
     AuthController.requireAdmin(request) match {
@@ -756,7 +817,25 @@ $categoriesJsonArray
   /** GET /admin/statistics */
   def statistics(request: HttpRequest): HttpResponse = {
     AuthController.requireAdmin(request) match {
-      case Right(_) => serveHtml("admin_statistics", request)
+      case Right(_) =>
+        val projectDir = System.getProperty("user.dir")
+        val path = Paths.get(projectDir, "app", "views", "admin_statistics.html")
+        Try(Files.readString(path)) match {
+          case Success(template) =>
+            val replacements = Map(
+              "__STAT_TOTAL_SALES__" -> AnalyticsService.totalUnitsSold.toString,
+              "__STAT_TOTAL_REVENUE__" -> formatMoney(AnalyticsService.totalRevenue),
+              "__STAT_TOTAL_USERS__" -> UserRepo.all.size.toString,
+              "__STAT_TOTAL_PRODUCTS__" -> MediaRepo.all.size.toString
+            )
+            val filled = replacePlaceholders(template, replacements)
+            val response = HttpResponse.ok(filled)
+            if (request.cookies.contains("sessionId"))
+              response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
+            else response
+          case Failure(e) =>
+            HttpResponse.notFound(s"No se pudo cargar estadísticas: ${e.getMessage}")
+        }
       case Left(res) => res
     }
   }

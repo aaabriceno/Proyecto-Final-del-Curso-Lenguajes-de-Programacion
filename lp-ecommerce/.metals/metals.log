@@ -8172,3 +8172,73 @@ Exception in thread "pool-96-thread-1" java.lang.InterruptedException
 2025.11.18 04:46:22 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Gift.scala. Using presentation compiler with project's scala-library version: 3.3.6
 2025.11.18 04:46:22 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Ranking.scala. Using presentation compiler with project's scala-library version: 3.3.6
 2025.11.18 04:46:22 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\models\Rating.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.18 05:32:31 INFO  Shutting down server
+2025.11.18 05:32:31 INFO  shutting down Metals
+2025.11.18 05:32:31 INFO  Exiting server
+2025.11.18 23:19:17 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.106.1.
+2025.11.18 23:19:18 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2025.11.18 23:22:06 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\HomeController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.18 23:22:06 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\GiftController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.18 23:37:56 INFO  Shutting down server
+2025.11.18 23:37:56 INFO  shutting down Metals
+2025.11.18 23:37:56 ERROR Unexpected error initializing server: 
+org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Request window/showMessageRequest failed with message: Canceled
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.lang.Thread.run(Thread.java:1474)
+
+2025.11.18 23:37:56 INFO  Exiting server
+2025.11.19 00:05:48 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.106.1.
+2025.11.19 00:05:49 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2025.11.19 01:33:07 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:20 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:21 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:24 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:25 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:25 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:25 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:27 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:29 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:33:29 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:12 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala
+2025.11.19 01:41:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:41:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:46:12 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:47:57 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 19, 2025 1:47:57 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 83
+nov. 19, 2025 1:47:57 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 85
+2025.11.19 01:57:15 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:58:17 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:58:26 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:58:59 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 01:59:13 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 02:01:10 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 02:40:09 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 02:42:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 02:42:01 WARN  no build target for: C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala
+2025.11.19 02:42:00 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 19, 2025 2:42:01 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 90
+nov. 19, 2025 2:42:01 A. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 92
+2025.11.19 02:42:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 02:45:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.19 02:45:01 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
