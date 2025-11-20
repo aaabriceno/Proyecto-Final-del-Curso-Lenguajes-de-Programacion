@@ -80,7 +80,7 @@ object MongoConnection {
       val collections = Await.result(database.listCollectionNames().toFuture(), 5.seconds)
       
       if (collections.contains("media")) {
-        println("🔄 Migrando colección 'media' → 'productos'...")
+        println("Migrando colección 'media' → 'productos'...")
         
         // Renombrar colección
         val mediaCollection = database.getCollection("media")
@@ -88,13 +88,13 @@ object MongoConnection {
           mediaCollection.renameCollection(MongoNamespace("lp_ecommerce", "productos")).toFuture(),
           5.seconds
         )
-        println("✅ Colección renombrada: 'media' → 'productos'")
+        println("Colección renombrada: 'media' → 'productos'")
         
         // Ahora trabajar con la colección 'productos'
         val productosCollection = database.getCollection("productos")
         
         // 1. Eliminar campos obsoletos (mtype, coverImage)
-        println("🗑️  Eliminando campos obsoletos (mtype, coverImage)...")
+        println("Eliminando campos obsoletos (mtype, coverImage)...")
         Await.result(
           productosCollection.updateMany(
             Document(),
@@ -107,7 +107,7 @@ object MongoConnection {
         )
         
         // 2. Agregar productType a productos que no lo tienen
-        println("📦 Agregando campo 'productType' a productos viejos...")
+        println("Agregando campo 'productType' a productos viejos...")
         Await.result(
           productosCollection.updateMany(
             org.mongodb.scala.model.Filters.exists("productType", false),
@@ -116,17 +116,17 @@ object MongoConnection {
           5.seconds
         )
         
-        println("✅ Migración completada exitosamente")
+        println("Migración completada exitosamente")
         
       } else if (collections.contains("productos")) {
-        println("✅ Colección 'productos' ya existe (migración previa)")
+        println("Colección 'productos' ya existe (migración previa)")
         
         // Verificar si hay campos obsoletos y eliminarlos
         val productosCollection = database.getCollection("productos")
         val sampleDoc = Await.result(productosCollection.find().first().toFuture(), 5.seconds)
         
         if (sampleDoc != null && (sampleDoc.containsKey("mtype") || sampleDoc.containsKey("coverImage"))) {
-          println("🗑️  Limpiando campos obsoletos de productos existentes...")
+          println("Limpiando campos obsoletos de productos existentes...")
           Await.result(
             productosCollection.updateMany(
               Document(),
@@ -137,7 +137,7 @@ object MongoConnection {
             ).toFuture(),
             5.seconds
           )
-          println("✅ Campos obsoletos eliminados")
+          println("Campos obsoletos eliminados")
         }
         
         // Agregar productType a productos que no lo tienen
@@ -149,7 +149,7 @@ object MongoConnection {
         )
         
         if (countWithoutProductType > 0) {
-          println(s"📦 Agregando 'productType' a $countWithoutProductType productos...")
+          println(s"Agregando 'productType' a $countWithoutProductType productos...")
           Await.result(
             productosCollection.updateMany(
               org.mongodb.scala.model.Filters.exists("productType", false),
@@ -157,13 +157,13 @@ object MongoConnection {
             ).toFuture(),
             5.seconds
           )
-          println("✅ Campo 'productType' agregado")
+          println("Campo 'productType' agregado")
         }
       }
       
     } catch {
       case e: Exception =>
-        println(s"⚠️  Error durante migración: ${e.getMessage}")
+        println(s"Error durante migración: ${e.getMessage}")
         // No detener la aplicación, solo advertir
     }
   }
@@ -172,7 +172,7 @@ object MongoConnection {
    * Inicializa datos de ejemplo (solo si la BD está vacía)
    */
   def initializeData(): Unit = {
-    println("🔍 Verificando si hay datos iniciales...")
+    println("Verificando si hay datos iniciales...")
     
     // ========= MIGRACIÓN: Renombrar colección 'media' a 'productos' =========
     migrateMediaToProductos()
@@ -183,12 +183,12 @@ object MongoConnection {
     )
     
     if (userCount == 0) {
-      println("📝 Insertando datos iniciales...")
+      println("Insertando datos iniciales...")
       insertInitialData()
     } else {
-      println(s"✅ Ya existen $userCount usuarios en la base de datos")
+      println(s"Ya existen $userCount usuarios en la base de datos")
       
-      // 🔒 VERIFICAR SI LAS CONTRASEÑAS ESTÁN HASHEADAS
+      //  VERIFICAR SI LAS CONTRASEÑAS ESTÁN HASHEADAS
       // (Las contraseñas en texto plano tienen ~8 caracteres, los hash SHA-256 en Base64 tienen 44)
       val users = Await.result(Collections.users.find().toFuture(), 5.seconds)
       val needsPasswordFix = users.exists { doc =>
@@ -197,10 +197,10 @@ object MongoConnection {
       }
       
       if (needsPasswordFix) {
-        println("⚠️  DETECTADAS CONTRASEÑAS SIN HASHEAR - Recreando usuarios con hashes correctos...")
+        println("DETECTADAS CONTRASEÑAS SIN HASHEAR - Recreando usuarios con hashes correctos...")
         // Eliminar usuarios viejos
         Await.result(Collections.users.deleteMany(Document()).toFuture(), 5.seconds)
-        println("🗑️  Usuarios viejos eliminados")
+        println("Usuarios viejos eliminados")
         // Crear usuarios nuevos con contraseñas hasheadas (sin recrear categorías/productos)
         insertInitialData(onlyUsers = true)
       }
@@ -237,7 +237,7 @@ object MongoConnection {
     )
     
     if (mediaCount > 0) {
-      println(s"🔍 Verificando estructura de $mediaCount productos...")
+      println(s"Verificando estructura de $mediaCount productos...")
       val allMedia = Await.result(Collections.media.find().toFuture(), 5.seconds)
       
       allMedia.foreach { doc =>
@@ -320,7 +320,7 @@ object MongoConnection {
     // Verificar e insertar promociones si no existen
     val promotionCount = Await.result(Collections.promotions.countDocuments().toFuture(), 5.seconds)
     if (promotionCount == 0) {
-      println("📢 Insertando 2 promociones de ejemplo...")
+      println("Insertando 2 promociones de ejemplo...")
       
       import org.mongodb.scala.bson.{BsonArray, BsonInt64, BsonDocument, BsonString, BsonInt32, BsonBoolean, BsonDateTime}
       import java.time.Instant

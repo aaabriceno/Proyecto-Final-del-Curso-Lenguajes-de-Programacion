@@ -35,7 +35,7 @@ object ShopController {
 
   /** GET /shop */
   def shop(request: HttpRequest): HttpResponse = {
-    // 🔍 DEBUG: Ver qué cookie recibimos
+    //  DEBUG: Ver qué cookie recibimos
     println(s"🔍 [SHOP] Cookies recibidas: ${request.cookies}")
     val sessionId = request.cookies.get("sessionId")
     println(s"🔍 [SHOP] SessionID: $sessionId")
@@ -81,7 +81,7 @@ object ShopController {
         }
         
       case Left(resp) => 
-        println(s"🔴 [SHOP] requireAuth FALLÓ, redirigiendo a login")
+        println(s" [SHOP] requireAuth FALLÓ, redirigiendo a login")
         resp
     }
   }

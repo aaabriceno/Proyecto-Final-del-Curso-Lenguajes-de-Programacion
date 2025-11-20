@@ -38,14 +38,14 @@ object HttpServer {
    * Inicia el servidor HTTP y queda escuchando indefinidamente.
    */
   def start(): Unit = {
-    println(s"🚀Iniciando servidor HTTP en puerto $PORT...")
-    println(s"📂 Servidor SIN frameworks (implementación manual).")
-    println(s"🌐 Acceso LOCAL: http://localhost:$PORT")
+    println(s"Iniciando servidor HTTP en puerto $PORT...")
+    println(s"Servidor SIN frameworks (implementación manual).")
+    println(s"Acceso LOCAL: http://localhost:$PORT")
     
     // Mostrar todas las IPs para acceso en red
     val localIPs = getLocalIPs
     if (localIPs.nonEmpty) {
-      println(s"🌍 Acceso en RED LOCAL:")
+      println(s"Acceso en RED LOCAL:")
       localIPs.foreach(ip => println(s"   http://$ip:$PORT"))
     }
     println()
@@ -55,8 +55,8 @@ object HttpServer {
       case scala.util.Success(socket) =>
         serverSocket = Some(socket)
         running = true
-        println("✅ Servidor iniciado correctamente.")
-        println("⏳ Esperando conexiones...\n")
+        println("Servidor iniciado correctamente.")
+        println("Esperando conexiones...\n")
 
         while (running) {
           try {
@@ -66,14 +66,14 @@ object HttpServer {
             }
           } catch {
             case _: java.net.SocketException if !running =>
-              println("🛑 Servidor detenido correctamente.")
+              println("Servidor detenido correctamente.")
             case e: Exception =>
-              println(s"⚠️ Error aceptando conexión: ${e.getMessage}")
+              println(s"Error aceptando conexión: ${e.getMessage}")
           }
         }
 
       case Failure(e) =>
-        println(s"❌ Error al iniciar el servidor: ${e.getMessage}")
+        println(s"Error al iniciar el servidor: ${e.getMessage}")
         e.printStackTrace()
     }
   }
@@ -82,11 +82,11 @@ object HttpServer {
    * Detiene el servidor y cierra el socket principal.
    */
   def stop(): Unit = {
-    println("\n🛑 Deteniendo servidor...")
+    println("\nDeteniendo servidor...")
     running = false
     serverSocket.foreach { s =>
       Try(s.close())
-      println("✅ Socket cerrado correctamente.")
+      println("Socket cerrado correctamente.")
     }
   }
 
@@ -101,7 +101,7 @@ object HttpServer {
 
       // Parsear request
       val request = HttpRequest.parse(reader)
-      println(s"📥 [${clientIp}] ${request.method} ${request.path}")
+      println(s"[${clientIp}] ${request.method} ${request.path}")
 
       // Enviar la respuesta
       val response = Router.route(request)
@@ -116,7 +116,7 @@ object HttpServer {
 
     } catch {
       case e: Exception =>
-        println(s"❌ Error manejando cliente [$clientIp]: ${e.getMessage}")
+        println(s"Error manejando cliente [$clientIp]: ${e.getMessage}")
         try {
           val errorWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream, "UTF-8"))
           val errorMsg = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\n\r\nError interno del servidor."
