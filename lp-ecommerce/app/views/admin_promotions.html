@@ -69,6 +69,7 @@
     }
   </style>
 </head>
+<body class="bg-light text-dark">
   <nav class="navbar border-bottom shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
@@ -76,11 +77,10 @@
         <a class="btn btn-outline-danger btn-sm" href="/admin">👨‍💼 Admin</a>
         <a class="btn btn-outline-light btn-sm" href="/logout"><i class="bi bi-box-arrow-right me-1"></i> Salir</a>
       </div>
-        color: #fff !important;
   </nav>
   <main class="container py-5">
     <div class="row mb-4 align-items-center">
-        color: #1976d2 !important;
+      <div class="col">
         <h1 class="fw-bold">🔥 Gestión de Promociones</h1>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
@@ -98,7 +98,7 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <h6 class="text-uppercase mb-2" style="color:#00e676">✅ Activas</h6>
-            <h2 class="mb-0 fw-bold">2</h2>
+            <h2 class="mb-0 fw-bold">__ACTIVE_COUNT__</h2>
             <small>En curso ahora mismo</small>
           </div>
         </div>
@@ -107,7 +107,7 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <h6 class="text-uppercase mb-2" style="color:#1976d2">⏰ Próximas</h6>
-            <h2 class="mb-0 fw-bold">0</h2>
+            <h2 class="mb-0 fw-bold">__UPCOMING_COUNT__</h2>
             <small>Aún no han comenzado</small>
           </div>
         </div>
@@ -116,7 +116,7 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <h6 class="text-uppercase mb-2" style="color:#b6c3d1">❌ Inactivas</h6>
-            <h2 class="mb-0 fw-bold">2</h2>
+            <h2 class="mb-0 fw-bold">__INACTIVE_COUNT__</h2>
             <small>Ya finalizaron</small>
           </div>
         </div>
@@ -140,62 +140,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Apple iPhone 17 Pro 256gb Ram 12gb</td>
-                <td><span class="badge bg-warning">20% OFF</span></td>
-                <td>2025-11-14</td>
-                <td>2025-11-15</td>
-                <td><span class="badge bg-secondary">❌ Inactiva</span></td>
-                <td>
-                  <form method="POST" action="/admin/promotions/6/delete" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar promoción?')">
-                      🗑️
-                    </button>
-                  </form>
-                </td>
-              </tr>
-              <tr>
-                <td>Iphone 16</td>
-                <td><span class="badge bg-warning">12% OFF</span></td>
-                <td>2025-11-13</td>
-                <td>2025-11-14</td>
-                <td><span class="badge bg-secondary">❌ Inactiva</span></td>
-                <td>
-                  <form method="POST" action="/admin/promotions/4/delete" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar promoción?')">
-                      🗑️
-                    </button>
-                  </form>
-                </td>
-              </tr>
-              <tr>
-                <td>Todos los productos</td>
-                <td><span class="badge bg-warning">20% OFF</span></td>
-                <td>2025-11-13</td>
-                <td>2025-11-23</td>
-                <td><span class="badge bg-success">✅ Activa</span></td>
-                <td>
-                  <form method="POST" action="/admin/promotions/2/delete" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar promoción?')">
-                      🗑️
-                    </button>
-                  </form>
-                </td>
-              </tr>
-              <tr>
-                <td>Todos los productos</td>
-                <td><span class="badge bg-warning">30% OFF</span></td>
-                <td>2025-11-12</td>
-                <td>2025-11-18</td>
-                <td><span class="badge bg-success">✅ Activa</span></td>
-                <td>
-                  <form method="POST" action="/admin/promotions/1/delete" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar promoción?')">
-                      🗑️
-                    </button>
-                  </form>
-                </td>
-              </tr>
+              <!-- PROMOTIONS_ROWS -->
             </tbody>
           </table>
         </div>

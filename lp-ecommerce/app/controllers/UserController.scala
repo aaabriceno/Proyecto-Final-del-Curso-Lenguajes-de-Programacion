@@ -163,23 +163,25 @@ object UserController {
 
     s"""
        |<div class="bg-dark border border-secondary rounded-3 p-3 mb-3">
-       |  <div class="d-flex justify-content-between flex-wrap gap-2">
-       |    <div>
-       |      <strong>Orden #${order.id}</strong><br>
-       |      <small class="text-muted">${formatDateTime(order.createdAt)}</small>
+       |  <div class="bg-light text-dark border border-secondary rounded-3 p-3">
+       |    <div class="d-flex justify-content-between flex-wrap gap-2">
+       |      <div>
+       |        <strong>Orden #${order.id}</strong><br>
+       |        <small class="text-muted">${formatDateTime(order.createdAt)}</small>
+       |      </div>
+       |      <div class="text-end">
+       |        <span class="text-muted d-block">Total pagado</span>
+       |        <span class="fs-5 text-warning fw-semibold">${formatMoney(order.totalNet)}</span>
+       |      </div>
        |    </div>
-       |    <div class="text-end">
-       |      <span class="text-muted d-block">Total pagado</span>
-       |      <span class="fs-5 text-warning fw-semibold">${formatMoney(order.totalNet)}</span>
+       |    <hr>
+       |    <ul class="list-unstyled mb-0">
+       |      $itemsHtml
+       |    </ul>
+       |    <div class="mt-3 small text-muted d-flex justify-content-between">
+       |      <span>Subtotal: ${formatMoney(order.totalGross)}</span>
+       |      <span>Descuento: ${formatMoney(order.totalDiscount)}</span>
        |    </div>
-       |  </div>
-       |  <hr>
-       |  <ul class="list-unstyled mb-0">
-       |    $itemsHtml
-       |  </ul>
-       |  <div class="mt-3 small text-muted d-flex justify-content-between">
-       |    <span>Subtotal: ${formatMoney(order.totalGross)}</span>
-       |    <span>Descuento: ${formatMoney(order.totalDiscount)}</span>
        |  </div>
       |</div>
      """.stripMargin
