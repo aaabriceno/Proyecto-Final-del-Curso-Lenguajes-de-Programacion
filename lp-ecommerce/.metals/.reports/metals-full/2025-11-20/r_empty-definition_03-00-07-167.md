@@ -1,3 +1,22 @@
+error id: file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/controllers/AdminController.scala:`<none>`.
+file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/controllers/AdminController.scala
+empty definition using pc, found symbol in pc: `<none>`.
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -models/media/price.
+	 -models/media/price#
+	 -models/media/price().
+	 -media/price.
+	 -media/price#
+	 -media/price().
+	 -scala/Predef.media.price.
+	 -scala/Predef.media.price#
+	 -scala/Predef.media.price().
+offset: 22440
+uri: file:///C:/Users/PC/Proyecto-Final-del-Curso-Lenguajes-de-Programacion/lp-ecommerce/app/controllers/AdminController.scala
+text:
+```scala
 package controllers
 
 import http.{HttpRequest, HttpResponse}
@@ -93,14 +112,14 @@ object AdminController {
         // Generar JSON manualmente
         val usersJsonArray = allUsers.map { user =>
           s"""{
-             |  "id": ${user.id},
-             |  "email": "${escapeJson(user.email)}",
-             |  "username": "${escapeJson(user.name)}",
-             |  "isAdmin": ${user.isAdmin},
-             |  "isActive": ${user.isActive},
-             |  "balance": ${user.balance},
-             |  "totalSpent": ${user.totalSpent}
-             |}""".stripMargin
+  "id": ${user.id},
+  "email": "${escapeJson(user.email)}",
+  "username": "${escapeJson(user.name)}",
+  "isAdmin": ${user.isAdmin},
+  "isActive": ${user.isActive},
+  "balance": ${user.balance},
+  "totalSpent": ${user.totalSpent}
+}""".stripMargin
         }.mkString(",\n")
         
         val json = s"""{"users": [\n$usersJsonArray\n]}"""
@@ -179,22 +198,22 @@ object AdminController {
         }
         
         s"""{
-           |  "id": ${media.id},
-           |  "title": "${escapeJson(media.title)}",
-           |  "description": "${escapeJson(media.description)}",
-           |  "productType": "${media.productType.asString}",
-           |  "categoryId": ${media.categoryId.getOrElse("null")},
-           |  "categoryPath": "$categoryPath",
-           |  "assetPath": "${escapeJson(media.assetPath)}",
-           |  "price": ${media.price},
-           |  "rating": ${media.rating},
-           |  "downloadCount": ${media.downloads},
-           |  "stock": ${media.stock},
-           |  "coverImage": "${escapeJson(media.getCoverImageUrl)}",
-           |  "hasPromotion": $hasPromotion,
-           |  "discountPercent": $discountPercent,
-           |  "discountedPrice": $discountedPrice
-           |}""".stripMargin
+  "id": ${media.id},
+  "title": "${escapeJson(media.title)}",
+  "description": "${escapeJson(media.description)}",
+  "productType": "${media.productType.asString}",
+  "categoryId": ${media.categoryId.getOrElse("null")},
+  "categoryPath": "$categoryPath",
+  "assetPath": "${escapeJson(media.assetPath)}",
+  "price": ${media.price},
+  "rating": ${media.rating},
+  "downloadCount": ${media.downloads},
+  "stock": ${media.stock},
+  "coverImage": "${escapeJson(media.getCoverImageUrl)}",
+  "hasPromotion": $hasPromotion,
+  "discountPercent": $discountPercent,
+  "discountedPrice": $discountedPrice
+}""".stripMargin
       }.mkString(",\n")
       
       val isAdminFlag = AuthController.getCurrentUser(request).flatMap(UserRepo.findByEmail).exists(_.isAdmin)
@@ -247,13 +266,13 @@ object AdminController {
     } else {
       topProducts.map { case (media, quantity, revenue) =>
         s"""
-           |<tr>
-           |  <td>${escapeHtml(media.title)}</td>
-           |  <td>${media.productType.asString.capitalize}</td>
-           |  <td>${formatMoney(media.price)}</td>
-           |  <td>${media.rating}</td>
-           |  <td><strong>$quantity</strong></td>
-           |</tr>
+<tr>
+  <td>${escapeHtml(media.title)}</td>
+  <td>${media.productType.asString.capitalize}</td>
+  <td>${formatMoney(media.price)}</td>
+  <td>${media.rating}</td>
+  <td><strong>$quantity</strong></td>
+</tr>
          """.stripMargin
       }.mkString
     }
@@ -394,14 +413,14 @@ object AdminController {
           val level = breadcrumb.length - 1
           
           s"""{
-             |  \"id\": ${cat.id},
-             |  \"name\": \"${escapeJson(cat.name)}\",
-             |  \"parentId\": ${if (cat.parentId.isEmpty || cat.parentId.contains(0L)) "null" else cat.parentId.get},
-             |  \"description\": \"${escapeJson(cat.description)}\",
-             |  \"productType\": \"${escapeJson(cat.productType)}\",
-             |  \"path\": \"${escapeJson(path)}\",
-             |  \"level\": $level
-             |}""".stripMargin
+  \"id\": ${cat.id},
+  \"name\": \"${escapeJson(cat.name)}\",
+  \"parentId\": ${if (cat.parentId.isEmpty || cat.parentId.contains(0L)) "null" else cat.parentId.get},
+  \"description\": \"${escapeJson(cat.description)}\",
+  \"productType\": \"${escapeJson(cat.productType)}\",
+  \"path\": \"${escapeJson(path)}\",
+  \"level\": $level
+}""".stripMargin
         }.mkString(",\n")
         val json = s"""{"categories": [
 $categoriesJsonArray
@@ -547,7 +566,7 @@ $categoriesJsonArray
           """<option value="">No hay productos sin promoción</option>"""
         } else {
           availableMedia.map { media =>
-            s"""<option value="${media.id}">${escapeHtml(media.title)} ($$${media.price})</option>"""
+            s"""<option value="${media.id}">${escapeHtml(media.title)} ($$${media.price@@})</option>"""
           }.mkString("\n")
         }
         
@@ -837,3 +856,10 @@ $categoriesJsonArray
     }
   }
 }
+
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: `<none>`.

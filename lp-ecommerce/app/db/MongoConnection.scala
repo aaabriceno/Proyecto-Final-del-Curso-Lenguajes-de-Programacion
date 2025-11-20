@@ -13,8 +13,12 @@ import scala.concurrent.duration._
 object MongoConnection {
 
   // URI de conexión (cambiar si usas MongoDB Atlas o servidor remoto)
-  private val uri = "mongodb://localhost:27017"
+
+  private val uriLocal = "mongodb://localhost:27017"
+  private val uriAtlas = "mongodb+srv://anthonybriceno_db_user:VvOjX7zqYxNULOZH@lp-ecommerce-cluster.cmr7cbl.mongodb.net/lp_ecommerce?authSource=admin"
+
   
+  private val uri = uriLocal
   // Cliente MongoDB
   private val client: MongoClient = MongoClient(uri)
   
@@ -53,7 +57,8 @@ object MongoConnection {
     } catch {
       case e: Exception =>
         println(s" Error conectando a MongoDB: ${e.getMessage}")
-        println(s" Asegúrate de que MongoDB esté corriendo en localhost:27017")
+        println(s" Verifica que la URI sea correcta:")
+        println(s"  → $uri")
         false
     }
   }

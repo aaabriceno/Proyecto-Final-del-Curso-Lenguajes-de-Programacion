@@ -17,6 +17,30 @@ body {
   font-family: 'Montserrat', Arial, sans-serif;
 }
 
+/* Navegación coherente en fondos oscuros */
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-brand:focus,
+.navbar-dark .navbar-brand:hover,
+.navbar-dark .nav-link,
+.navbar-dark .nav-link:focus,
+.navbar-dark .nav-link:hover {
+  color: var(--color-text-light) !important;
+}
+.navbar-dark .btn-outline-light,
+.navbar-dark .btn-outline-light:hover,
+.navbar-dark .btn-outline-danger,
+.navbar-dark .btn-outline-danger:hover {
+  color: var(--color-text-light) !important;
+  border-color: var(--color-text-light) !important;
+}
+
+.bg-dark .breadcrumb,
+.bg-dark .breadcrumb-item,
+.bg-dark .breadcrumb-item a {
+  background: transparent !important;
+  color: var(--color-text-light) !important;
+}
+
 /* Paleta tech principal */
 :root {
   --color-bg-main: #e3eaf2;
