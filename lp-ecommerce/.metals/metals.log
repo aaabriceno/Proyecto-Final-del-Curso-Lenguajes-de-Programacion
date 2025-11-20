@@ -8853,3 +8853,244 @@ ADVERTENCIA: Unmatched cancel notification for request id 1012
 nov. 20, 2025 3:08:46 A.Â M. scala.meta.internal.pc.CompilerAccess handleError
 GRAVE: A severe compiler error occurred, full details of the error can be found in the error report C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\.metals\.reports\metals-full\2025-11-20\r_compiler-error_03-08-46-879.md
 2025.11.20 03:11:46 INFO  no build target found for C:\Users\PC\Proyecto-Final-del-Curso-Lenguajes-de-Programacion\lp-ecommerce\app\controllers\ShopController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:07 INFO  Started: Metals version 1.6.3 in folders 'C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce' for client Visual Studio Code 1.106.2.
+2025.11.20 14:52:14 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2025.11.20 14:52:23 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:52:30 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 1
+2025.11.20 14:52:30 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:52:30 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 5
+nov. 20, 2025 2:52:30 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 3
+nov. 20, 2025 2:52:30 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 2
+2025.11.20 14:52:30 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:30 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\RankingService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:52:31 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 10
+nov. 20, 2025 2:52:31 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 14
+nov. 20, 2025 2:52:31 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 8
+2025.11.20 14:52:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\RankingService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:52:31 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 15
+2025.11.20 14:52:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:52:32 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 19
+2025.11.20 14:52:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:32 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:32 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:34 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:40 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:52:54 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:04 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:06 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:06 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:53:07 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 46
+nov. 20, 2025 2:53:07 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 48
+nov. 20, 2025 2:53:07 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 44
+nov. 20, 2025 2:53:07 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 45
+2025.11.20 14:53:07 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:07 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:53:07 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 50
+2025.11.20 14:53:07 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:51 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:53:51 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:10 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:10 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:10 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:10 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:55:11 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 79
+2025.11.20 14:55:10 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:10 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:55:11 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 78
+nov. 20, 2025 2:55:11 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 80
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+nov. 20, 2025 2:55:12 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 83
+nov. 20, 2025 2:55:12 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 84
+nov. 20, 2025 2:55:12 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 85
+nov. 20, 2025 2:55:12 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 86
+2025.11.20 14:55:11 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\controllers\AdminController.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\Main.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:55:28 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\RankingService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:01 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:02 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:02 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala
+2025.11.20 14:56:02 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:03 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:03 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+nov. 20, 2025 2:56:04 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+ADVERTENCIA: Unmatched cancel notification for request id 97
+2025.11.20 14:56:03 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:06 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:06 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:07 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:17 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:18 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:20 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:20 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:20 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:20 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:24 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:24 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:26 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:27 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:27 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:27 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:27 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:27 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:29 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:29 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:30 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:30 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:30 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:31 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:31 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:33 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:33 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:33 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:33 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:33 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:34 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:34 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:34 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:34 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:36 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:36 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:36 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:36 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:36 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:36 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:37 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:37 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:38 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:38 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:38 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:38 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:38 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:40 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:40 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:41 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:41 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:41 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:44 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:45 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:45 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:46 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:46 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:46 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:46 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:46 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:46 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:48 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:48 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:48 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:50 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:51 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:51 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:52 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:52 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:52 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:52 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:52 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:53 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:53 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:53 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:55 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:55 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:56 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:56 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:56 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:57 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:56:57 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:59 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:59 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:59 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:59 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:59 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:56:59 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:00 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:01 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:57:01 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:04 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:19 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:19 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:35 WARN  no build target for: C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala
+2025.11.20 14:57:35 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:35 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:35 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:35 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:35 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\services\UserService.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:35 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\db\MongoConnection.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:39 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:57:42 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+Exception in thread "pool-81-thread-1" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:244)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:153)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2025.11.20 14:57:47 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:58:01 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpResponse.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:58:04 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpServer.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:58:04 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\Router.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:58:04 INFO  no build target found for C:\Users\anthony\Proyecto-Final-Curso-Lenguaje-de-Programacion\lp-ecommerce\app\http\HttpRequest.scala. Using presentation compiler with project's scala-library version: 3.3.6
+2025.11.20 14:58:05 INFO  Shutting down server
+2025.11.20 14:58:05 INFO  shutting down Metals
+2025.11.20 14:58:05 INFO  Exiting server
