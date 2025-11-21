@@ -1,14 +1,30 @@
-logs
-target
-/.bsp
-/.idea
-/.idea_modules
-/.classpath
-/.project
-/.settings
-/RUNNING_PID
-.metals/
-.metals/**
+# Scala / SBT Output
+target/
+project/project/
+project/target/
 
-.metals/metals.log
-.metals/metals.mv.db
+# IDEs
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# BSP / Bloop / Metals
+.bsp/
+.bloop/
+.metals/
+
+# Play Framework
+RUNNING_PID
+
+# VSCode
+.vscode/
+
+# Log files
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
