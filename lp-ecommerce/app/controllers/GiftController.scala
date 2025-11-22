@@ -2,6 +2,7 @@ package controllers
 
 import http.{HttpRequest, HttpResponse}
 import models._
+import services.ReceiptService
 import java.time.format.DateTimeFormatter
 
 object GiftController {
@@ -204,7 +205,7 @@ object GiftController {
                         referenceId = Some(gift.id),
                         notes = message.filter(_.nonEmpty)
                       )
-                      OrderRepo.create(
+                      val order = OrderRepo.create(
                         user.id,
                         Vector(OrderItem(
                           mediaId = media.id,
@@ -218,6 +219,7 @@ object GiftController {
                           giftRecipient = Some(recipient.email)
                         ))
                       )
+                      ReceiptService.ensureReceiptFor(order)
                       NotificationRepo.create(
                         recipient.id,
                         s"${user.name} te regaló ${media.title}",
@@ -267,7 +269,7 @@ object GiftController {
                 DownloadRepo.add(user.id, media.id, 1, gift.originalPrice, discount)
               }
               val senderEmail = UserRepo.findById(gift.fromUserId).map(_.email)
-              OrderRepo.create(
+              val order = OrderRepo.create(
                 user.id,
                 Vector(OrderItem(
                   mediaId = media.id,
@@ -281,6 +283,7 @@ object GiftController {
                   giftSender = senderEmail
                 ))
               )
+              ReceiptService.ensureReceiptFor(order)
             }
             HttpResponse.redirect("/user/gifts?success=Regalo+reclamado")
           case None =>

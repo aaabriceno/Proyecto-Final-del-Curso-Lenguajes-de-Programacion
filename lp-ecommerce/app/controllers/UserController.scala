@@ -340,6 +340,18 @@ object UserController {
       labels
     }.mkString(" ")
 
+    val receiptButtons =
+      s"""
+         |<div class="d-flex flex-wrap gap-2">
+         |  <a class="btn btn-outline-primary btn-sm" href="/orders/${order.id}/receipt?format=pdf">
+         |    <i class='bi bi-download me-1'></i>Descargar boleta
+         |  </a>
+         |  <a class="btn btn-link btn-sm text-decoration-none" href="/orders/${order.id}/receipt" target="_blank">
+         |    Ver en línea
+         |  </a>
+         |</div>
+       """.stripMargin
+
     s"""
        |<div class="bg-dark border border-secondary rounded-3 p-3 mb-3">
        |  <div class="bg-light text-dark border border-secondary rounded-3 p-3">
@@ -362,6 +374,7 @@ object UserController {
        |      <span>Subtotal: ${formatMoney(order.totalGross)}</span>
        |      <span>Descuento: ${formatMoney(order.totalDiscount)}</span>
        |    </div>
+       |    <div class="mt-3">$receiptButtons</div>
        |  </div>
       |</div>
      """.stripMargin

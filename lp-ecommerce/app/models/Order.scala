@@ -141,6 +141,11 @@ object OrderRepo {
     docs.map(docToOrder).toVector
   }
 
+  def findById(id: Long): Option[Order] = {
+    val doc = Await.result(collection.find(equal("_id", id)).first().toFuture(), 5.seconds)
+    Option(doc).map(docToOrder)
+  }
+
   def countAll: Int = {
     Await.result(collection.countDocuments().toFuture(), 5.seconds).toInt
   }
