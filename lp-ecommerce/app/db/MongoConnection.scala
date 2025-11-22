@@ -12,6 +12,14 @@ import scala.concurrent.duration._
  */
 object MongoConnection {
 
+  case class BootstrapOptions(
+    seedExamples: Boolean = true,
+    runSchemaFixes: Boolean = true,
+    seedPromotions: Boolean = true
+  ) {
+    def isDisabled: Boolean = !seedExamples && !runSchemaFixes && !seedPromotions
+  }
+
   // URI de conexión (cambiar si usas MongoDB Atlas o servidor remoto)
 
   private val uriLocal = "mongodb://localhost:27017"
@@ -171,196 +179,207 @@ object MongoConnection {
   /**
    * Inicializa datos de ejemplo (solo si la BD está vacía)
    */
-  def initializeData(): Unit = {
+  def initializeData(options: BootstrapOptions = BootstrapOptions()): Unit = {
+    if (options.isDisabled) {
+      println("BootstrapOptions desactivado: no se ejecutarán tareas de inicialización.")
+      return
+    }
+
     println("Verificando si hay datos iniciales...")
-    
-    // ========= MIGRACIÓN: Renombrar colección 'media' a 'productos' =========
-    migrateMediaToProductos()
-    
-    val userCount = Await.result(
-      Collections.users.countDocuments().toFuture(),
-      5.seconds
-    )
-    
-    if (userCount == 0) {
-      println("Insertando datos iniciales...")
-      insertInitialData()
+
+    if (options.runSchemaFixes) {
+      // ========= MIGRACIÓN: Renombrar colección 'media' a 'productos' =========
+      migrateMediaToProductos()
     } else {
-      println(s"Ya existen $userCount usuarios en la base de datos")
-      
-      //  VERIFICAR SI LAS CONTRASEÑAS ESTÁN HASHEADAS
-      // (Las contraseñas en texto plano tienen ~8 caracteres, los hash SHA-256 en Base64 tienen 44)
-      val users = Await.result(Collections.users.find().toFuture(), 5.seconds)
-      val needsPasswordFix = users.exists { doc =>
-        val password = doc.getString("password")
-        password.length < 40 // Si es menos de 40 caracteres, probablemente es texto plano
-      }
-      
-      if (needsPasswordFix) {
-        println("DETECTADAS CONTRASEÑAS SIN HASHEAR - Recreando usuarios con hashes correctos...")
-        // Eliminar usuarios viejos
-        Await.result(Collections.users.deleteMany(Document()).toFuture(), 5.seconds)
-        println("Usuarios viejos eliminados")
-        // Crear usuarios nuevos con contraseñas hasheadas (sin recrear categorías/productos)
-        insertInitialData(onlyUsers = true)
-      }
+      println("⏭️  Migraciones legacy desactivadas (LP_RUN_SCHEMA_FIXES=false)")
     }
-    
-    // Agregar categorías adicionales si solo existe 1
-    val categoryCount = Await.result(
-      Collections.categories.countDocuments().toFuture(),
-      5.seconds
-    )
-    
-    if (categoryCount == 1) {
-      println(" Agregando categorías adicionales...")
-      val moreCategories = Seq(
-        Document("_id" -> 2L, "name" -> "Video", "description" -> "Contenido audiovisual", "isActive" -> true),
-        Document("_id" -> 3L, "name" -> "Diseño", "description" -> "Imágenes y recursos gráficos", "isActive" -> true),
-        Document("_id" -> 4L, "name" -> "LoFi", "parentId" -> 1L, "description" -> "Música LoFi y chill", "isActive" -> true),
-        Document("_id" -> 5L, "name" -> "Rock", "parentId" -> 1L, "description" -> "Rock y metal", "isActive" -> true),
-        Document("_id" -> 6L, "name" -> "Cortos", "parentId" -> 2L, "description" -> "Cortometrajes", "isActive" -> true),
-        Document("_id" -> 7L, "name" -> "Pósters", "parentId" -> 3L, "description" -> "Pósters y carteles", "isActive" -> true)
-      )
-      
-      Await.result(
-        Collections.categories.insertMany(moreCategories).toFuture(),
+
+    if (options.seedExamples) {
+      val userCount = Await.result(
+        Collections.users.countDocuments().toFuture(),
         5.seconds
       )
-      println(" Categorías adicionales insertadas")
-    }
-    
-    // Actualizar documentos de media que no tienen isActive/promotionId
-    val mediaCount = Await.result(
-      Collections.media.countDocuments().toFuture(),
-      5.seconds
-    )
-    
-    if (mediaCount > 0) {
-      println(s"Verificando estructura de $mediaCount productos...")
-      val allMedia = Await.result(Collections.media.find().toFuture(), 5.seconds)
-      
-      allMedia.foreach { doc =>
-        var needsUpdate = false
-        val updates = scala.collection.mutable.ListBuffer[org.mongodb.scala.bson.conversions.Bson]()
-        
-        // Agregar isActive si no existe
-        if (!doc.containsKey("isActive")) {
-          updates += org.mongodb.scala.model.Updates.set("isActive", true)
-          needsUpdate = true
+
+      if (userCount == 0) {
+        println("Insertando datos iniciales...")
+        insertInitialData()
+      } else {
+        println(s"Ya existen $userCount usuarios en la base de datos")
+
+        val users = Await.result(Collections.users.find().toFuture(), 5.seconds)
+        val needsPasswordFix = users.exists { doc =>
+          val password = doc.getString("password")
+          password.length < 40
         }
-        
-        // Agregar promotionId: null si no existe
-        if (!doc.containsKey("promotionId")) {
-          updates += org.mongodb.scala.model.Updates.set("promotionId", null)
-          needsUpdate = true
-        }
-        
-        // Renombrar campos viejos si existen
-        if (doc.containsKey("mediaType") && !doc.containsKey("mtype")) {
-          updates += org.mongodb.scala.model.Updates.rename("mediaType", "mtype")
-          needsUpdate = true
-        }
-        if (doc.containsKey("url") && !doc.containsKey("assetPath")) {
-          updates += org.mongodb.scala.model.Updates.rename("url", "assetPath")
-          needsUpdate = true
-        }
-        
-        // Eliminar campos obsoletos (author, downloads, averageRating si existen)
-        if (doc.containsKey("author")) {
-          updates += org.mongodb.scala.model.Updates.unset("author")
-          needsUpdate = true
-        }
-        if (doc.containsKey("downloads")) {
-          updates += org.mongodb.scala.model.Updates.unset("downloads")
-          needsUpdate = true
-        }
-        if (doc.containsKey("averageRating")) {
-          updates += org.mongodb.scala.model.Updates.unset("averageRating")
-          needsUpdate = true
-        }
-        
-        if (needsUpdate) {
-          Await.result(
-            Collections.media.updateOne(
-              org.mongodb.scala.model.Filters.equal("_id", doc.getLong("_id")),
-              org.mongodb.scala.model.Updates.combine(updates.toSeq: _*)
-            ).toFuture(),
-            5.seconds
-          )
-          println(s"   Actualizado producto ID ${doc.getLong("_id")}")
+
+        if (needsPasswordFix) {
+          println("DETECTADAS CONTRASEÑAS SIN HASHEAR - Recreando usuarios con hashes correctos...")
+          Await.result(Collections.users.deleteMany(Document()).toFuture(), 5.seconds)
+          println("Usuarios viejos eliminados")
+          insertInitialData(onlyUsers = true)
         }
       }
+    } else {
+      println("⏭️  Inserción de datos de ejemplo desactivada (LP_SEED_SAMPLE_DATA=false)")
     }
-    
-    // Actualizar categorías existentes que no tienen isActive
-    val categoryCountForUpdate = Await.result(
-      Collections.categories.countDocuments().toFuture(),
-      5.seconds
-    )
-    
-    if (categoryCountForUpdate > 0) {
-      println(s" Verificando estructura de $categoryCountForUpdate categorías...")
-      val allCategories = Await.result(Collections.categories.find().toFuture(), 5.seconds)
-      
-      allCategories.foreach { doc =>
-        if (!doc.containsKey("isActive")) {
-          Await.result(
-            Collections.categories.updateOne(
-              org.mongodb.scala.model.Filters.equal("_id", doc.getLong("_id")),
-              org.mongodb.scala.model.Updates.set("isActive", true)
-            ).toFuture(),
-            5.seconds
-          )
-          println(s"   Actualizada categoría ID ${doc.getLong("_id")}")
-        }
-      }
-    }
-    
-    // Verificar e insertar promociones si no existen
-    val promotionCount = Await.result(Collections.promotions.countDocuments().toFuture(), 5.seconds)
-    if (promotionCount == 0) {
-      println("Insertando 2 promociones de ejemplo...")
-      
-      import org.mongodb.scala.bson.{BsonArray, BsonInt64, BsonDocument, BsonString, BsonInt32, BsonBoolean, BsonDateTime}
-      import java.time.Instant
-      
-      val now = Instant.now().toEpochMilli
-      val oneDayMs = 24L * 60 * 60 * 1000
-      
-      val bsonPromo1 = new BsonDocument()
-      bsonPromo1.append("_id", BsonInt64(1L))
-      bsonPromo1.append("name", BsonString("Black Friday Música"))
-      bsonPromo1.append("description", BsonString("30% de descuento en toda la música"))
-      bsonPromo1.append("discountPercent", BsonInt32(30))
-      bsonPromo1.append("startDate", BsonDateTime(now - oneDayMs))
-      bsonPromo1.append("endDate", BsonDateTime(now + (5 * oneDayMs)))
-      bsonPromo1.append("targetType", BsonString("category"))
-      bsonPromo1.append("targetIds", BsonArray(BsonInt64(1L)))
-      bsonPromo1.append("isActive", BsonBoolean(true))
-      bsonPromo1.append("createdAt", BsonDateTime(now))
-      val promo1 = Document(bsonPromo1)
-      
-      val bsonPromo2 = new BsonDocument()
-      bsonPromo2.append("_id", BsonInt64(2L))
-      bsonPromo2.append("name", BsonString("Lanzamiento Videos"))
-      bsonPromo2.append("description", BsonString("20% OFF en categoría Video"))
-      bsonPromo2.append("discountPercent", BsonInt32(20))
-      bsonPromo2.append("startDate", BsonDateTime(now))
-      bsonPromo2.append("endDate", BsonDateTime(now + (10 * oneDayMs)))
-      bsonPromo2.append("targetType", BsonString("category"))
-      bsonPromo2.append("targetIds", BsonArray(BsonInt64(2L)))
-      bsonPromo2.append("isActive", BsonBoolean(true))
-      bsonPromo2.append("createdAt", BsonDateTime(now))
-      val promo2 = Document(bsonPromo2)
-      
-      Await.result(
-        Collections.promotions.insertMany(Seq(promo1, promo2)).toFuture(),
+
+    if (options.runSchemaFixes) {
+      // Agregar categorías adicionales si solo existe 1
+      val categoryCount = Await.result(
+        Collections.categories.countDocuments().toFuture(),
         5.seconds
       )
-      println("✅ 2 promociones insertadas (Black Friday 30%, Videos 20%)")
+
+      if (categoryCount == 1) {
+        println(" Agregando categorías adicionales...")
+        val moreCategories = Seq(
+          Document("_id" -> 2L, "name" -> "Video", "description" -> "Contenido audiovisual", "isActive" -> true),
+          Document("_id" -> 3L, "name" -> "Diseño", "description" -> "Imágenes y recursos gráficos", "isActive" -> true),
+          Document("_id" -> 4L, "name" -> "LoFi", "parentId" -> 1L, "description" -> "Música LoFi y chill", "isActive" -> true),
+          Document("_id" -> 5L, "name" -> "Rock", "parentId" -> 1L, "description" -> "Rock y metal", "isActive" -> true),
+          Document("_id" -> 6L, "name" -> "Cortos", "parentId" -> 2L, "description" -> "Cortometrajes", "isActive" -> true),
+          Document("_id" -> 7L, "name" -> "Pósters", "parentId" -> 3L, "description" -> "Pósters y carteles", "isActive" -> true)
+        )
+
+        Await.result(
+          Collections.categories.insertMany(moreCategories).toFuture(),
+          5.seconds
+        )
+        println(" Categorías adicionales insertadas")
+      }
+
+      // Actualizar documentos de media que no tienen isActive/promotionId
+      val mediaCount = Await.result(
+        Collections.media.countDocuments().toFuture(),
+        5.seconds
+      )
+
+      if (mediaCount > 0) {
+        println(s"Verificando estructura de $mediaCount productos...")
+        val allMedia = Await.result(Collections.media.find().toFuture(), 5.seconds)
+
+        allMedia.foreach { doc =>
+          var needsUpdate = false
+          val updates = scala.collection.mutable.ListBuffer[org.mongodb.scala.bson.conversions.Bson]()
+
+          if (!doc.containsKey("isActive")) {
+            updates += org.mongodb.scala.model.Updates.set("isActive", true)
+            needsUpdate = true
+          }
+
+          if (!doc.containsKey("promotionId")) {
+            updates += org.mongodb.scala.model.Updates.set("promotionId", null)
+            needsUpdate = true
+          }
+
+          if (doc.containsKey("mediaType") && !doc.containsKey("mtype")) {
+            updates += org.mongodb.scala.model.Updates.rename("mediaType", "mtype")
+            needsUpdate = true
+          }
+          if (doc.containsKey("url") && !doc.containsKey("assetPath")) {
+            updates += org.mongodb.scala.model.Updates.rename("url", "assetPath")
+            needsUpdate = true
+          }
+
+          if (doc.containsKey("author")) {
+            updates += org.mongodb.scala.model.Updates.unset("author")
+            needsUpdate = true
+          }
+          if (doc.containsKey("downloads")) {
+            updates += org.mongodb.scala.model.Updates.unset("downloads")
+            needsUpdate = true
+          }
+          if (doc.containsKey("averageRating")) {
+            updates += org.mongodb.scala.model.Updates.unset("averageRating")
+            needsUpdate = true
+          }
+
+          if (needsUpdate) {
+            Await.result(
+              Collections.media.updateOne(
+                org.mongodb.scala.model.Filters.equal("_id", doc.getLong("_id")),
+                org.mongodb.scala.model.Updates.combine(updates.toSeq: _*)
+              ).toFuture(),
+              5.seconds
+            )
+            println(s"   Actualizado producto ID ${doc.getLong("_id")}")
+          }
+        }
+      }
+
+      val categoryCountForUpdate = Await.result(
+        Collections.categories.countDocuments().toFuture(),
+        5.seconds
+      )
+
+      if (categoryCountForUpdate > 0) {
+        println(s" Verificando estructura de $categoryCountForUpdate categorías...")
+        val allCategories = Await.result(Collections.categories.find().toFuture(), 5.seconds)
+
+        allCategories.foreach { doc =>
+          if (!doc.containsKey("isActive")) {
+            Await.result(
+              Collections.categories.updateOne(
+                org.mongodb.scala.model.Filters.equal("_id", doc.getLong("_id")),
+                org.mongodb.scala.model.Updates.set("isActive", true)
+              ).toFuture(),
+              5.seconds
+            )
+            println(s"   Actualizada categoría ID ${doc.getLong("_id")}")
+          }
+        }
+      }
     } else {
-      println(s"✅ Ya existen $promotionCount promociones en la base de datos")
+      println("⏭️  Normalización de categorías/productos desactivada (LP_RUN_SCHEMA_FIXES=false)")
+    }
+
+    if (options.seedPromotions) {
+      val promotionCount = Await.result(Collections.promotions.countDocuments().toFuture(), 5.seconds)
+      if (promotionCount == 0) {
+        println("Insertando 2 promociones de ejemplo...")
+
+        import org.mongodb.scala.bson.{BsonArray, BsonInt64, BsonDocument, BsonString, BsonInt32, BsonBoolean, BsonDateTime}
+        import java.time.Instant
+
+        val now = Instant.now().toEpochMilli
+        val oneDayMs = 24L * 60 * 60 * 1000
+
+        val bsonPromo1 = new BsonDocument()
+        bsonPromo1.append("_id", BsonInt64(1L))
+        bsonPromo1.append("name", BsonString("Black Friday Música"))
+        bsonPromo1.append("description", BsonString("30% de descuento en toda la música"))
+        bsonPromo1.append("discountPercent", BsonInt32(30))
+        bsonPromo1.append("startDate", BsonDateTime(now - oneDayMs))
+        bsonPromo1.append("endDate", BsonDateTime(now + (5 * oneDayMs)))
+        bsonPromo1.append("targetType", BsonString("category"))
+        bsonPromo1.append("targetIds", BsonArray(BsonInt64(1L)))
+        bsonPromo1.append("isActive", BsonBoolean(true))
+        bsonPromo1.append("createdAt", BsonDateTime(now))
+        val promo1 = Document(bsonPromo1)
+
+        val bsonPromo2 = new BsonDocument()
+        bsonPromo2.append("_id", BsonInt64(2L))
+        bsonPromo2.append("name", BsonString("Lanzamiento Videos"))
+        bsonPromo2.append("description", BsonString("20% OFF en categoría Video"))
+        bsonPromo2.append("discountPercent", BsonInt32(20))
+        bsonPromo2.append("startDate", BsonDateTime(now))
+        bsonPromo2.append("endDate", BsonDateTime(now + (10 * oneDayMs)))
+        bsonPromo2.append("targetType", BsonString("category"))
+        bsonPromo2.append("targetIds", BsonArray(BsonInt64(2L)))
+        bsonPromo2.append("isActive", BsonBoolean(true))
+        bsonPromo2.append("createdAt", BsonDateTime(now))
+        val promo2 = Document(bsonPromo2)
+
+        Await.result(
+          Collections.promotions.insertMany(Seq(promo1, promo2)).toFuture(),
+          5.seconds
+        )
+        println("✅ 2 promociones insertadas (Black Friday 30%, Videos 20%)")
+      } else {
+        println(s"✅ Ya existen $promotionCount promociones en la base de datos")
+      }
+    } else {
+      println("⏭️  Inserción automática de promociones desactivada (LP_SEED_PROMOTIONS=false)")
     }
   }
   

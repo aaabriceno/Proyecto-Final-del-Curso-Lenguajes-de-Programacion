@@ -2,32 +2,89 @@ package controllers
 
 import http.{HttpRequest, HttpResponse}
 import models._
+import java.time.format.DateTimeFormatter
 
 object GiftController {
 
+  private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
+
+  private def escapeHtml(s: String): String =
+    Option(s).getOrElse("")
+      .replace("&", "&amp;")
+      .replace("<", "&lt;")
+      .replace(">", "&gt;")
+      .replace("\"", "&quot;")
+
+  private def formatMoney(amount: BigDecimal): String = f"$$${amount}%.2f"
+
+  private def formatDate(date: java.time.LocalDateTime): String = dateFormatter.format(date)
+
+  private def giftBadge(isClaimed: Boolean): String =
+    if (isClaimed) "<span class=\"badge bg-success\">Reclamado</span>"
+    else "<span class=\"badge bg-warning text-dark\">Pendiente</span>"
+
+  private def renderGiftItem(gift: Gift, isPendingSection: Boolean): String = {
+    val mediaTitle = MediaRepo.find(gift.mediaId).map(_.title).getOrElse(s"Contenido #${gift.mediaId}")
+    val counterpart =
+      if (isPendingSection) UserRepo.findById(gift.fromUserId).map(_.name).getOrElse("Un usuario")
+      else UserRepo.findById(gift.toUserId).map(_.name).getOrElse("Un usuario")
+    val counterpartLabel =
+      if (isPendingSection) s"Te lo envió ${escapeHtml(counterpart)}"
+      else s"Destinatario: ${escapeHtml(counterpart)}"
+
+    val messageBlock = gift.message.filter(_.nonEmpty).map { msg =>
+      s"""
+         |<div class="mt-2 small text-muted fst-italic border-start ps-2">
+         |  "${escapeHtml(msg)}"
+         |</div>
+       """.stripMargin
+    }.getOrElse("")
+
+    val claimButton =
+      if (isPendingSection && !gift.claimed)
+        s"""
+          |<form method="POST" action="/gifts/${gift.id}/claim" class="mt-3">
+          |  <button type="submit" class="btn btn-success btn-sm">
+          |    <i class="bi bi-check-circle me-1"></i>Reclamar regalo
+          |  </button>
+          |</form>
+        """.stripMargin
+      else ""
+
+    s"""
+      |<div class="list-group-item py-3">
+      |  <div class="d-flex justify-content-between flex-wrap gap-2">
+      |    <div>
+      |      <strong>${escapeHtml(mediaTitle)}</strong><br>
+      |      <small class="text-muted">$counterpartLabel</small>
+      |    </div>
+      |    <div class="text-end">
+      |      ${giftBadge(gift.claimed)}
+      |      <div class="text-muted small">${formatDate(gift.createdAt)}</div>
+      |    </div>
+      |  </div>
+      |  <div class="mt-2 d-flex flex-wrap gap-3 small">
+      |    <span>Pagado: <strong>${formatMoney(gift.pricePaid)}</strong></span>
+      |    <span>Precio original: <strong>${formatMoney(gift.originalPrice)}</strong></span>
+      |  </div>
+      |  $messageBlock
+      |  $claimButton
+      |</div>
+    """.stripMargin
+  }
+
   private def renderGiftsPage(user: User, pending: Vector[Gift], sent: Vector[Gift]): HttpResponse = {
-    def renderList(title: String, gifts: Vector[Gift], emptyMessage: String): String = {
-      if (gifts.isEmpty) s"<p class='text-muted'>$emptyMessage</p>"
-      else {
-        val rows = gifts.map { gift =>
-          val mediaTitle = MediaRepo.find(gift.mediaId).map(_.title).getOrElse(s"Contenido ${gift.mediaId}")
-          val status = if (gift.claimed) "Reclamado" else "Pendiente"
-          val paid = f"${gift.pricePaid}%.2f"
-          val badge = if (gift.claimed) "success" else "warning"
-          s"""
-             |<div class="list-group-item bg-dark text-light border-secondary">
-             |  <div class="d-flex justify-content-between">
-             |    <div>
-             |      <strong>$mediaTitle</strong><br>
-             |      <small>Pagado: $$${paid}</small>
-             |    </div>
-             |    <span class="badge bg-$badge">$status</span>
-             |  </div>
-             |</div>
-          """.stripMargin
-        }.mkString("\n")
-        s"<div class='list-group'>$rows</div>"
-      }
+    def renderList(gifts: Vector[Gift], emptyMessage: String, isPendingSection: Boolean): String = {
+      if (gifts.isEmpty)
+        s"""
+          |<div class="alert alert-secondary text-muted" role="alert">$emptyMessage</div>
+        """.stripMargin
+      else
+        s"""
+          |<div class="list-group shadow-sm">
+          |  ${gifts.map(g => renderGiftItem(g, isPendingSection)).mkString("\n")}
+          |</div>
+        """.stripMargin
     }
 
     val html = s"""
@@ -35,24 +92,65 @@ object GiftController {
       |<html lang="es">
       |<head>
       |  <meta charset="UTF-8">
-      |  <title>Mis regalos</title>
+      |  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      |  <title>Mis regalos — LP Studios</title>
       |  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+      |  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+      |  <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
       |</head>
-      |<body class="bg-dark text-light">
-      |  <div class="container py-4">
-      |    <h1 class="mb-4">🎁 Mis regalos</h1>
-      |    <h4>Pendientes</h4>
-      |    %s
-      |    <h4 class="mt-4">Enviados</h4>
-      |    %s
-      |    <a href="/user/account" class="btn btn-outline-light mt-4">Volver</a>
-      |  </div>
+      |<body class="bg-light text-dark">
+      |  <nav class="navbar border-bottom shadow-sm" style="background:#e3eaf2; color:#1976d2;">
+      |    <div class="container">
+      |      <a class="navbar-brand fw-semibold" href="/" style="color:#1976d2 !important;">LP Studios</a>
+      |      <div class="ms-auto d-flex gap-2">
+      |        <a class="btn btn-outline-light btn-sm" href="/shop" style="background:#1976d2; color:#fff; border-color:#1976d2;">🛍️ Tienda</a>
+      |        <a class="btn btn-outline-warning btn-sm position-relative" id="notificationBtn" href="/user/notifications" title="Notificaciones">
+      |          <i class="bi bi-bell-fill"></i>
+      |        </a>
+      |        <a class="btn btn-outline-secondary btn-sm" href="/user/account">👤 Mi cuenta</a>
+      |        <a class="btn btn-outline-danger btn-sm" href="/logout">🚪 Salir</a>
+      |      </div>
+      |    </div>
+      |  </nav>
+      |
+      |  <main class="container py-5">
+      |    <div class="row justify-content-center">
+      |      <div class="col-lg-10 col-xl-9">
+      |        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+      |          <div>
+      |            <h1 class="fw-bold mb-1">🎁 Mis regalos</h1>
+      |            <p class="text-muted mb-0">Visualiza los regalos recibidos y los que enviaste a otros usuarios.</p>
+      |          </div>
+      |          <a href="/user/account" class="btn btn-primary">Volver a mi cuenta</a>
+      |        </div>
+      |
+      |        <section class="mb-5">
+      |          <div class="d-flex justify-content-between align-items-center mb-3">
+      |            <h4 class="mb-0">Regalos recibidos</h4>
+      |            <span class="badge bg-warning text-dark">${pending.size}</span>
+      |          </div>
+      |          ${renderList(pending, "No tienes regalos pendientes.", isPendingSection = true)}
+      |        </section>
+      |
+      |        <section class="mb-5">
+      |          <div class="d-flex justify-content-between align-items-center mb-3">
+      |            <h4 class="mb-0">Regalos enviados</h4>
+      |            <span class="badge bg-info text-dark">${sent.size}</span>
+      |          </div>
+      |          ${renderList(sent, "Aún no has enviado regalos.", isPendingSection = false)}
+      |        </section>
+      |      </div>
+      |    </div>
+      |  </main>
+      |
+      |  <footer class="text-center text-muted py-4 mt-5 border-top">
+      |    <small>© 2025 LP Studios — Fearless Design. Timeless Sound.</small>
+      |  </footer>
+      |  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      |  <script src="/assets/javascripts/notifications.js"></script>
       |</body>
       |</html>
-    """.stripMargin.format(
-      renderList("Pendientes", pending, "No tienes regalos pendientes."),
-      renderList("Enviados", sent, "Aún no has enviado regalos.")
-    )
+    """.stripMargin
 
     HttpResponse.ok(html)
   }
@@ -106,6 +204,20 @@ object GiftController {
                         referenceId = Some(gift.id),
                         notes = message.filter(_.nonEmpty)
                       )
+                      OrderRepo.create(
+                        user.id,
+                        Vector(OrderItem(
+                          mediaId = media.id,
+                          title = media.title,
+                          quantity = 1,
+                          unitPrice = media.price,
+                          discount = discount,
+                          netAmount = finalPrice,
+                          productType = media.productType,
+                          isGift = true,
+                          giftRecipient = Some(recipient.email)
+                        ))
+                      )
                       NotificationRepo.create(
                         recipient.id,
                         s"${user.name} te regaló ${media.title}",
@@ -154,8 +266,23 @@ object GiftController {
               if (media.productType == ProductType.Digital) {
                 DownloadRepo.add(user.id, media.id, 1, gift.originalPrice, discount)
               }
+              val senderEmail = UserRepo.findById(gift.fromUserId).map(_.email)
+              OrderRepo.create(
+                user.id,
+                Vector(OrderItem(
+                  mediaId = media.id,
+                  title = media.title,
+                  quantity = 1,
+                  unitPrice = gift.originalPrice,
+                  discount = gift.originalPrice,
+                  netAmount = BigDecimal(0),
+                  productType = media.productType,
+                  isGift = true,
+                  giftSender = senderEmail
+                ))
+              )
             }
-            HttpResponse.json(200, Map("success" -> true))
+            HttpResponse.redirect("/user/gifts?success=Regalo+reclamado")
           case None =>
             HttpResponse.json(404, Map("success" -> false, "error" -> "Regalo no encontrado"))
         }

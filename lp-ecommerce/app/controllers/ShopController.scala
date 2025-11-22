@@ -149,7 +149,9 @@ object ShopController {
                     <i class="bi bi-cart-plus me-2"></i>Comprar ahora ($$${finalPrice})
                   </button>
                 </form>
-                
+                <button type="button" class="btn btn-warning w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}" data-gift-button data-media-id="${media.id}" data-media-title="${escapeHtml(media.title)}">
+                  <i class="bi bi-gift me-2"></i>Regalar este producto
+                </button>
                 <button onclick="addToCart(${media.id})" class="btn btn-success w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}">
                   <i class="bi bi-cart me-2"></i>Agregar al carrito
                 </button>
@@ -286,9 +288,12 @@ object ShopController {
                 <td class="text-center align-middle"><span class="badge bg-success">${media.stock}</span></td>
                 <td class="text-end align-middle"><strong>${formatMoney(subtotal)}</strong></td>
                 <td class="text-center align-middle">
-                  <form method="POST" action="/cart/remove/${media.id}" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
-                  </form>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-sm btn-warning" data-gift-button data-media-id="${media.id}" data-media-title="${escapeHtml(media.title)}">🎁</button>
+                    <form method="POST" action="/cart/remove/${media.id}" class="d-inline">
+                      <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                    </form>
+                  </div>
                 </td>
               </tr>
             """

@@ -1,7 +1,7 @@
 package controllers
 
 import http.{HttpRequest, HttpResponse}
-import models.{UserRepo, BalanceRequestRepo, DownloadRepo, OrderRepo, Order, OrderItem, TransactionRepo, TransactionType, MediaRepo, Transaction}
+import models.{UserRepo, BalanceRequestRepo, DownloadRepo, OrderRepo, Order, OrderItem, TransactionRepo, TransactionType, MediaRepo, Transaction, NotificationRepo, Notification, NotificationType, Download, ProductType}
 import scala.io.Source
 import scala.util.{Try, Success, Failure}
 import java.net.URLEncoder
@@ -73,6 +73,9 @@ object UserController {
      .replace(">", "&gt;")
      .replace("\"", "&quot;")
 
+  private def escapeJsonValue(s: String): String =
+    s.replace("\\", "\\\\").replace("\"", "\\\"")
+
   private def formatMoney(amount: BigDecimal): String =
     f"$$${amount}%.2f"
 
@@ -91,9 +94,6 @@ object UserController {
   def updateInfo(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
       case Right(user) =>
-        val name = request.formData.getOrElse("name", user.name)
-        val phone = request.formData.getOrElse("phone", user.phone)
-
         // Actualiza datos del usuario (cuando implementes la función)
         // UserRepo.updateInfo(user.id, name, phone)
         HttpResponse.redirect(
@@ -108,8 +108,28 @@ object UserController {
   def downloads(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
       case Right(user) =>
-        val _ = DownloadRepo.findByUserId(user.id)
-        serveHtml("user_downloads", request)
+        val downloads = DownloadRepo.findByUserId(user.id)
+        val templatePath = s"${System.getProperty("user.dir")}/app/views/user_downloads.html"
+
+        Try(Source.fromFile(templatePath, "UTF-8").mkString) match {
+          case Success(html) =>
+            val totalUnits = downloads.map(_.quantity).sum
+            val downloadCountLabel = s"${downloads.size} descargas"
+            val vipBanner = buildVipBanner(user.totalSpent, totalUnits)
+            val table = renderDownloadsTable(downloads)
+            val updated = html
+              .replace("__BALANCE__", formatMoney(user.balance))
+              .replace("__TOTAL_SPENT__", formatMoney(user.totalSpent))
+              .replace("__TOTAL_DOWNLOADS__", totalUnits.toString)
+              .replace("__DOWNLOAD_COUNT__", downloadCountLabel)
+              .replace("__VIP_BANNER__", vipBanner)
+              .replace("__DOWNLOADS_TABLE__", table)
+
+            HttpResponse.ok(updated)
+
+          case Failure(err) =>
+            HttpResponse.notFound(s"No se pudo cargar la vista de descargas: ${err.getMessage}")
+        }
       case Left(resp) => resp
     }
   }
@@ -145,6 +165,152 @@ object UserController {
     }
   }
 
+  def searchUsers(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        val query = request.queryParams.get("q").map(_.trim.toLowerCase).getOrElse("")
+        val results =
+          if (query.length < 2) Vector.empty
+          else UserRepo.all
+            .filter(u => u.id != user.id && u.isActive &&
+              (u.name.toLowerCase.contains(query) || u.email.toLowerCase.contains(query)))
+            .take(10)
+
+        val body = results.map { u =>
+          s"""{"name":"${escapeJsonValue(u.name)}","email":"${escapeJsonValue(u.email)}"}"""
+        }.mkString("[", ",", "]")
+
+        HttpResponse.json(body)
+      case Left(resp) => resp
+    }
+  }
+
+  def notificationsPage(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        val templatePath = s"${System.getProperty("user.dir")}/app/views/user_notifications.html"
+        val html = Try(Source.fromFile(templatePath, "UTF-8").mkString).getOrElse("<h1>Error cargando vista</h1>")
+        val notifications = NotificationRepo.getByUser(user.id, 50)
+        val content = renderNotifications(notifications)
+        HttpResponse.ok(html.replace("<!-- NOTIFICATIONS_PLACEHOLDER -->", content))
+      case Left(resp) => resp
+    }
+  }
+
+  def notificationsFeed(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        val unread = NotificationRepo.countUnread(user.id)
+        val notifications = NotificationRepo.getByUser(user.id, 20)
+        val jsonItems = notifications.map { n =>
+          s"""{"id":${n.id},"message":"${escapeJsonValue(n.message)}","type":"${n.notificationType.asString}","read":${n.read}}"""
+        }.mkString("[", ",", "]")
+        val body = s"""{"count":$unread,"notifications":$jsonItems}"""
+        HttpResponse.json(body)
+      case Left(resp) => resp
+    }
+  }
+
+  def notificationsMarkRead(id: Long, request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        NotificationRepo.markAsRead(id, user.id)
+        HttpResponse.json("{\"success\":true}")
+      case Left(resp) => resp
+    }
+  }
+
+  def notificationsMarkAll(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        NotificationRepo.markAllAsRead(user.id)
+        HttpResponse.json("{\"success\":true}")
+      case Left(resp) => resp
+    }
+  }
+
+  private def buildVipBanner(totalSpent: BigDecimal, totalUnits: Int): String = {
+    if (totalSpent >= BigDecimal(1000)) {
+      """
+        |<div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+        |  <i class="bi bi-stars fs-4 text-warning"></i>
+        |  <div>
+        |    <strong>¡Nivel VIP desbloqueado!</strong><br>
+        |    Tienes beneficios permanentes y 20% de descuento automático en contenidos digitales.
+        |  </div>
+        |</div>
+      """.stripMargin
+    } else if (totalUnits > 0) {
+      s"""
+        |<div class="alert alert-info" role="alert">
+        |  <strong>Gracias por tus compras.</strong> Llevas $totalUnits descargas en tu cuenta. Sigue explorando nuevos contenidos digitales.
+        |</div>
+      """.stripMargin
+    } else ""
+  }
+
+  private def renderDownloadsTable(downloads: Vector[Download]): String = {
+    if (downloads.isEmpty) {
+      return """
+        |<div class="text-center text-muted py-5">
+        |  <i class="bi bi-cloud-arrow-down display-4 mb-3"></i>
+        |  <p class="mb-3">Todavía no tienes descargas registradas.</p>
+        |  <a href="/shop" class="btn btn-primary">Explorar productos</a>
+        |</div>
+      """.stripMargin
+    }
+
+    val rows = downloads.map { download =>
+      val mediaOpt = MediaRepo.find(download.mediaId)
+      val title = mediaOpt.map(m => escapeHtml(m.title)).getOrElse(s"Producto #${download.mediaId}")
+      val badge = downloadTypeBadge(mediaOpt.map(_.productType))
+      val code = escapeHtml(download.uniqueCode.take(12))
+      val discountCell =
+        if (download.discount > 0) formatMoney(download.discount)
+        else "<span class=\"text-muted\">—</span>"
+
+      s"""
+        |<tr>
+        |  <td>
+        |    <strong>$title</strong><br>
+        |    <small class="text-muted">Código: $code</small><br>
+        |    $badge
+        |  </td>
+        |  <td class="text-center">${download.quantity}</td>
+        |  <td class="text-center">${formatMoney(download.price)}</td>
+        |  <td class="text-center">$discountCell</td>
+        |  <td class="text-end">${formatMoney(download.finalPrice)}</td>
+        |  <td class="text-end">${formatDateTime(download.downloadDate)}</td>
+        |</tr>
+      """.stripMargin
+    }.mkString("\n")
+
+    s"""
+      |<div class="table-responsive">
+      |  <table class="table table-hover align-middle">
+      |    <thead class="table-light">
+      |      <tr>
+      |        <th>Contenido</th>
+      |        <th class="text-center">Cantidad</th>
+      |        <th class="text-center">Precio unitario</th>
+      |        <th class="text-center">Descuento</th>
+      |        <th class="text-end">Monto final</th>
+      |        <th class="text-end">Fecha</th>
+      |      </tr>
+      |    </thead>
+      |    <tbody>$rows</tbody>
+      |  </table>
+      |</div>
+    """.stripMargin
+  }
+
+  private def downloadTypeBadge(productType: Option[ProductType]): String =
+    productType match {
+      case Some(ProductType.Digital) => "<span class=\"badge bg-info text-dark mt-1\">Digital</span>"
+      case Some(ProductType.Hardware) => "<span class=\"badge bg-secondary mt-1\">Hardware</span>"
+      case None => "<span class=\"badge bg-light text-muted mt-1\">Sin tipo</span>"
+    }
+
   private def renderOrderCard(order: Order): String = {
     val itemsHtml = order.items.map { item =>
       s"""
@@ -161,6 +327,19 @@ object UserController {
        """.stripMargin
     }.mkString("\n")
 
+    val giftLabels = order.items.flatMap { item =>
+      val labels = scala.collection.mutable.ListBuffer.empty[String]
+      if (item.isGift) {
+        item.giftRecipient.foreach { r =>
+          labels += s"<span class='badge bg-warning text-dark me-1'>🎁 Enviado a ${escapeHtml(r)}</span>"
+        }
+      }
+      item.giftSender.foreach { s =>
+        labels += s"<span class='badge bg-success text-dark me-1'>🎁 Recibido de ${escapeHtml(s)}</span>"
+      }
+      labels
+    }.mkString(" ")
+
     s"""
        |<div class="bg-dark border border-secondary rounded-3 p-3 mb-3">
        |  <div class="bg-light text-dark border border-secondary rounded-3 p-3">
@@ -168,6 +347,7 @@ object UserController {
        |      <div>
        |        <strong>Orden #${order.id}</strong><br>
        |        <small class="text-muted">${formatDateTime(order.createdAt)}</small>
+       |        ${if (giftLabels.nonEmpty) s"<div class=\"mt-1\">$giftLabels</div>" else ""}
        |      </div>
        |      <div class="text-end">
        |        <span class="text-muted d-block">Total pagado</span>
@@ -185,6 +365,34 @@ object UserController {
        |  </div>
       |</div>
      """.stripMargin
+  }
+
+  private def renderNotifications(notifications: Vector[Notification]): String = {
+    if (notifications.isEmpty) {
+      return """<p class='text-center text-muted mb-0'>Aún no tienes notificaciones.</p>"""
+    }
+
+    notifications.map { n =>
+      val badge = n.notificationType match {
+        case NotificationType.GiftReceived => "bg-success"
+        case NotificationType.BalanceApproved => "bg-success"
+        case NotificationType.BalanceRejected => "bg-danger"
+        case NotificationType.PurchaseSuccess => "bg-primary"
+        case _ => "bg-secondary"
+      }
+      val readClass = if (n.read) "bg-light text-muted" else "bg-white text-dark"
+      s"""
+         |<div class="list-group-item ${readClass} border-0 border-bottom border-light">
+         |  <div class="d-flex justify-content-between align-items-center">
+         |    <div>
+         |      <span class="badge ${badge} me-2">${n.notificationType.asString.toUpperCase}</span>
+         |      ${escapeHtml(n.message)}
+         |    </div>
+         |    <small class="text-muted">${formatDateTime(n.createdAt)}</small>
+         |  </div>
+         |</div>
+       """.stripMargin
+    }.mkString("\n")
   }
 
   private def sortOrdersByDate(orders: Vector[Order]): Vector[Order] =

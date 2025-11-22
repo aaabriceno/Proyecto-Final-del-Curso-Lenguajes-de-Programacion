@@ -62,6 +62,8 @@ object Router {
         case ("GET", "/user/info")        => UserController.info(request)
         case ("POST", "/user/info")       => UserController.updateInfo(request)
         case ("GET", "/user/downloads")   => UserController.downloads(request)
+        case ("GET", "/user/notifications") => UserController.notificationsPage(request)
+        case ("GET", "/api/users/search") => UserController.searchUsers(request)
         case ("GET", "/user/orders")      => UserController.orders(request)
         case ("GET", "/user/transactions")=> UserController.transactions(request)
         case ("GET", "/user/balance/request")  => UserController.balanceRequestForm(request)
@@ -76,6 +78,11 @@ object Router {
         case ("POST", p) if p.startsWith("/gifts/") && p.endsWith("/claim") =>
           val id = Try(p.split("/")(2).toLong).getOrElse(0L)
           GiftController.claim(id, request)
+        case ("GET", "/notifications") => UserController.notificationsFeed(request)
+        case ("POST", "/notifications/mark-all-read") => UserController.notificationsMarkAll(request)
+        case ("POST", p) if p.startsWith("/notifications/") && p.endsWith("/read") =>
+          val id = Try(p.stripPrefix("/notifications/").stripSuffix("/read").toLong).getOrElse(0L)
+          UserController.notificationsMarkRead(id, request)
 
         // ---------- Administración ----------
         case ("GET", "/admin")              => AdminController.dashboard(request)

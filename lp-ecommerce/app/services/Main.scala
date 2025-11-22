@@ -11,6 +11,14 @@ import java.nio.charset.Charset
  */
 object Main {
 
+  private def envFlag(name: String, default: Boolean): Boolean =
+    sys.env
+      .get(name)
+      .map(_.trim.toLowerCase)
+      .filter(_.nonEmpty)
+      .map(v => v == "1" || v == "true" || v == "yes")
+      .getOrElse(default)
+
   def main(args: Array[String]): Unit = {
     printBanner()
 
@@ -24,8 +32,19 @@ object Main {
       System.exit(1)
     }
 
-    // Inicializar datos de ejemplo si la BD está vacía
-    MongoConnection.initializeData()
+    // Configuración para tareas opcionales de bootstrap/mantenimiento
+    val bootstrapOptions = MongoConnection.BootstrapOptions(
+      seedExamples = envFlag("LP_SEED_SAMPLE_DATA", default = true),
+      runSchemaFixes = envFlag("LP_RUN_SCHEMA_FIXES", default = true),
+      seedPromotions = envFlag("LP_SEED_PROMOTIONS", default = true)
+    )
+
+    if (bootstrapOptions.isDisabled) {
+      println("\nModo producción: se omiten tareas automáticas de inicialización.")
+    } else {
+      // Inicializar datos de ejemplo o aplicar migraciones si corresponde
+      MongoConnection.initializeData(bootstrapOptions)
+    }
 
     // REORGANIZAR CATEGORÍAS con estructura jerárquica (COMENTADO - ya ejecutado)
     // println("\nReorganizando categorías...")
@@ -35,10 +54,14 @@ object Main {
     // println("\nActualizando productos y promociones...")
     // scripts.UpdateProductsAndPromotions.run()
 
-    // LIMPIAR solicitudes corruptas (SOLO para desarrollo/debugging)
-    // Una vez arreglado el problema, comentar esta línea
-    println("\nLimpiando solicitudes de balance corruptas...")
-    models.BalanceRequestRepo.deleteAll()
+    // Purga de solicitudes de saldo (solo si se solicita vía variable de entorno)
+    val purgeBalanceRequests = envFlag("LP_PURGE_BALANCE_REQUESTS", default = false)
+    if (purgeBalanceRequests) {
+      println("\nLimpiando solicitudes de balance (LP_PURGE_BALANCE_REQUESTS=true)...")
+      models.BalanceRequestRepo.deleteAll()
+    } else {
+      println("\nSolicitudes de balance se conservarán (LP_PURGE_BALANCE_REQUESTS=false).")
+    }
     
     // Cierre limpio al presionar Ctrl+C
     Runtime.getRuntime.addShutdownHook(new Thread {
