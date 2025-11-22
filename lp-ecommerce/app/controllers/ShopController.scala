@@ -3,6 +3,7 @@ package controllers
 import http.{HttpRequest, HttpResponse}
 import java.net.URLEncoder
 import models.{MediaRepo, CategoryRepo, PromotionRepo, PromotionTarget, CartRepo, DownloadRepo, UserRepo, Media, User, TransactionRepo, TransactionType, ProductType, OrderRepo, OrderItem}
+import services.ReceiptService
 import session.SessionManager
 import scala.io.Source
 import scala.util.{Try, Success, Failure}
@@ -435,6 +436,7 @@ object ShopController {
                       )
                     }
                     val order = OrderRepo.create(user.id, orderItems)
+                    ReceiptService.ensureReceiptFor(order)
                     processedItems.foreach { case (media, quantity, lineDiscount) =>
                       registerTransaction(
                         transactionType = TransactionType.Purchase,
@@ -499,6 +501,7 @@ object ShopController {
                       productType = media.productType
                     )
                     val order = OrderRepo.create(user.id, Vector(orderItem))
+                    ReceiptService.ensureReceiptFor(order)
                     registerTransaction(
                       transactionType = TransactionType.Purchase,
                       fromUserId = Some(user.id),

@@ -65,6 +65,9 @@ object Router {
         case ("GET", "/user/notifications") => UserController.notificationsPage(request)
         case ("GET", "/api/users/search") => UserController.searchUsers(request)
         case ("GET", "/user/orders")      => UserController.orders(request)
+        case ("GET", p) if p.startsWith("/orders/") && p.endsWith("/receipt") =>
+          val id = Try(p.stripPrefix("/orders/").stripSuffix("/receipt").toLong).getOrElse(0L)
+          ReceiptController.download(id, request)
         case ("GET", "/user/transactions")=> UserController.transactions(request)
         case ("GET", "/user/balance/request")  => UserController.balanceRequestForm(request)
         case ("POST", "/user/balance/request") => UserController.createBalanceRequest(request)
@@ -152,6 +155,10 @@ object Router {
         case ("GET", p) if p.startsWith("/scripts/") =>
           val relPath = p.stripPrefix("/scripts/")
           HttpResponse.serveStaticFile(relPath)
+
+        case ("GET", p) if p.startsWith("/receipts/") =>
+          val hash = p.stripPrefix("/receipts/")
+          ReceiptController.publicView(hash, request)
 
         // ---------- Rutas no encontradas ----------
         case _ =>

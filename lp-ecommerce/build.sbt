@@ -15,7 +15,14 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-parser" % "0.14.6",
   
   // Opcional: ScalaTest para tests futuros
-  "org.scalatest" %% "scalatest" % "3.2.17" % Test
+  "org.scalatest" %% "scalatest" % "3.2.17" % Test,
+
+  // Generación de PDFs desde HTML
+  "com.openhtmltopdf" % "openhtmltopdf-pdfbox" % "1.0.10",
+
+  // Generación de códigos QR
+  "com.google.zxing" % "core" % "3.5.3",
+  "com.google.zxing" % "javase" % "3.5.3"
 )
 
 // Directorios de código fuente

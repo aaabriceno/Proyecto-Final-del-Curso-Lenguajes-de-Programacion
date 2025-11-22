@@ -48,6 +48,7 @@ object MongoConnection {
     val transactions: MongoCollection[Document] = database.getCollection("transactions")
     val topups: MongoCollection[Document] = database.getCollection("topups")
     val orders: MongoCollection[Document] = database.getCollection("orders")
+    val receipts: MongoCollection[Document] = database.getCollection("receipts")
   }
   
   /**
