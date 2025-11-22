@@ -3,7 +3,7 @@ package models
 import java.time.{LocalDateTime, ZoneId, Instant}
 import org.mongodb.scala.Document
 import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.bson.{BsonInt64, BsonInt32, BsonDouble, BsonString, BsonDateTime, BsonArray, BsonDocument}
+import org.mongodb.scala.bson.{BsonInt64, BsonInt32, BsonDouble, BsonString, BsonDateTime, BsonArray, BsonDocument, BsonBoolean}
 import db.MongoConnection
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -16,7 +16,10 @@ case class OrderItem(
   unitPrice: BigDecimal,
   discount: BigDecimal,
   netAmount: BigDecimal,
-  productType: ProductType
+  productType: ProductType,
+  isGift: Boolean = false,
+  giftRecipient: Option[String] = None,
+  giftSender: Option[String] = None
 )
 
 case class Order(
@@ -58,18 +61,24 @@ object OrderRepo {
     LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault())
 
   private def itemToDoc(item: OrderItem): Document = {
-    Document(
+    var doc = Document(
       "mediaId" -> item.mediaId,
       "title" -> item.title,
       "quantity" -> item.quantity,
       "unitPrice" -> item.unitPrice.toDouble,
       "discount" -> item.discount.toDouble,
       "netAmount" -> item.netAmount.toDouble,
-      "productType" -> item.productType.asString
+      "productType" -> item.productType.asString,
+      "isGift" -> item.isGift
     )
+    item.giftRecipient.foreach(v => doc = doc + ("giftRecipient" -> v))
+    item.giftSender.foreach(v => doc = doc + ("giftSender" -> v))
+    doc
   }
 
   private def docToItem(doc: Document): OrderItem = {
+    val isGift = doc.get("isGift").collect { case v: BsonBoolean => v.getValue }.getOrElse(false)
+
     OrderItem(
       mediaId = readLong(doc, "mediaId"),
       title = doc.getString("title"),
@@ -77,7 +86,10 @@ object OrderRepo {
       unitPrice = BigDecimal(doc.getDouble("unitPrice")),
       discount = BigDecimal(doc.getDouble("discount")),
       netAmount = BigDecimal(doc.getDouble("netAmount")),
-      productType = ProductType.from(doc.getString("productType"))
+      productType = ProductType.from(doc.getString("productType")),
+      isGift = isGift,
+      giftRecipient = Option(doc.getString("giftRecipient")).filter(_.nonEmpty),
+      giftSender = Option(doc.getString("giftSender")).filter(_.nonEmpty)
     )
   }
 

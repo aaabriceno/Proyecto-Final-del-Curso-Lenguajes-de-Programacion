@@ -191,6 +191,11 @@ object BalanceRequestRepo {
     findById(id).filter(_.status == RequestStatus.Pending).map { request =>
       // Agregar saldo al usuario
       UserRepo.addBalance(request.userId, request.amount)
+      NotificationRepo.create(
+        request.userId,
+        s"Tu solicitud de saldo por $$${request.amount} fue aprobada",
+        NotificationType.BalanceApproved
+      )
       TopUpRepo.create(request.userId, adminId, request.amount, Some(request.id))
 
       val updated = request.copy(
@@ -222,8 +227,13 @@ object BalanceRequestRepo {
         collection.replaceOne(equal("_id", id), requestToDoc(updated)).toFuture(),
         5.seconds
       )
-      
+
       println(s"❌ Solicitud ${id} RECHAZADA por admin ${adminId}")
+      NotificationRepo.create(
+        request.userId,
+        s"Tu solicitud de saldo por $$${request.amount} fue rechazada",
+        NotificationType.BalanceRejected
+      )
       updated
     }
   }

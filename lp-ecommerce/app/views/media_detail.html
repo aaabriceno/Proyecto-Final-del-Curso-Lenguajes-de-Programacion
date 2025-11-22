@@ -80,6 +80,40 @@
     <small>© 2025 LP Studios — Fearless Design. Timeless Sound.</small>
   </footer>
 
+  <!-- ===== GIFT MODAL ===== -->
+  <div class="modal fade" id="giftModal" tabindex="-1" aria-labelledby="giftModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title" id="giftModalLabel">🎁 Enviar como regalo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-muted">Vas a regalar <strong data-gift-title>este contenido</strong>.</p>
+          <div class="alert alert-info d-none" data-gift-feedback></div>
+          <form id="gift-form">
+            <input type="hidden" name="mediaId">
+            <div class="mb-3">
+              <label class="form-label">Correo del destinatario</label>
+              <input type="email" name="email" class="form-control" list="gift-recipient-suggestions" placeholder="ej: amigo@correo.com" required>
+              <datalist id="gift-recipient-suggestions"></datalist>
+              <small class="text-muted">Escribe al menos 2 letras para buscar.</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Mensaje (opcional)</label>
+              <textarea name="message" class="form-control" rows="2" placeholder="Añade una nota para tu amigo"></textarea>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-warning">
+                <i class="bi bi-gift me-1"></i>Enviar regalo
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== SCRIPTS ===== -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -106,5 +140,6 @@
       }
     }
   </script>
+  <script src="/assets/javascripts/gifting.js"></script>
 </body>
 </html>

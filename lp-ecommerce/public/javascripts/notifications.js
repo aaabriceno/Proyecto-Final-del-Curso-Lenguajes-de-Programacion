@@ -206,24 +206,21 @@
     startNotificationPolling();
   }
 
-  // Click en botón de notificaciones → marcar todas como leídas
+  // Botones dedicados para marcar todas como leídas (no bloquear navegación del ícono)
   document.addEventListener('click', function(e) {
-    const btn = e.target.id === 'notificationBtn'
-      ? e.target
-      : e.target.closest('#notificationBtn');
+    const markAllBtn = e.target.closest('[data-action="mark-all-notifications"]');
+    if (!markAllBtn) return;
 
-    if (btn) {
-      e.preventDefault();
-      fetch('/notifications/mark-all-read', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Csrf-Token': document.querySelector('input[name="csrfToken"]')?.value || 'nocheck'
-        }
-      }).then(() => {
+    e.preventDefault();
+    fetch('/notifications/mark-all-read', { method: 'POST' })
+      .then(() => {
         updateNotificationBadge(0);
         lastNotificationCount = 0;
-      }).catch(err => console.log('Error al marcar todas leídas:', err));
-    }
+        checkNotifications();
+        if (markAllBtn.dataset.refresh === 'true') {
+          window.location.reload();
+        }
+      })
+      .catch(err => console.log('Error al marcar todas leídas:', err));
   });
 })();
