@@ -26,7 +26,7 @@ object MongoConnection {
   private val uriAtlas = "mongodb+srv://anthonybriceno_db_user:VvOjX7zqYxNULOZH@lp-ecommerce-cluster.cmr7cbl.mongodb.net/lp_ecommerce?authSource=admin"
 
   
-  private val uri = uriLocal
+  private val uri = uriAtlas
   // Cliente MongoDB
   private val client: MongoClient = MongoClient(uri)
   
