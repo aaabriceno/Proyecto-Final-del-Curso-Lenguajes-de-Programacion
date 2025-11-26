@@ -22,7 +22,10 @@ libraryDependencies ++= Seq(
 
   // Generación de códigos QR
   "com.google.zxing" % "core" % "3.5.3",
-  "com.google.zxing" % "javase" % "3.5.3"
+  "com.google.zxing" % "javase" % "3.5.3",
+
+  // Envío de correos (Jakarta Mail)
+  "com.sun.mail" % "jakarta.mail" % "2.0.1"
 )
 
 // Directorios de código fuente

@@ -57,7 +57,36 @@ object ReceiptService {
       Some(htmlRelative),
       pdfResultPath.map(_ => targetRelativePdf)
     )
-    Some(GeneratedReceipt(stored, html, htmlRelative, pdfResultPath))
+    val generated = GeneratedReceipt(stored, html, htmlRelative, pdfResultPath)
+
+    // Enviar boleta por correo SOLO cuando se crea por primera vez
+    if (existing.isEmpty) {
+      try {
+        val subject = s"Tu boleta LP Studios #${stored.series}-${stored.number}"
+        val baseUrl = sys.env.getOrElse("APP_BASE_URL", "http://localhost:9000")
+        val absoluteUrl = s"$baseUrl/${generated.htmlRelativePath}"
+
+        EmailService.send(
+          to = user.email,
+          subject = subject,
+          htmlBody =
+            s"""<p>Hola ${escape(user.name)},</p>
+               |<p>Gracias por tu compra en LP Studios. Adjuntamos el resumen de tu boleta:</p>
+               |<p><strong>Orden:</strong> #${order.id}<br/>
+               |<strong>Total pagado:</strong> ${formatMoney(order.totalNet)}</p>
+               |<p>Puedes descargar la boleta en PDF desde este adjunto.</p>
+               |<hr/>
+               |<p>Este es un correo generado automáticamente para fines de demostración.</p>
+               |""".stripMargin,
+          attachment = pdfResultPath
+        )
+      } catch {
+        case e: Exception =>
+          println(s"⚠️ Error al enviar boleta por correo: ${e.getMessage}")
+      }
+    }
+
+    Some(generated)
   }
 
   def renderHtml(order: Order): Option[String] =

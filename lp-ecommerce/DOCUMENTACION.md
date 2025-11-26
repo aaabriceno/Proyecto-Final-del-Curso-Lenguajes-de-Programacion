@@ -1,314 +1,425 @@
 # Documentación del Proyecto E-Commerce en Scala
 
-## Descripción General
-Este proyecto es un sistema de comercio electrónico implementado desde cero en Scala, sin usar frameworks web externos. Utiliza únicamente la librería estándar de Scala, `java.net.ServerSocket` para el servidor HTTP, y MongoDB para la persistencia de datos.
+## 1. Descripción General
 
-**Características principales:**
-- Servidor HTTP manual (sin Play Framework, Akka HTTP, etc.)
-- Autenticación de usuarios con sesiones
-- Panel de administración completo
-- Gestión de productos, categorías jerárquicas, promociones
-- Carrito de compras y sistema de pagos
-- API JSON para integraciones
-- Base de datos MongoDB
+Este proyecto es un sistema de comercio electrónico implementado desde cero en **Scala 2.13**, sin frameworks web (no Play, no Spring, etc.).  
+El servidor HTTP está construido manualmente sobre `java.net.ServerSocket` y la persistencia se realiza en **MongoDB**.
 
-## Arquitectura del Proyecto
-
-### Estructura de Carpetas
-```
-lp-ecommerce/
-├── app/                          # Código fuente principal
-│   ├── controllers/              # Controladores HTTP
-│   │   ├── AdminController.scala # Panel de admin
-│   │   ├── AuthController.scala  # Autenticación
-│   │   ├── HomeController.scala  # Páginas públicas
-│   │   ├── ShopController.scala  # Tienda y carrito
-│   │   └── UserController.scala  # Perfil de usuario
-│   ├── db/                       # Conexión a base de datos
-│   │   └── MongoConnection.scala # Configuración MongoDB
-│   ├── http/                     # Servidor HTTP manual
-│   │   ├── HttpRequest.scala     # Parsing de requests
-│   │   ├── HttpResponse.scala    # Generación de responses
-│   │   └── HttpServer.scala      # Servidor principal
-│   ├── models/                   # Modelos de datos
-│   │   ├── Media.scala           # Modelo de productos
-│   │   ├── User.scala            # Modelo de usuarios
-│   │   ├── Category.scala        # Modelo de categorías
-│   │   ├── Promotion.scala       # Modelo de promociones
-│   │   └── BalanceRequest.scala  # Modelo de solicitudes de saldo
-│   ├── scripts/                  # Scripts de migración
-│   │   ├── ReorganizeCategories.scala
-│   │   └── UpdateProductsAndPromotions.scala
-│   ├── services/                 # Servicios y lógica de negocio
-│   │   └── Main.scala            # Punto de entrada
-│   ├── session/                  # Gestión de sesiones
-│   │   └── SessionManager.scala
-│   └── views/                    # Vistas HTML
-├── public/                       # Archivos estáticos
-│   ├── images/                   # Imágenes de productos
-│   ├── javascripts/              # Scripts JS
-│   └── stylesheets/              # CSS
-├── conf/                         # Configuración
-│   ├── application.conf          # Config Play-like
-│   └── routes                    # Definición de rutas
-└── project/                      # Configuración SBT
-```
-
-## Flujo de la Aplicación
-
-### 1. Inicio del Servidor (`Main.scala`)
-El archivo `Main.scala` es el punto de entrada que ejecuta `sbt run`. Su flujo es:
-
-1. **Mostrar banner** con información del proyecto
-2. **Conectar a MongoDB** y verificar conexión
-3. **Inicializar datos** si la BD está vacía (productos, usuarios de ejemplo)
-4. **Ejecutar scripts de migración**:
-   - `ReorganizeCategories.run()`: Organiza categorías en árbol jerárquico
-   - `UpdateProductsAndPromotions.run()`: Actualiza productos con nuevas categorías
-5. **Limpiar datos corruptos** (opcional, para desarrollo)
-6. **Actualizar imágenes de productos** (setea `coverImage` en productos existentes)
-7. **Configurar cierre limpio** (Ctrl+C)
-8. **Iniciar servidor HTTP** en puerto 9000
-
-### 2. Servidor HTTP (`HttpServer.scala`)
-- Implementa un servidor HTTP básico usando `java.net.ServerSocket`
-- Escucha en puerto 9000
-- Parsea requests HTTP y los enruta a controladores
-- Maneja respuestas HTTP con headers, cookies, etc.
-
-### 3. Enrutamiento (`routes` y `HttpServer.scala`)
-Las rutas se definen en `conf/routes` y se mapean a métodos de controladores:
-
-**Rutas Públicas:**
-- `GET /` → `HomeController.index`
-- `GET /login` → `AuthController.loginForm`
-- `POST /login` → `AuthController.login`
-- `GET /register` → `AuthController.registerForm`
-- `POST /register` → `AuthController.register`
-- `GET /shop` → `ShopController.index`
-- `GET /api/media` → `AdminController.mediaJson` (público)
-
-**Rutas de Usuario (requieren login):**
-- `GET /user/account` → `UserController.account`
-- `POST /cart/add` → `ShopController.addToCart`
-- `GET /cart` → `ShopController.viewCart`
-
-**Rutas de Admin (requieren admin):**
-- `GET /admin` → `AdminController.dashboard`
-- `GET /admin/media` → `AdminController.media`
-- `POST /admin/media` → `AdminController.createMedia`
-- `GET /admin/users` → `AdminController.users`
-- `GET /api/users` → `AdminController.usersJson`
-
-## Controladores Principales
-
-### AuthController
-**Responsabilidades:**
-- Formularios de login/registro
-- Validación de credenciales
-- Gestión de sesiones con cookies
-- Verificación de permisos (admin/usuario)
-
-**Métodos clave:**
-- `login()`: Autentica usuario y crea sesión
-- `requireAuth()`: Verifica sesión activa
-- `requireAdmin()`: Verifica permisos de admin
-
-### HomeController
-**Responsabilidades:**
-- Página principal con navbar dinámico
-- Detección de sesión para mostrar contenido personalizado
-
-**Métodos clave:**
-- `index()`: Muestra home con navbar según rol del usuario
-
-### ShopController
-**Responsabilidades:**
-- Listado de productos en tienda
-- Gestión del carrito de compras
-- Proceso de compra/pago
-
-**Métodos clave:**
-- `index()`: Lista productos con filtros y promociones
-- `addToCart()`: Agrega productos al carrito
-- `viewCart()`: Muestra carrito actual
-- `checkout()`: Procesa compra
-
-### UserController
-**Responsabilidades:**
-- Perfil de usuario
-- Historial de compras
-- Gestión de saldo
-
-**Métodos clave:**
-- `account()`: Muestra información del usuario
-- `downloads()`: Historial de descargas
-
-### AdminController
-**Responsabilidades:**
-- Panel completo de administración
-- CRUD de productos, categorías, promociones, usuarios
-- API JSON para frontend
-- Estadísticas y reportes
-
-**Métodos clave:**
-- `dashboard()`: Dashboard principal
-- `media()`: Gestión de productos
-- `createMedia()`: Crear producto
-- `updateMedia()`: Editar producto
-- `categoriesJson()`: API de categorías
-- `promotions()`: Gestión de promociones
-- `usersJson()`: API de usuarios
-
-## Modelos de Datos
-
-### Media (Producto)
-**Campos principales:**
-- `id`: Long (único)
-- `title`: String
-- `description`: String
-- `productType`: ProductType (digital/físico)
-- `categoryId`: Option[Long]
-- `assetPath`: String (ruta al archivo/contenido)
-- `price`: BigDecimal
-- `stock`: Int
-- `rating`: Double
-- `downloads`: Int
-
-**Funciones clave:**
-- `mediaToDoc()`: Convierte a documento MongoDB
-- `docToMedia()`: Convierte de documento MongoDB
-
-### User
-**Campos principales:**
-- `id`: Long
-- `name`: String
-- `email`: String
-- `password`: String (hasheado)
-- `isAdmin`: Boolean
-- `balance`: BigDecimal
-- `totalSpent`: BigDecimal
-
-### Category
-**Campos principales:**
-- `id`: Long
-- `name`: String
-- `parentId`: Option[Long] (para jerarquía)
-- `description`: String
-- `productType`: String
-
-**Funciones clave:**
-- `getBreadcrumb()`: Obtiene ruta completa en árbol
-
-### Promotion
-**Campos principales:**
-- `id`: Long
-- `name`: String
-- `discountPercent`: Int
-- `startDate/endDate`: LocalDateTime
-- `targetType`: PromotionTarget (Product/Category)
-- `targetIds`: Vector[Long]
-
-## Base de Datos MongoDB
-
-### Colecciones
-- `media`: Productos
-- `users`: Usuarios
-- `categories`: Categorías
-- `promotions`: Promociones
-- `balance_requests`: Solicitudes de carga de saldo
-- `sessions`: Sesiones activas
-
-### Conexión (`MongoConnection.scala`)
-- Configura cliente MongoDB
-- Inicializa datos de ejemplo
-- Proporciona acceso a colecciones
-- Maneja migraciones
-
-## Vistas y Frontend
-
-### Estructura
-- Archivos HTML en `app/views/`
-- CSS en `public/stylesheets/`
-- JavaScript en `public/javascripts/`
-- Imágenes en `public/images/`
-
-### Características
-- Navbar dinámico según rol
-- Formularios con validación
-- AJAX para operaciones asíncronas
-- Bootstrap para estilos
-
-## Scripts de Migración
-
-### ReorganizeCategories
-- Reorganiza categorías en estructura de árbol
-- Asegura integridad referencial
-
-### UpdateProductsAndPromotions
-- Actualiza productos con nuevas categorías
-- Migra promociones a nuevo formato
-
-## Cómo Ejecutar el Proyecto
-
-### Prerrequisitos
-1. **Scala y SBT**: Instalar desde https://www.scala-lang.org/download/
-2. **MongoDB**: Seguir `INSTALACION_MONGODB.md`
-3. **Dependencias**: Ejecutar `sbt compile`
-
-### Ejecución
-```bash
-# Iniciar MongoDB
-Start-Service MongoDB  # Windows PowerShell
-
-# Ejecutar servidor
-sbt run
-```
-
-### Acceso
-- **Aplicación**: http://localhost:9000
-- **Admin**: Usuario admin con email `admin@example.com`, password `admin123`
-
-## Funcionalidades Implementadas
-
-### Completadas ✅
-- Sistema de usuarios y autenticación
-- Gestión completa de productos
-- Categorías jerárquicas
-- Promociones con descuentos
-- Carrito de compras básico
-- Panel de admin completo
-- API JSON para productos
-- Gestión de saldo y solicitudes
-
-### Pendientes ❌ (según PDF original)
-- Historial de descargas con descuentos
-- Sistema de regalos entre usuarios
-- Calificaciones de productos (1-10)
-- Rankings de productos más descargados/calificados
-- Consultas avanzadas (últimos 10 descargados, etc.)
-- Cierre de cuenta de usuario
-
-## Notas de Desarrollo
-
-### Decisiones Arquitectónicas
-- **Sin frameworks**: Implementación desde cero para aprendizaje
-- **MongoDB**: Base de datos NoSQL para flexibilidad
-- **Sesiones con cookies**: Gestión manual de estado
-- **JSON manual**: Sin librerías externas para serialización
-
-### Patrones Usados
-- **MVC**: Modelos, Vistas, Controladores
-- **Repository**: Capa de acceso a datos
-- **Singleton**: Objetos Scala para servicios
-- **Try/Success/Failure**: Manejo de errores funcional
-
-### Consideraciones de Seguridad
-- Passwords hasheados
-- Validación de inputs
-- Verificación de permisos
-- Escape de HTML/JSON para prevenir XSS
+El proyecto soporta:
+- Productos digitales (audio, video, diseño) y hardware.
+- Carrito de compras, pedidos, transacciones y boletas (HTML + PDF).
+- Recargas de saldo, sistema de notificaciones, regalos, ratings y rankings.
+- Panel de administración completo.
+- Envío de boletas por **correo electrónico** usando SMTP real.
 
 ---
 
-*Este documento se generó automáticamente analizando el código fuente. Para actualizaciones, modificar este archivo o regenerarlo con herramientas de análisis de código.*
+## 2. Arquitectura del Proyecto
+
+### 2.1. Estructura de carpetas
+
+```text
+lp-ecommerce/
+├── app/
+│   ├── controllers/        # Lógica HTTP (controladores)
+│   ├── db/                 # Conexión y migraciones MongoDB
+│   ├── http/               # Servidor HTTP manual
+│   ├── models/             # Modelos de dominio + repositorios
+│   ├── scripts/            # Scripts de organización de datos
+│   ├── services/           # Servicios de negocio (Main, receipts, email, analytics)
+│   ├── session/            # Manejo de sesiones y CSRF
+│   └── views/              # Plantillas HTML
+├── public/
+│   ├── images/             # Imágenes, assets de audio/video (vía /assets)
+│   ├── javascripts/        # JS para frontend (addContent, carrito, etc.)
+│   ├── stylesheets/        # CSS
+│   └── receipts/           # Boletas HTML/PDF generadas
+├── project/                # Configuración SBT
+└── build.sbt               # Dependencias y configuración de compilación
+```
+
+### 2.2. Componentes principales
+
+- `http/HttpServer.scala`  
+  Servidor HTTP de bajo nivel (abre el puerto 9000, acepta sockets, parsea requests y escribe responses).
+
+- `http/Router.scala`  
+  Centraliza todas las rutas y mapea `(método, path)` → controlador/método.
+
+- `db/MongoConnection.scala`  
+  Administra la conexión a MongoDB, colecciones y datos de ejemplo/migraciones.
+
+- `models/*.scala`  
+  Modelos de dominio + repositorios:
+  - `User`, `UserRepo`
+  - `Media`, `MediaRepo`
+  - `Category`, `CategoryRepo`
+  - `Promotion`, `PromotionRepo`
+  - `CartEntry`, `CartRepo`
+  - `Order`, `OrderRepo`
+  - `Transaction`, `TransactionRepo`
+  - `Download`, `DownloadRepo`
+  - `Notification`, `NotificationRepo`
+  - `BalanceRequest`, `BalanceRequestRepo`
+  - `TopUp`, `TopUpRepo`
+  - `Receipt`, `ReceiptRepo`
+  - `PasswordResetRequest`, `PasswordResetRequestRepo`
+
+- `controllers/*.scala`  
+  Controladores responsables de manejar rutas y componer vistas:
+  - `AuthController`: login, registro, protección de rutas.
+  - `HomeController`: página principal.
+  - `ShopController`: catálogo, detalle de producto, carrito, compra.
+  - `UserController`: cuenta, descargas, pedidos, info usuario, cambio de contraseña.
+  - `AdminController`: dashboard admin, productos, categorías, promociones, estadísticas.
+  - `GiftController`, `RatingController`, `ReceiptController`, `RankingController`.
+
+- `services/Main.scala`  
+  Punto de entrada del sistema (`main` que corre con `sbt run`).
+
+- `services/ReceiptService.scala`  
+  Genera boletas HTML y PDF, y coordina almacenamiento en `public/receipts`.
+
+- `services/EmailService.scala`  
+  Envía correos (boletas) vía SMTP real (Jakarta Mail) o modo demo (consola).
+
+- `session/*`  
+  Gestión de sesión con cookies y protección CSRF.
+
+---
+
+## 3. Diagrama de Clases (vista simplificada)
+
+Diagrama textual (puedes pegarlo en un editor que soporte Mermaid):
+
+```mermaid
+classDiagram
+  class User {
+    +Long id
+    +String name
+    +String email
+    +String phone
+    +String passwordHash
+    +Boolean isAdmin
+    +Boolean isActive
+    +BigDecimal balance
+    +BigDecimal totalSpent
+  }
+
+  class Media {
+    +Long id
+    +String title
+    +String description
+    +ProductType productType
+    +BigDecimal price
+    +Double rating
+    +Option~Long~ categoryId
+    +String assetPath
+    +Int stock
+    +Option~Long~ promotionId
+    +Boolean isActive
+  }
+
+  class Category {
+    +Long id
+    +String name
+    +Option~Long~ parentId
+    +String description
+    +String productType
+  }
+
+  class CartEntry {
+    +Long userId
+    +Long mediaId
+    +Int quantity
+  }
+
+  class Order {
+    +Long id
+    +Long userId
+    +Vector~OrderItem~ items
+    +BigDecimal totalGross
+    +BigDecimal totalDiscount
+    +BigDecimal totalNet
+  }
+
+  class Transaction {
+    +Long id
+    +TransactionType transactionType
+    +Option~Long~ fromUserId
+    +Option~Long~ toUserId
+    +Option~Long~ mediaId
+    +Int quantity
+    +BigDecimal grossAmount
+    +BigDecimal discount
+    +BigDecimal netAmount
+  }
+
+  class Download {
+    +Long id
+    +Long userId
+    +Long mediaId
+    +Int quantity
+    +BigDecimal price
+    +BigDecimal discount
+    +BigDecimal finalPrice
+  }
+
+  class BalanceRequest {
+    +Long id
+    +Long userId
+    +BigDecimal amount
+    +String paymentMethod
+    +RequestStatus status
+  }
+
+  class TopUp {
+    +Long id
+    +Long userId
+    +Long adminId
+    +BigDecimal amount
+  }
+
+  class Receipt {
+    +Long id
+    +Long orderId
+    +Long userId
+    +String series
+    +String number
+    +String qrData
+  }
+
+  class PasswordResetRequest {
+    +Long id
+    +Long userId
+    +PasswordResetStatus status
+  }
+
+  User "1" --> "*" Order
+  User "1" --> "*" Download
+  User "1" --> "*" CartEntry
+  User "1" --> "*" BalanceRequest
+  User "1" --> "*" PasswordResetRequest
+  Order "1" --> "*" OrderItem
+  Order "1" --> "1" Receipt
+  Media "1" --> "*" Download
+  Media "1" --> "*" CartEntry
+  Category "1" --> "*" Media
+```
+
+---
+
+## 4. Flujos principales
+
+### 4.1. Inicio del servidor (`services.Main`)
+
+1. Muestra banner informativo.
+2. Verifica conexión a MongoDB (`MongoConnection.testConnection()`).
+3. Inicializa datos de ejemplo y migra categorías/productos si corresponde (`initializeData`).
+4. Opcionalmente purga solicitudes de recarga antiguas (`LP_PURGE_BALANCE_REQUESTS`).
+5. Levanta `HttpServer` en puerto 9000 y configura shutdown limpio.
+
+### 4.2. Flujo de registro y login
+
+- **Registro (`AuthController.register`)**
+  - Recibe `name`, `email`, `phone`, `password` del formulario.
+  - Usa `UserRepo.add` (hashea contraseña con SHA-256 + Base64).
+  - Redirige a login.
+
+- **Login (`AuthController.login`)**
+  - Valida credenciales con `UserRepo.authenticate`.
+  - Crea sesión y cookie `sessionId`.
+  - Redirige a `/user/account` (si usuario) o `/admin` (si admin).
+
+- **Protección de rutas**  
+  - `AuthController.requireAuth` y `requireAdmin` se usan en todos los controladores para proteger rutas.
+  - Si no hay sesión válida, redirige a login.
+
+### 4.3. Flujo de compra
+
+1. Usuario agrega productos al carrito (`ShopController.addToCart`, `CartRepo`).
+2. Visualiza carrito (`ShopController.viewCart`):
+   - Muestra stock, tipo de producto, precio y saldo disponible.
+3. Inicia compra (`ShopController.purchasePage`):
+   - Verifica que el carrito no esté vacío.
+4. Procesa compra (`ShopController.processPurchase`):
+   - Calcula precios con promoción y descuento VIP (`calculatePricing`).
+   - Verifica que no haya productos sin stock (solo hardware usa stock).
+   - Descuenta saldo (`UserRepo.deductBalance`).
+   - Reduce stock de productos hardware (`MediaRepo.reduceStock`).
+   - Crea `Order` y `OrderItem`s (`OrderRepo.create`).
+   - Registra transacciones (`TransactionRepo.create`) y descargas digitales (`DownloadRepo.add`).
+   - Genera boleta (`ReceiptService.ensureReceiptFor`), que también dispara el correo.
+   - Limpia carrito (`CartRepo.clear`).
+
+### 4.4. Recargas de saldo
+
+- Usuario solicita recarga (`UserController.balanceRequestForm` → `BalanceRequestRepo.add`).
+- Admin ve solicitudes (`AdminController.balanceRequests`, vista `admin_balance_requests.html`).
+- Al aprobar (`BalanceRequestRepo.approve`):
+  - Suma saldo (`UserRepo.addBalance`).
+  - Crea `TopUp` en `topups`.
+  - Crea notificación `BalanceApproved`.
+- Al rechazar (`BalanceRequestRepo.reject`):
+  - Marca la solicitud como `rejected` y notifica al usuario.
+
+### 4.5. Cambio de contraseña
+
+**Forma 1 – Usuario dentro de sesión:**  
+`/user/password` → `UserController.changePassword`
+
+- Valida nueva contraseña (`min length 6` y confirmación).
+- Si **NO** hay solicitud aprobada de reset:
+  - Requiere contraseña actual y valida con `UserRepo.changePassword`.
+- Si **SÍ** hay `PasswordResetRequest` en estado `Approved`:
+  - Ignora la contraseña actual.
+  - Cambia directamente la contraseña con `UserRepo.forceChangePassword`.
+  - Marca la solicitud como `Completed`.
+
+**Forma 2 – Solicitud al admin (dentro de sesión):**  
+`POST /user/password/request` → `UserController.requestPasswordChange`
+
+- Usuario envía una solicitud con notas opcionales.
+- Se crea un `PasswordResetRequest` en estado `Pending`.
+- Se notifica al usuario y a todos los admins.
+- El admin gestiona solicitudes en `/admin/password-requests`:
+  - **Aprobar** (`AdminController.approvePasswordReset`): `status = Approved` + notificación al usuario.
+  - **Rechazar** (`AdminController.rejectPasswordReset`): `status = Rejected` + notificación al usuario.
+
+### 4.6. Boletas y correos
+
+1. `ReceiptService.ensureReceiptFor(order)`:
+   - Busca boleta previa (`ReceiptRepo.findByOrder`).
+   - Si no existe, crea una nueva (`ReceiptRepo.create`).
+   - Genera QR, HTML y PDF en `public/receipts/`.
+   - Actualiza rutas almacenadas en MongoDB.
+   - **Si es la primera vez** (orden nueva): envía correo al usuario con el PDF adjunto (via `EmailService.send`).
+
+2. El usuario puede luego:
+   - Descargar el PDF desde “Mis compras” (`ReceiptController.download`).
+   - Ver boleta en línea (HTML público).
+
+---
+
+## 5. Módulos y funciones importantes
+
+### 5.1. `Media.scala` (productos)
+
+- `case class Media(...)`  
+  Representa un producto (digital o hardware).
+
+- Métodos clave:
+  - `def managesStock`: `true` solo para hardware.
+  - `def hasStock(quantity: Int)`:
+    - Digital: siempre `true`.
+    - Hardware: valida contra `stock`.
+  - `def getCoverImageUrl`:
+    - Si `assetPath` es imagen → la usa.
+    - Si es audio → `image-audio.jpg`.
+    - Si es video → `image-video.jpg`.
+
+- `object MediaRepo`:
+  - `all`, `find`, `search`, `filterByCategory`.
+  - `add` / `update`: normaliza stock según `productType`.
+  - `reduceStock` / `addStock`: manipulan stock solo si `managesStock == true`.
+
+### 5.2. `User.scala` (usuarios)
+
+- `hashPassword` / `verifyPassword`: SHA-256 + Base64.
+- `authenticate(email, password)`.
+- `addBalance`, `deductBalance`, `refundBalance`.
+- `updateBasicInfo(id, name, phone)`.
+- `changePassword(id, currentPassword, newPassword)`.
+- `forceChangePassword(id, newPassword)` (usado tras aprobación admin).
+
+### 5.3. `Download.scala` (descargas)
+
+- Registra cada compra/descarga con precio, descuento, finalPrice, fecha y código único.
+- Métodos de estadística: `totalRevenue`, `totalDownloads`, `downloadsByUser`, etc.
+
+### 5.4. `Notification.scala` (notificaciones en memoria)
+
+- Tipos: `BalanceApproved`, `BalanceRejected`, `PurchaseSuccess`, `GiftReceived`, `Info`.
+- `NotificationRepo.create(userId, message, type)`.
+- `getUnread`, `getByUser`, `markAsRead`, `markAllAsRead`.
+
+### 5.5. `PasswordResetRequest.scala`
+
+- Modela solicitudes de cambio de contraseña con estados (`Pending`, `Approved`, `Rejected`, `Completed`).
+- `create(userId, notes)`.
+- `findPending`, `findApprovedForUser(userId)`.
+- `updateStatus(id, status, adminId, notes)`.
+- `markCompleted(id)`.
+
+### 5.6. `EmailService.scala`
+
+- Carga configuración SMTP desde variables de entorno (`SMTP_HOST`, `SMTP_USER`, etc.).
+- Modo demo si faltan datos (imprime en consola).
+- Envía correos HTML; si hay `attachment`, adjunta el archivo (PDF de boleta).
+
+### 5.7. `HttpServer.scala` + `Router.scala`
+
+- `HttpServer.start()`:
+  - Abre socket en puerto 9000.
+  - Acepta conexiones y parsea requests con `HttpRequest.parse`.
+  - Pasa el request a `Router.route` y escribe la respuesta (`HttpResponse.toHttpString` + `binaryBody`).
+
+- `Router.route(request)`:
+  - Tiene un `match` con todas las rutas (GET/POST + path).
+  - Llama al controlador y método correspondiente.
+
+---
+
+## 6. Base de datos MongoDB
+
+Colecciones principales (según `MongoConnection.Collections`):
+
+- `users`, `productos` (media), `categories`, `carts`, `downloads`  
+- `promotions`, `ratings`, `gifts`, `rankings`  
+- `transactions`, `topups`, `orders`, `receipts`  
+- `balance_requests`, `password_reset_requests`
+
+`MongoConnection.initializeData`:
+- Crea 2 usuarios (admin y usuario ejemplo).
+- Crea categorías base (digitales + hardware) si no existen.
+- Inserta algunos productos de ejemplo.
+
+---
+
+## 7. Ejecución y Configuración
+
+### 7.1. Prerrequisitos
+
+1. **JDK + SBT** instalados.
+2. **MongoDB** en ejecución (local).
+3. Dependencias: `sbt compile`.
+
+### 7.2. Variables de entorno (opcional, para email)
+
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`, `SMTP_TLS`  
+  Configuran el servidor SMTP para envío de boletas.
+
+- `APP_BASE_URL`  
+  URL base de la app (para links en correos). Por defecto: `http://localhost:9000`.
+
+### 7.3. Arranque
+
+```bash
+# Windows PowerShell
+Start-Service MongoDB
+sbt run
+```
+
+App en: `http://localhost:9000`  
+
+---
+
+## 8. Resumen para tu documento Word
+
+Con este `DOCUMENTACION.md` puedes:
+- Copiar la **descripción general** y la **arquitectura** como capítulos de introducción.
+- Usar el **diagrama Mermaid** para generar un diagrama de clases visual.
+- Explicar los **flujos** (compra, recarga, contraseña, boletas) como secciones de casos de uso.
+- Detallar los **módulos/ficheros clave** (Controllers, Models, Services) con sus responsabilidades.
+
+Esto cubre la parte técnica principal del proyecto y te sirve como base para redactar la memoria final en Word. 
