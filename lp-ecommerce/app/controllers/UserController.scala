@@ -82,6 +82,111 @@ object UserController {
   private def formatDateTime(dt: java.time.LocalDateTime): String =
     dt.toLocalDate.toString + " " + dt.toLocalTime.truncatedTo(ChronoUnit.MINUTES).toString
 
+  /** GET /forgot-password - formulario para solicitar código por correo */
+  def forgotPasswordForm(request: HttpRequest): HttpResponse = {
+    val projectDir = System.getProperty("user.dir")
+    val path = s"$projectDir/app/views/forgot_password.html"
+    val sessionId = request.cookies.getOrElse("sessionId", session.SessionManager.createSession("anonymous"))
+    val csrfField = session.CsrfProtection.hiddenFieldHtml(sessionId)
+
+    Try(Source.fromFile(path, "UTF-8").mkString) match {
+      case Success(html) =>
+        val updated = html.replace("<!-- CSRF_TOKEN_PLACEHOLDER -->", csrfField)
+        val response = HttpResponse.ok(updated)
+        if (!request.cookies.contains("sessionId"))
+          response.withCookie("sessionId", sessionId, maxAge = Some(86400))
+        else response
+      case Failure(e) =>
+        HttpResponse.notFound(s"No se pudo cargar la página de recuperación: ${e.getMessage}")
+    }
+  }
+
+  /** POST /forgot-password - envía código de 6 dígitos al correo si el usuario existe */
+  def forgotPassword(request: HttpRequest): HttpResponse = {
+    val data = request.formData
+    val email = data.getOrElse("email", "").trim.toLowerCase
+    val csrfToken = data.getOrElse("csrfToken", "")
+    val sessionId = request.cookies.getOrElse("sessionId", "")
+
+    if (!session.CsrfProtection.validateToken(sessionId, csrfToken))
+      return HttpResponse.redirect("/forgot-password?error=Token+CSRF+inv%C3%A1lido")
+
+    models.UserRepo.findByEmail(email) match {
+      case Some(user) =>
+        val code = models.PasswordResetCodeRepo.createForUser(user.id, minutesValid = 15)
+        val body =
+          s"""<p>Hola ${escapeHtml(user.name)},</p>
+             |<p>Has solicitado restablecer tu contraseña en LP Studios.</p>
+             |<p>Tu código de verificación es:</p>
+             |<h2 style="letter-spacing:4px;">${code.code}</h2>
+             |<p>Este código es válido por 3 minutos.</p>
+             |<p>Luego, visita la página de <a href="/reset-password">restablecer contraseña</a> e ingresa tu correo, el código y tu nueva contraseña.</p>
+             |""".stripMargin
+        services.EmailService.send(
+          to = user.email,
+          subject = "Código de verificación para restablecer contraseña",
+          htmlBody = body
+        )
+      case None =>
+        () // no revelar si el correo existe o no
+    }
+
+    HttpResponse.redirect("/reset-password?success=" + URLEncoder.encode("Si el correo existe, se envi\u00f3 un c\u00f3digo de verificaci\u00f3n a tu correo.", "UTF-8"))
+  }
+
+  /** GET /reset-password - formulario para ingresar código y nueva contraseña */
+  def resetPasswordForm(request: HttpRequest): HttpResponse = {
+    val projectDir = System.getProperty("user.dir")
+    val path = s"$projectDir/app/views/reset_password.html"
+    val sessionId = request.cookies.getOrElse("sessionId", session.SessionManager.createSession("anonymous"))
+    val csrfField = session.CsrfProtection.hiddenFieldHtml(sessionId)
+
+    Try(Source.fromFile(path, "UTF-8").mkString) match {
+      case Success(html) =>
+        val updated = html.replace("<!-- CSRF_TOKEN_PLACEHOLDER -->", csrfField)
+        val response = HttpResponse.ok(updated)
+        if (!request.cookies.contains("sessionId"))
+          response.withCookie("sessionId", sessionId, maxAge = Some(86400))
+        else response
+      case Failure(e) =>
+        HttpResponse.notFound(s"No se pudo cargar la página de reinicio: ${e.getMessage}")
+    }
+  }
+
+  /** POST /reset-password - valida código y actualiza contraseña sin estar logueado */
+  def resetPassword(request: HttpRequest): HttpResponse = {
+    val data = request.formData
+    val email = data.getOrElse("email", "").trim.toLowerCase
+    val code  = data.getOrElse("code", "").trim
+    val newPass = data.getOrElse("newPassword", "")
+    val confirm = data.getOrElse("confirmPassword", "")
+    val csrfToken = data.getOrElse("csrfToken", "")
+    val sessionId = request.cookies.getOrElse("sessionId", "")
+
+    if (!session.CsrfProtection.validateToken(sessionId, csrfToken))
+      return HttpResponse.redirect("/reset-password?error=Token+CSRF+inv%C3%A1lido")
+
+    if (newPass.length < 6)
+      return HttpResponse.redirect("/reset-password?error=" + URLEncoder.encode("La nueva contraseña debe tener al menos 6 caracteres", "UTF-8"))
+
+    if (newPass != confirm)
+      return HttpResponse.redirect("/reset-password?error=" + URLEncoder.encode("La nueva contraseña y su confirmación no coinciden", "UTF-8"))
+
+    models.UserRepo.findByEmail(email) match {
+      case Some(user) =>
+        models.PasswordResetCodeRepo.findValid(user.id, code) match {
+          case Some(token) =>
+            models.UserRepo.forceChangePassword(user.id, newPass)
+            models.PasswordResetCodeRepo.markUsed(token.id)
+            HttpResponse.redirect("/login?success=" + URLEncoder.encode("Contraseña restablecida correctamente. Ahora puedes iniciar sesión.", "UTF-8"))
+          case None =>
+            HttpResponse.redirect("/reset-password?error=" + URLEncoder.encode("Código inválido o expirado", "UTF-8"))
+        }
+      case None =>
+        HttpResponse.redirect("/reset-password?error=" + URLEncoder.encode("Código inválido o expirado", "UTF-8"))
+    }
+  }
+
   /** GET /user/info */
   def info(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {

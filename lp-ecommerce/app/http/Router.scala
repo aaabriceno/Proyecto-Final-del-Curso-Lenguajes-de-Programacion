@@ -65,6 +65,11 @@ object Router {
         case ("POST", "/user/password")        => UserController.changePassword(request)
         case ("POST", "/user/password/request")=> UserController.requestPasswordChange(request)
         case ("GET", "/user/downloads")   => UserController.downloads(request)
+        // Recuperación de contraseña sin sesión
+        case ("GET", "/forgot-password")  => UserController.forgotPasswordForm(request)
+        case ("POST", "/forgot-password") => UserController.forgotPassword(request)
+        case ("GET", "/reset-password")   => UserController.resetPasswordForm(request)
+        case ("POST", "/reset-password")  => UserController.resetPassword(request)
         case ("GET", "/user/notifications") => UserController.notificationsPage(request)
         case ("GET", "/api/users/search") => UserController.searchUsers(request)
         case ("GET", "/user/orders")      => UserController.orders(request)

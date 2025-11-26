@@ -286,6 +286,23 @@ classDiagram
   - **Aprobar** (`AdminController.approvePasswordReset`): `status = Approved` + notificación al usuario.
   - **Rechazar** (`AdminController.rejectPasswordReset`): `status = Rejected` + notificación al usuario.
 
+**Forma 3 – Olvidé mi contraseña (fuera de sesión, por correo):**  
+
+- `GET /forgot-password` → formulario donde el usuario ingresa su email.
+- `POST /forgot-password`:
+  - Busca usuario por email.
+  - Si existe, genera un código de 6 dígitos (`PasswordResetCodeRepo.createForUser`) válido por unos minutos (configurable).
+  - Envía el código al correo del usuario usando `EmailService.send`.
+  - Redirige a `/reset-password`.
+- `GET /reset-password` → formulario donde se ingresa:
+  - correo,
+  - código de 6 dígitos,
+  - nueva contraseña + confirmación.
+- `POST /reset-password`:
+  - Verifica que el código sea válido y no expirado (`PasswordResetCodeRepo.findValid`).
+  - Si es válido, actualiza la contraseña con `UserRepo.forceChangePassword` y marca el código como usado.
+  - Si no, muestra error (“Código inválido o expirado”).
+
 ### 4.6. Boletas y correos
 
 1. `ReceiptService.ensureReceiptFor(order)`:
@@ -351,7 +368,16 @@ classDiagram
 - `updateStatus(id, status, adminId, notes)`.
 - `markCompleted(id)`.
 
-### 5.6. `EmailService.scala`
+### 5.6. `PasswordResetCode.scala`
+
+- Modela códigos de verificación enviados por correo para “Olvidé mi contraseña”.
+- Campos: `id`, `userId`, `code`, `createdAt`, `expiresAt`, `used`.
+- Métodos:
+  - `createForUser(userId, minutesValid)` → genera un código de 6 dígitos con expiración.
+  - `findValid(userId, code)` → busca un código no usado y no expirado.
+  - `markUsed(id)` → marca el código como usado tras restablecer la contraseña.
+
+### 5.7. `EmailService.scala`
 
 - Carga configuración SMTP desde variables de entorno (`SMTP_HOST`, `SMTP_USER`, etc.).
 - Modo demo si faltan datos (imprime en consola).

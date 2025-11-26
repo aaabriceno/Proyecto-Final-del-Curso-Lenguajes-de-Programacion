@@ -50,6 +50,7 @@ object MongoConnection {
     val orders: MongoCollection[Document] = database.getCollection("orders")
     val receipts: MongoCollection[Document] = database.getCollection("receipts")
     val passwordResetRequests: MongoCollection[Document] = database.getCollection("password_reset_requests")
+    val passwordResetCodes: MongoCollection[Document] = database.getCollection("password_reset_codes")
   }
   
   /**
