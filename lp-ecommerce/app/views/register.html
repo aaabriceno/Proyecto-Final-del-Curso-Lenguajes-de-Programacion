@@ -29,7 +29,10 @@
 
       <div class="mb-3">
         <label class="form-label">Contraseña:</label>
-        <input type="password" name="password" class="form-control" required minlength="6">
+        <div class="input-group">
+          <input type="password" id="reg-password" name="password" class="form-control" required minlength="6">
+          <button type="button" class="btn btn-outline-light" id="toggleRegPassword" tabindex="-1">👁️</button>
+        </div>
       </div>
 
       <button type="submit" class="btn btn-success w-100">Registrar</button>
@@ -39,5 +42,17 @@
       ¿Ya tienes cuenta? <a href="/login" class="text-warning text-decoration-none">Inicia sesión</a>
     </p>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function () {
+      const input = document.getElementById('reg-password');
+      const btn = document.getElementById('toggleRegPassword');
+      if (!input || !btn) return;
+      btn.addEventListener('click', function () {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+      });
+    })();
+  </script>
 </body>
 </html>

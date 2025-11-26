@@ -63,7 +63,32 @@ case class Media(
 ) {
 
   // Obtener imagen de portada desde assetPath
-  def getCoverImageUrl: String = if (assetPath.startsWith("/assets/")) assetPath else s"/assets/$assetPath"
+  def getCoverImageUrl: String = {
+    val path = if (assetPath.startsWith("/assets/")) assetPath else s"/assets/$assetPath"
+    val lower = path.toLowerCase
+
+    val isImage =
+      lower.endsWith(".jpg") ||
+      lower.endsWith(".jpeg") ||
+      lower.endsWith(".png") ||
+      lower.endsWith(".gif") ||
+      lower.endsWith(".webp")
+    val isAudio =
+      lower.endsWith(".mp3") ||
+      lower.endsWith(".wav") ||
+      lower.endsWith(".ogg") ||
+      lower.endsWith(".flac")
+    val isVideo =
+      lower.endsWith(".mp4") ||
+      lower.endsWith(".webm") ||
+      lower.endsWith(".mov") ||
+      lower.endsWith(".mkv")
+
+    if (isImage) path
+    else if (isVideo) "/assets/images/image-video.jpg"
+    else if (isAudio) "/assets/images/image-audio.jpg"
+    else "/assets/images/placeholder.jpg"
+  }
 
   // ========= RELACIONES =========
 

@@ -161,17 +161,51 @@ object ShopController {
 
             val projectDir = System.getProperty("user.dir")
             val path = s"$projectDir/app/views/media_detail.html"
-            
+
+            val assetUrl = {
+              val raw = media.assetPath
+              if (raw.startsWith("/assets/")) raw else s"/assets/${raw.stripPrefix("/")}"
+            }
+
+            val previewHtml: String = {
+              val lower = assetUrl.toLowerCase
+              if (media.productType == ProductType.Digital && (lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".ogg") || lower.endsWith(".flac"))) {
+                s"""
+                   |<div class="card bg-dark border-secondary shadow-sm p-4">
+                   |  <h5 class="mb-3">🎧 Previsualización de audio</h5>
+                   |  <audio controls class="w-100">
+                   |    <source src="$assetUrl">
+                   |    Tu navegador no soporta audio HTML5.
+                   |  </audio>
+                   |</div>
+                   |""".stripMargin
+              } else if (media.productType == ProductType.Digital && (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov") || lower.endsWith(".mkv"))) {
+                s"""
+                   |<div class="ratio ratio-16x9 shadow-sm">
+                   |  <video src="$assetUrl" class="w-100 h-100 rounded" controls preload="metadata">
+                   |    Tu navegador no soporta video HTML5.
+                   |  </video>
+                   |</div>
+                   |""".stripMargin
+              } else {
+                s"""
+                   |<div class="ratio ratio-16x9 shadow-sm">
+                   |  <img src="${media.getCoverImageUrl}" alt="Producto" class="img-fluid rounded object-fit-cover">
+                   |</div>
+                   |""".stripMargin
+              }
+            }
+
             Try(Source.fromFile(path, "UTF-8").mkString) match {
               case Success(html) =>
-                // Reemplazar navbar, botón de compra y datos del producto
+                // Reemplazar navbar, botón de compra, datos del producto y previsualización
                 val updatedHtml = html
                   .replace("<!-- NAVBAR_PLACEHOLDER -->", navbarButtons)
                   .replace("<!-- CTA_PLACEHOLDER -->", actionBlock)
-                  .replace("/assets/images/placeholder.jpg", media.getCoverImageUrl)
+                  .replace("<!-- MEDIA_PREVIEW_PLACEHOLDER -->", previewHtml)
                   .replace("🎵 Nombre del Producto", escapeHtml(media.title))
                   .replace("$99.99", priceDisplay)
-                  .replace("Descripción detallada del producto. Aquí puedes incluir características, inspiración o información del autor.", 
+                  .replace("Descripción detallada del producto. Aquí puedes incluir características, inspiración o información del autor.",
                            escapeHtml(media.description))
                 
                 val response = HttpResponse.ok(updatedHtml)
@@ -307,8 +341,7 @@ object ShopController {
                 </td>
               </tr>
             """
-          }.mkString("
-")
+          }.mkString("\n")
         } else {
           """
           <tr>

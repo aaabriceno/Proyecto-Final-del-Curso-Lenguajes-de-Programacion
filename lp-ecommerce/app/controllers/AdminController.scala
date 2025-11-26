@@ -384,6 +384,83 @@ object AdminController {
     }
   }
 
+  /** GET /admin/password-requests */
+  def passwordResetRequests(request: HttpRequest): HttpResponse = {
+    AuthController.requireAdmin(request) match {
+      case Right(admin) =>
+        val projectDir = System.getProperty("user.dir")
+        val path = Paths.get(projectDir, "app", "views", "admin_password_resets.html")
+        Try(Files.readString(path)) match {
+          case Success(template) =>
+            val pending = PasswordResetRequestRepo.findPending()
+            val rows = if (pending.isEmpty) {
+              """<tr><td colspan="4" class="text-center py-4 text-muted">No hay solicitudes pendientes.</td></tr>"""
+            } else {
+              pending.map { req =>
+                val user = UserRepo.findById(req.userId)
+                val name = user.map(_.name).getOrElse(s"Usuario #${req.userId}")
+                val email = user.map(_.email).getOrElse("-")
+                s"""
+                   |<tr>
+                   |  <td>#${req.id}</td>
+                   |  <td>$name<br><small class="text-muted">$email</small></td>
+                   |  <td>${req.createdAt.toString.substring(0,16)}</td>
+                   |  <td>
+                   |    <form method="POST" action="/admin/password-requests/${req.id}/approve" class="d-inline">
+                   |      <button type="submit" class="btn btn-sm btn-success">Aprobar</button>
+                   |    </form>
+                   |    <form method="POST" action="/admin/password-requests/${req.id}/reject" class="d-inline ms-1">
+                   |      <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
+                   |    </form>
+                   |  </td>
+                   |</tr>
+                   |""".stripMargin
+              }.mkString("\n")
+            }
+            val html = template.replace("<!-- PASSWORD_RESET_ROWS -->", rows)
+            val response = HttpResponse.ok(html)
+            if (request.cookies.contains("sessionId"))
+              response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
+            else response
+          case Failure(e) =>
+            HttpResponse.notFound(s"No se pudo cargar las solicitudes de contraseña: ${e.getMessage}")
+        }
+      case Left(res) => res
+    }
+  }
+
+  /** POST /admin/password-requests/:id/approve */
+  def approvePasswordReset(id: Long, request: HttpRequest): HttpResponse = {
+    AuthController.requireAdmin(request) match {
+      case Right(admin) =>
+        PasswordResetRequestRepo.updateStatus(id, PasswordResetStatus.Approved, admin.id).foreach { req =>
+          NotificationRepo.create(
+            req.userId,
+            s"Tu solicitud de cambio de contraseña (#${req.id}) fue aprobada por el administrador.",
+            NotificationType.Info
+          )
+        }
+        HttpResponse.redirect("/admin/password-requests?success=Solicitud+aprobada")
+      case Left(res) => res
+    }
+  }
+
+  /** POST /admin/password-requests/:id/reject */
+  def rejectPasswordReset(id: Long, request: HttpRequest): HttpResponse = {
+    AuthController.requireAdmin(request) match {
+      case Right(admin) =>
+        PasswordResetRequestRepo.updateStatus(id, PasswordResetStatus.Rejected, admin.id).foreach { req =>
+          NotificationRepo.create(
+            req.userId,
+            s"Tu solicitud de cambio de contraseña (#${req.id}) fue rechazada por el administrador.",
+            NotificationType.Info
+          )
+        }
+        HttpResponse.redirect("/admin/password-requests?success=Solicitud+rechazada")
+      case Left(res) => res
+    }
+  }
+
   /** GET /api/categories - API JSON para obtener todas las categorías */
   def categoriesJson(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
@@ -793,11 +870,12 @@ $categoriesJsonArray
     }
   }
 
-  /** GET /api/files/list - API JSON para listar archivos en public/images/ */
+  /** GET /api/files/list - API JSON para listar archivos en public/images/ (imágenes y audio/video) */
   def listFiles(request: HttpRequest): HttpResponse = {
     AuthController.requireAdmin(request) match {
       case Right(_) =>
         val imagesDir = new java.io.File("public/images")
+        val allowedExtensions = Set(".jpg", ".jpeg", ".png", ".gif", ".webp", ".mp3", ".wav", ".ogg", ".flac", ".mp4", ".webm", ".mov", ".mkv")
         
         def listFilesRecursively(dir: java.io.File, basePath: String = ""): Seq[Map[String, String]] = {
           if (!dir.exists() || !dir.isDirectory) return Seq.empty
@@ -813,10 +891,9 @@ $categoriesJsonArray
               Map("name" -> file.getName, "type" -> "folder", "path" -> relativePath) +: 
               listFilesRecursively(file, relativePath)
             } else {
-              // Solo archivos de imagen
-              val ext = file.getName.toLowerCase
-              if (ext.endsWith(".jpg") || ext.endsWith(".jpeg") || ext.endsWith(".png") || 
-                  ext.endsWith(".gif") || ext.endsWith(".webp")) {
+              val nameLower = file.getName.toLowerCase
+              val ext = allowedExtensions.find(nameLower.endsWith).getOrElse("")
+              if (ext.nonEmpty) {
                 Seq(Map("name" -> file.getName, "type" -> "file", "path" -> relativePath))
               } else {
                 Seq.empty

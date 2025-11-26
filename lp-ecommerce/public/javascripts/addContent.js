@@ -335,19 +335,29 @@ async function loadFiles(path) {
     filteredFiles.forEach(file => {
       const item = document.createElement("button");
       item.className = "list-group-item list-group-item-action d-flex align-items-center";
-      
-      const icon = file.type === "folder" ? 
-        '<i class="bi bi-folder me-2 text-warning"></i>' : 
-        '<i class="bi bi-file-earmark-image me-2 text-success"></i>';
-      
+
+      let icon;
+      if (file.type === "folder") {
+        icon = '<i class="bi bi-folder me-2 text-warning"></i>';
+      } else {
+        const lower = file.name.toLowerCase();
+        if (lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".ogg") || lower.endsWith(".flac")) {
+          icon = '<i class="bi bi-music-note-beamed me-2 text-success"></i>';
+        } else if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov") || lower.endsWith(".mkv")) {
+          icon = '<i class="bi bi-film me-2 text-success"></i>';
+        } else {
+          icon = '<i class="bi bi-file-earmark-image me-2 text-success"></i>';
+        }
+      }
+
       item.innerHTML = `${icon} ${file.name}`;
-      
+
       if (file.type === "folder") {
         item.onclick = () => loadFiles([...path, file.name]);
       } else {
         item.onclick = () => selectFile(file.path);
       }
-      
+
       fileList.appendChild(item);
     });
     

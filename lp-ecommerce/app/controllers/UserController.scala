@@ -85,7 +85,28 @@ object UserController {
   /** GET /user/info */
   def info(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
-      case Right(_) => serveHtml("user_info", request)
+      case Right(user) =>
+        val projectDir = System.getProperty("user.dir")
+        val path = s"$projectDir/app/views/user_info.html"
+
+        Try(Source.fromFile(path, "UTF-8").mkString) match {
+          case Success(html) =>
+            val sessionId = request.cookies.getOrElse("sessionId", "")
+            val updated = html
+              .replace("__USER_NAME__", escapeHtml(user.name))
+              .replace("__USER_EMAIL__", escapeHtml(user.email))
+              .replace("__USER_PHONE__", escapeHtml(user.phone))
+              .replace("<!-- CSRF_TOKEN_PLACEHOLDER -->", session.CsrfProtection.hiddenFieldHtml(sessionId))
+
+            val response = HttpResponse.ok(updated)
+            if (request.cookies.contains("sessionId")) {
+              response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
+            } else {
+              response
+            }
+          case Failure(e) =>
+            HttpResponse.notFound(s"No se pudo cargar la página de perfil: ${e.getMessage}")
+        }
       case Left(resp) => resp
     }
   }
@@ -94,8 +115,10 @@ object UserController {
   def updateInfo(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
       case Right(user) =>
-        // Actualiza datos del usuario (cuando implementes la función)
-        // UserRepo.updateInfo(user.id, name, phone)
+        val name  = request.formData.getOrElse("name", user.name).trim
+        val phone = request.formData.getOrElse("phone", user.phone).trim
+
+        UserRepo.updateBasicInfo(user.id, name, phone)
         HttpResponse.redirect(
           "/user/info?success=" + URLEncoder.encode("Información actualizada", "UTF-8")
         )
@@ -130,6 +153,93 @@ object UserController {
           case Failure(err) =>
             HttpResponse.notFound(s"No se pudo cargar la vista de descargas: ${err.getMessage}")
         }
+      case Left(resp) => resp
+    }
+  }
+
+  /** GET /user/password */
+  def changePasswordForm(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(_) =>
+        val projectDir = System.getProperty("user.dir")
+        val path = s"$projectDir/app/views/user_change_password.html"
+        val sessionId = request.cookies.getOrElse("sessionId", "")
+
+        Try(Source.fromFile(path, "UTF-8").mkString) match {
+          case Success(html) =>
+            val updated = html.replace("<!-- CSRF_TOKEN_PLACEHOLDER -->", session.CsrfProtection.hiddenFieldHtml(sessionId))
+            val response = HttpResponse.ok(updated)
+            if (request.cookies.contains("sessionId")) {
+              response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
+            } else {
+              response
+            }
+          case Failure(e) =>
+            HttpResponse.notFound(s"No se pudo cargar la página de cambio de contraseña: ${e.getMessage}")
+        }
+      case Left(resp) => resp
+    }
+  }
+
+  /** POST /user/password */
+  def changePassword(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        val current = request.formData.getOrElse("currentPassword", "")
+        val next    = request.formData.getOrElse("newPassword", "")
+        val confirm = request.formData.getOrElse("confirmPassword", "")
+
+        if (next.length < 6) {
+          return HttpResponse.redirect("/user/password?error=" + URLEncoder.encode("La nueva contraseña debe tener al menos 6 caracteres", "UTF-8"))
+        }
+        if (next != confirm) {
+          return HttpResponse.redirect("/user/password?error=" + URLEncoder.encode("La nueva contraseña y su confirmación no coinciden", "UTF-8"))
+        }
+
+        val approvedReqOpt = models.PasswordResetRequestRepo.findApprovedForUser(user.id)
+
+        approvedReqOpt match {
+          case Some(req) =>
+            UserRepo.forceChangePassword(user.id, next)
+            models.PasswordResetRequestRepo.markCompleted(req.id)
+            HttpResponse.redirect("/user/password?success=" + URLEncoder.encode("Contraseña actualizada tras aprobación del administrador", "UTF-8"))
+          case None =>
+            UserRepo.changePassword(user.id, current, next) match {
+              case Left(msg) =>
+                HttpResponse.redirect("/user/password?error=" + URLEncoder.encode(msg, "UTF-8"))
+              case Right(_)  =>
+                HttpResponse.redirect("/user/password?success=" + URLEncoder.encode("Contraseña actualizada correctamente", "UTF-8"))
+            }
+        }
+
+      case Left(resp) => resp
+    }
+  }
+
+  /** POST /user/password/request - solicitud al admin con sesión iniciada */
+  def requestPasswordChange(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        val notes = request.formData.get("notes").map(_.trim).filter(_.nonEmpty)
+        val existingPending = models.PasswordResetRequestRepo.findPending().exists(_.userId == user.id)
+        if (existingPending) {
+          return HttpResponse.redirect("/user/password?error=" + URLEncoder.encode("Ya tienes una solicitud de cambio de contraseña pendiente", "UTF-8"))
+        }
+        val req = models.PasswordResetRequestRepo.create(user.id, notes)
+        NotificationRepo.create(
+          user.id,
+          s"Tu solicitud de cambio de contraseña (#${req.id}) fue registrada y está pendiente de revisión.",
+          NotificationType.Info
+        )
+        // Notificar a todos los administradores que existe una nueva solicitud
+        UserRepo.all.filter(_.isAdmin).foreach { adminUser =>
+          NotificationRepo.create(
+            adminUser.id,
+            s"Nuevo pedido de cambio de contraseña del usuario ${user.email} (#${req.id}).",
+            NotificationType.Info
+          )
+        }
+        HttpResponse.redirect("/user/password?success=" + URLEncoder.encode("Solicitud enviada al administrador", "UTF-8"))
       case Left(resp) => resp
     }
   }
@@ -268,6 +378,17 @@ object UserController {
       val discountCell =
         if (download.discount > 0) formatMoney(download.discount)
         else "<span class=\"text-muted\">—</span>"
+      val downloadAction = mediaOpt match {
+        case Some(media) if media.productType == ProductType.Digital =>
+          val assetPath =
+            if (media.assetPath.startsWith("/assets/")) media.assetPath
+            else s"/assets/${media.assetPath.stripPrefix("/")}"
+          s"""<a class="btn btn-sm btn-primary" href="$assetPath" download>
+             |  <i class="bi bi-download"></i> Descargar
+             |</a>""".stripMargin
+        case _ =>
+          "<span class=\"text-muted\">N/A</span>"
+      }
 
       s"""
         |<tr>
@@ -281,7 +402,8 @@ object UserController {
         |  <td class="text-center">$discountCell</td>
         |  <td class="text-end">${formatMoney(download.finalPrice)}</td>
         |  <td class="text-end">${formatDateTime(download.downloadDate)}</td>
-        |</tr>
+        |  <td class="text-end">$downloadAction</td>
+      |</tr>
       """.stripMargin
     }.mkString("\n")
 
@@ -296,6 +418,7 @@ object UserController {
       |        <th class="text-center">Descuento</th>
       |        <th class="text-end">Monto final</th>
       |        <th class="text-end">Fecha</th>
+      |        <th class="text-end">Acciones</th>
       |      </tr>
       |    </thead>
       |    <tbody>$rows</tbody>

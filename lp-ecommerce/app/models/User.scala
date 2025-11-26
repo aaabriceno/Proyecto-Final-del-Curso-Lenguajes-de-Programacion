@@ -239,4 +239,72 @@ object UserRepo {
   /** Consultar total gastado (para descuento VIP) */
   def getTotalSpent(id: Long): Option[BigDecimal] =
     findById(id).map(_.totalSpent)
+
+  // =====================================================
+  //  🧾 Actualización de datos básicos
+  // =====================================================
+
+  def updateBasicInfo(id: Long, name: String, phone: String): Option[User] = synchronized {
+    findById(id).map { user =>
+      val updated = user.copy(
+        name = name.trim,
+        phone = phone.trim
+      )
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          combine(
+            set("name", updated.name),
+            set("phone", updated.phone)
+          )
+        ).toFuture(),
+        5.seconds
+      )
+      println(s"✅ Usuario ${id} actualizado: name='${updated.name}', phone='${updated.phone}'")
+      updated
+    }
+  }
+
+  // =====================================================
+  //  🔐 Cambio de contraseña con sesión iniciada
+  // =====================================================
+
+  def changePassword(id: Long, currentPassword: String, newPassword: String): Either[String, User] = synchronized {
+    findById(id) match {
+      case None =>
+        Left("Usuario no encontrado")
+      case Some(user) =>
+        if (!verifyPassword(currentPassword, user.passwordHash)) {
+          Left("La contraseña actual no es correcta")
+        } else {
+          val newHash = hashPassword(newPassword)
+          val updated = user.copy(passwordHash = newHash)
+          Await.result(
+            collection.updateOne(
+              equal("_id", id),
+              set("password", newHash)
+            ).toFuture(),
+            5.seconds
+          )
+          println(s"✅ Contraseña actualizada para usuario ${id}")
+          Right(updated)
+        }
+    }
+  }
+
+  def forceChangePassword(id: Long, newPassword: String): Option[User] = synchronized {
+    findById(id).map { user =>
+      val newHash = hashPassword(newPassword)
+      val updated = user.copy(passwordHash = newHash)
+      Await.result(
+        collection.updateOne(
+          equal("_id", id),
+          set("password", newHash)
+        ).toFuture(),
+        5.seconds
+      )
+      println(s"✅ Contraseña actualizada (forzada) para usuario ${id}")
+      updated
+    }
+  }
 }

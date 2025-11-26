@@ -36,21 +36,34 @@
           </div>
           
           <div class="card-body">
-            <div class="mb-3">
-              <p class="mb-2"><strong>Nombre:</strong> <span id="user-name">Usuario Ejemplo</span></p>
-              <p class="mb-2"><strong>Email:</strong> <span id="user-email">usuario@example.com</span></p>
-              <p class="mb-2"><strong>Teléfono:</strong> <span id="user-phone">+123456789</span></p>
-              <p class="mb-2"><strong>Rol:</strong> <span id="user-role" class="badge bg-secondary">Usuario</span></p>
-              <hr>
-              <p class="mb-2"><strong>Saldo:</strong> <span id="user-balance" class="text-success fw-bold">$500.00</span></p>
-              <p class="mb-0"><strong>Gastado:</strong> <span id="user-spent" class="text-info">$200.00</span></p>
-            </div>
-          </div>
+            <form method="POST" action="/user/info">
+              <!-- CSRF_TOKEN_PLACEHOLDER -->
 
-          <div class="card-footer text-center border-secondary">
-            <a href="/user/account" class="btn btn-outline-primary">
-              <i class="bi bi-arrow-left me-2"></i>Volver a Mi Cuenta
-            </a>
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre completo</label>
+                <input type="text" id="name" name="name" class="form-control" value="__USER_NAME__" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" value="__USER_EMAIL__" disabled>
+                <div class="form-text text-muted">El correo es tu identificador de cuenta y no se puede cambiar.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input type="text" id="phone" name="phone" class="form-control" value="__USER_PHONE__">
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <a href="/user/account" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-left me-2"></i>Volver
+                </a>
+                <button type="submit" class="btn btn-primary">
+                  <i class="bi bi-save me-2"></i>Guardar cambios
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

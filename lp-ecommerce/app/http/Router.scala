@@ -61,6 +61,9 @@ object Router {
         case ("GET", "/user/account")     => UserController.account(request)
         case ("GET", "/user/info")        => UserController.info(request)
         case ("POST", "/user/info")       => UserController.updateInfo(request)
+        case ("GET", "/user/password")         => UserController.changePasswordForm(request)
+        case ("POST", "/user/password")        => UserController.changePassword(request)
+        case ("POST", "/user/password/request")=> UserController.requestPasswordChange(request)
         case ("GET", "/user/downloads")   => UserController.downloads(request)
         case ("GET", "/user/notifications") => UserController.notificationsPage(request)
         case ("GET", "/api/users/search") => UserController.searchUsers(request)
@@ -118,6 +121,15 @@ object Router {
         case ("POST", p) if p.endsWith("/delete") && p.startsWith("/admin/categories/") =>
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.deleteCategory(id, request)
+
+        // ---------- Password reset requests ----------
+        case ("GET", "/admin/password-requests") => AdminController.passwordResetRequests(request)
+        case ("POST", p) if p.startsWith("/admin/password-requests/") && p.endsWith("/approve") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.approvePasswordReset(id, request)
+        case ("POST", p) if p.startsWith("/admin/password-requests/") && p.endsWith("/reject") =>
+          val id = Try(p.split("/")(3).toLong).getOrElse(0L)
+          AdminController.rejectPasswordReset(id, request)
 
         // ---------- Promociones ----------
         case ("GET", "/admin/promotions")      => AdminController.promotions(request)

@@ -26,7 +26,7 @@ object MongoConnection {
   private val uriAtlas = "mongodb+srv://anthonybriceno_db_user:VvOjX7zqYxNULOZH@lp-ecommerce-cluster.cmr7cbl.mongodb.net/lp_ecommerce?authSource=admin"
 
   
-  private val uri = uriAtlas
+  private val uri = uriLocal
   // Cliente MongoDB
   private val client: MongoClient = MongoClient(uri)
   
@@ -49,6 +49,7 @@ object MongoConnection {
     val topups: MongoCollection[Document] = database.getCollection("topups")
     val orders: MongoCollection[Document] = database.getCollection("orders")
     val receipts: MongoCollection[Document] = database.getCollection("receipts")
+    val passwordResetRequests: MongoCollection[Document] = database.getCollection("password_reset_requests")
   }
   
   /**
