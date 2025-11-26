@@ -146,14 +146,14 @@ object ShopController {
               } else {
                 s"""
                 <form method="POST" action="/shop/${media.id}/purchase" class="mb-3">
-                  <button type="submit" class="btn btn-primary btn-lg w-100 ${if (media.stock <= 0) "disabled" else ""}">
+                  <button type="submit" class="btn btn-primary btn-lg w-100 ${if (media.isOutOfStock) "disabled" else ""}">
                     <i class="bi bi-cart-plus me-2"></i>Comprar ahora ($$${finalPrice})
                   </button>
                 </form>
-                <button type="button" class="btn btn-warning w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}" data-gift-button data-media-id="${media.id}" data-media-title="${escapeHtml(media.title)}">
+                <button type="button" class="btn btn-warning w-100 mb-3 ${if (media.isOutOfStock) "disabled" else ""}" data-gift-button data-media-id="${media.id}" data-media-title="${escapeHtml(media.title)}">
                   <i class="bi bi-gift me-2"></i>Regalar este producto
                 </button>
-                <button onclick="addToCart(${media.id})" class="btn btn-success w-100 mb-3 ${if (media.stock <= 0) "disabled" else ""}">
+                <button onclick="addToCart(${media.id})" class="btn btn-success w-100 mb-3 ${if (media.isOutOfStock) "disabled" else ""}">
                   <i class="bi bi-cart me-2"></i>Agregar al carrito
                 </button>
                 """
@@ -267,6 +267,15 @@ object ShopController {
         val cartRows = if (hasItems) {
           cartItems.map { case (entry, media) =>
             val subtotal = media.price * entry.quantity
+            val maxAttr = if (media.managesStock) s" max='${media.stock}'" else ""
+            val stockBadgeClass =
+              if (!media.managesStock) "bg-info"
+              else if (media.isOutOfStock) "bg-danger"
+              else "bg-success"
+            val stockLabel =
+              if (!media.managesStock) "ILIMITADO"
+              else if (media.isOutOfStock) "AGOTADO"
+              else media.stock.toString
             s"""
               <tr>
                 <td>
@@ -281,32 +290,32 @@ object ShopController {
                 <td class="text-center align-middle">
                   <form method="POST" action="/cart/update/${media.id}" class="d-inline">
                     <div class="input-group input-group-sm">
-                      <input type="number" name="quantity" class="form-control text-center" value="${entry.quantity}" min="1" max="${media.stock}">
-                      <button type="submit" class="btn btn-sm btn-secondary">✓</button>
+                      <input type="number" name="quantity" class="form-control text-center" value="${entry.quantity}" min="1"${maxAttr}>
+                      <button type="submit" class="btn btn-sm btn-secondary">&#10003;</button>
                     </div>
                   </form>
                 </td>
-                <td class="text-center align-middle"><span class="badge bg-success">${media.stock}</span></td>
+                <td class="text-center align-middle"><span class="badge ${stockBadgeClass}">${stockLabel}</span></td>
                 <td class="text-end align-middle"><strong>${formatMoney(subtotal)}</strong></td>
                 <td class="text-center align-middle">
                   <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-sm btn-warning" data-gift-button data-media-id="${media.id}" data-media-title="${escapeHtml(media.title)}">🎁</button>
+                    <button type="button" class="btn btn-sm btn-warning" data-gift-button data-media-id="${media.id}" data-media-title="${escapeHtml(media.title)}">&#127873;</button>
                     <form method="POST" action="/cart/remove/${media.id}" class="d-inline">
-                      <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                      <button type="submit" class="btn btn-sm btn-danger">&#128465;</button>
                     </form>
                   </div>
                 </td>
               </tr>
             """
-          }.mkString("\n")
+          }.mkString("
+")
         } else {
           """
           <tr>
-            <td colspan="6" class="text-center text-muted">Tu carrito está vacío.</td>
+            <td colspan="6" class="text-center text-muted">Tu carrito esta vacio.</td>
           </tr>
           """
         }
-
         val updatedHtml = html
           .replace("const hasItems = false;", s"const hasItems = ${hasItems};")
           .replace("__ITEM_COUNT__", cartItems.size.toString)

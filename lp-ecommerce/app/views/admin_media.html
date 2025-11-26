@@ -172,7 +172,13 @@
           </tr>
         `;
       } else {
-        tbody.innerHTML = products.map(product => `
+        tbody.innerHTML = products.map(product => {
+          const isHardware = product.productType === 'hardware';
+          const stockBadge = isHardware
+            ? (product.stock > 0 ? 'bg-success' : 'bg-danger')
+            : 'bg-info';
+          const stockLabel = isHardware ? product.stock : 'ILIMITADO';
+          return `
           <tr>
             <td>${product.id}</td>
             <td><strong>${product.title}</strong></td>
@@ -180,7 +186,7 @@
             <td>$${product.price}</td>
             <td>${product.rating} ⭐</td>
             <td>${product.downloadCount} 📥</td>
-            <td>${product.stock}</td>
+            <td><span class="badge ${stockBadge}">${stockLabel}</span></td>
             <td>
               <div class="btn-group btn-group-sm">
                 <a href="/admin/media/${product.id}/edit" class="btn btn-warning">✏️</a>
@@ -190,7 +196,7 @@
               </div>
             </td>
           </tr>
-        `).join('');
+        `}).join('');
       }
     }
     

@@ -66,9 +66,10 @@
             <input type="number" id="content-price" name="price" class="form-control" step="0.01" min="0" required>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" id="stock-field" style="display:none;">
             <label for="content-stock" class="form-label">Stock *</label>
-            <input type="number" id="content-stock" name="stock" class="form-control" min="0" value="100" required>
+            <input type="number" id="content-stock" name="stock" class="form-control" min="0" value="0">
+            <div class="form-text">Solo aplica para productos físicos (hardware).</div>
           </div>
 
           <!-- ===== SELECTOR DE TIPO DE PRODUCTO ===== -->

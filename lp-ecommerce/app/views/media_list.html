@@ -314,9 +314,17 @@
         }
         // Generar cards de productos
         grid.innerHTML = products.map(product => {
+          const isHardware = product.productType === 'hardware';
+          const isOutOfStock = isHardware && product.stock <= 0;
+          const stockBadgeClass = isHardware
+            ? (isOutOfStock ? 'bg-danger' : 'bg-success')
+            : 'bg-info';
+          const stockLabel = isHardware
+            ? (isOutOfStock ? '❌ Agotado' : `✅ Disponible (${product.stock})`)
+            : '⚡ Entrega inmediata';
           const adminAction = isAdmin
             ? `<a class="btn btn-warning btn-sm" href="/admin/media/${product.id}/edit" title="Editar producto">✏️</a>`
-            : `<button class="btn btn-primary btn-sm ${product.stock <= 0 ? 'disabled' : ''}" 
+            : `<button class="btn btn-primary btn-sm ${isOutOfStock ? 'disabled' : ''}" 
                       onclick="addToCart(${product.id})">🛒</button>`;
           return `
           <div class="col-12 col-sm-6 col-lg-4">
@@ -336,10 +344,10 @@
                 <h5 class="card-title text-white">${product.title}</h5>
                 <p class="card-text small text-muted">${product.description.substring(0, 50)}${product.description.length > 50 ? '...' : ''}</p>
                 <div class="mb-2">
-                  <span class="badge ${product.stock > 0 ? 'bg-success' : 'bg-danger'}">
-                    ${product.stock > 0 ? `✅ Disponible (${product.stock})` : '❌ Agotado'}
+                  <span class="badge ${stockBadgeClass}">
+                    ${stockLabel}
                   </span>
-                  <span class="badge bg-info">${product.productType === 'hardware' ? 'Hardware' : 'Digital'}</span>
+                  <span class="badge bg-info">${isHardware ? 'Hardware' : 'Digital'}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                   ${product.hasPromotion ? `

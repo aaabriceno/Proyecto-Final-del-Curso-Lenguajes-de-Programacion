@@ -53,9 +53,11 @@ async function loadAllCategories() {
 // ============================================================
 function setupProductTypeSelector() {
   const productTypeSelect = document.getElementById("productType");
+  toggleStockField(productTypeSelect.value);
   
   productTypeSelect.addEventListener("change", (e) => {
     const selectedType = e.target.value;
+    toggleStockField(selectedType);
     console.log(`🔄 Tipo de producto cambiado a: ${selectedType}`);
     
     if (selectedType === "digital") {
@@ -67,6 +69,30 @@ function setupProductTypeSelector() {
       clearAllSelectors();
     }
   });
+}
+
+// ============================================================
+// Mostrar/Ocultar campo de stock segun el tipo
+// ============================================================
+function toggleStockField(productType) {
+  const stockWrapper = document.getElementById("stock-field");
+  const stockInput = document.getElementById("stock");
+  if (!stockWrapper || !stockInput) return;
+  
+  const isHardware = productType === "hardware";
+  stockWrapper.style.display = isHardware ? "block" : "none";
+  
+  if (isHardware) {
+    stockInput.removeAttribute("disabled");
+    stockInput.setAttribute("required", "required");
+    if (!stockInput.value || Number(stockInput.value) < 0) {
+      stockInput.value = 0;
+    }
+  } else {
+    stockInput.value = 0;
+    stockInput.setAttribute("disabled", "disabled");
+    stockInput.removeAttribute("required");
+  }
 }
 
 // ============================================================
@@ -292,6 +318,7 @@ async function loadProductData(productId) {
     const productType = product.productType || "digital"; // Default a digital si no existe
     
     document.getElementById("productType").value = productType;
+    toggleStockField(productType);
     console.log(`📦 Producto cargado con tipo: ${productType}`);
     
     // Cargar categorías filtradas por tipo
@@ -391,8 +418,9 @@ async function saveProduct(productId) {
   // Obtener valores del formulario
   const title = document.getElementById("title").value.trim();
   const price = document.getElementById("price").value;
-  const stock = document.getElementById("stock").value;
+  const stockInput = document.getElementById("stock");
   const productType = document.getElementById("productType").value;
+  const stock = productType === "hardware" ? stockInput.value : "0";
   const url = document.getElementById("url").value.trim();
   const description = document.getElementById("description").value.trim();
   

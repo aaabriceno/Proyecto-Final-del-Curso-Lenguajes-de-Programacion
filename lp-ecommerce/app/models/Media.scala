@@ -6,6 +6,7 @@ import org.mongodb.scala.model.Updates._
 import db.MongoConnection
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.math.max
 
 /**
  * Tipos de producto según su naturaleza física
@@ -74,12 +75,17 @@ case class Media(
 
   // ========= STOCK =========
 
-  def hasStock(quantity: Int = 1): Boolean = stock >= quantity
-  def isLowStock: Boolean = stock > 0 && stock <= 10
-  def isOutOfStock: Boolean = stock <= 0
+  def managesStock: Boolean = productType == ProductType.Hardware
+
+  def hasStock(quantity: Int = 1): Boolean =
+    !managesStock || stock >= quantity
+
+  def isLowStock: Boolean = managesStock && stock > 0 && stock <= 10
+  def isOutOfStock: Boolean = managesStock && stock <= 0
 
   def stockStatus: String =
-    if (isOutOfStock) "AGOTADO"
+    if (!managesStock) "Disponible (digital)"
+    else if (isOutOfStock) "AGOTADO"
     else if (stock == 1) "ÚLTIMA UNIDAD"
     else if (isLowStock) s"ÚLTIMAS $stock UNIDADES"
     else "DISPONIBLE"
@@ -311,7 +317,21 @@ object MediaRepo {
   def add(title: String, description: String, productType: ProductType,
           price: BigDecimal, categoryId: Option[Long], assetPath: String,
           stock: Int = 0, promotionId: Option[Long] = None): Media = synchronized {
-    val media = Media(nextId(), title, description, productType, price, 0.0, categoryId, assetPath, stock, promotionId)
+    val normalizedStock =
+      if (productType == ProductType.Hardware) max(stock, 0)
+      else 0
+    val media = Media(
+      nextId(),
+      title,
+      description,
+      productType,
+      price,
+      0.0,
+      categoryId,
+      assetPath,
+      normalizedStock,
+      promotionId
+    )
     Await.result(
       collection.insertOne(mediaToDoc(media)).toFuture(),
       5.seconds
@@ -324,6 +344,9 @@ object MediaRepo {
              price: BigDecimal, categoryId: Option[Long], assetPath: String,
              stock: Int, promotionId: Option[Long] = None): Option[Media] = synchronized {
     find(id).map { oldMedia =>
+      val normalizedStock =
+        if (productType == ProductType.Hardware) max(stock, 0)
+        else 0
       val updated = oldMedia.copy(
         title = title, 
         description = description,
@@ -331,7 +354,7 @@ object MediaRepo {
         price = price, 
         categoryId = categoryId,
         assetPath = assetPath,
-        stock = stock,
+        stock = normalizedStock,
         promotionId = promotionId
       )
       
@@ -347,6 +370,8 @@ object MediaRepo {
   def reduceStock(id: Long, quantity: Int): Either[String, Media] = synchronized {
     find(id) match {
       case None => Left("Producto no encontrado")
+      case Some(media) if !media.managesStock =>
+        Right(media)
       case Some(media) =>
         if (media.stock < quantity)
           Left(s"Stock insuficiente. Solo quedan ${media.stock} unidades disponibles")
@@ -367,16 +392,19 @@ object MediaRepo {
 
   def addStock(id: Long, quantity: Int): Option[Media] = synchronized {
     find(id).map { media =>
-      val updated = media.copy(stock = media.stock + quantity)
-      Await.result(
-        collection.updateOne(
-          equal("_id", id),
-          set("stock", updated.stock)
-        ).toFuture(),
-        5.seconds
-      )
-      println(s"📦 Stock agregado: ${media.title} (+${quantity}, total ${updated.stock})")
-      updated
+      if (!media.managesStock) media
+      else {
+        val updated = media.copy(stock = media.stock + quantity)
+        Await.result(
+          collection.updateOne(
+            equal("_id", id),
+            set("stock", updated.stock)
+          ).toFuture(),
+          5.seconds
+        )
+        println(s"📦 Stock agregado: ${media.title} (+${quantity}, total ${updated.stock})")
+        updated
+      }
     }
   }
 

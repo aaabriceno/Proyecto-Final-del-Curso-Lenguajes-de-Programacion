@@ -4,6 +4,7 @@ import http.{HttpRequest, HttpResponse}
 import models._
 import services.AnalyticsService
 import scala.util.{Try, Success, Failure}
+import scala.math.max
 import java.nio.file.{Files, Paths}
 import scala.io.Source
 
@@ -289,8 +290,9 @@ object AdminController {
         val catId = data.get("categoryId").flatMap(_.toLongOption)
         val productType = ProductType.from(data.getOrElse("productType", "digital"))
         val url = data.getOrElse("url", "")
-        val stock = data.get("stock").flatMap(_.toIntOption).getOrElse(0)
+        val requestedStock = data.get("stock").flatMap(_.toIntOption).getOrElse(0)
         val promotionId = data.get("promotionId").flatMap(_.toLongOption) // Opcional
+        val stock = if (productType == ProductType.Hardware) max(requestedStock, 0) else 0
         
         println(s"🔍 [CREATE MEDIA] Valores parseados:")
         println(s"  title = '$title'")
@@ -342,8 +344,9 @@ object AdminController {
         val catId = data.get("categoryId").flatMap(_.toLongOption)
         val productType = ProductType.from(data.getOrElse("productType", "digital"))
         val url = data.getOrElse("url", "")
-        val stock = data.get("stock").flatMap(_.toIntOption).getOrElse(0)
+        val requestedStock = data.get("stock").flatMap(_.toIntOption).getOrElse(0)
         val promotionId = data.get("promotionId").flatMap(_.toLongOption)
+        val stock = if (productType == ProductType.Hardware) max(requestedStock, 0) else 0
 
         println(s"🔍 [UPDATE] Valores parseados:")
         println(s"  id = $id")
