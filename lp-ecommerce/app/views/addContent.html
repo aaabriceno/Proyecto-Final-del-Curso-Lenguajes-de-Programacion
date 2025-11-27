@@ -13,15 +13,16 @@
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
 </head>
 
-<body class="bg-dark text-light">
+<body class="bg-light text-dark">
 
   <!-- ===== NAVBAR ADMIN ===== -->
-  <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+  <nav class="navbar bg-white border-bottom shadow-sm">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
+      <a class="navbar-brand fw-semibold" href="/admin" style="color:#1976d2 !important;">LP Studios</a>
       <div class="ms-auto d-flex gap-2">
-        <a class="btn btn-outline-danger btn-sm" href="/admin">👨‍💼 Admin</a>
-        <a class="btn btn-outline-light btn-sm" href="/login">
+        <a class="btn btn-primary btn-sm" href="/shop">🛒 Tienda</a>
+        <a class="btn btn-primary btn-sm" href="/admin">👨‍💼 Admin</a>
+        <a class="btn btn-primary btn-sm" href="/logout">
           <i class="bi bi-box-arrow-right me-1"></i> Salir
         </a>
       </div>
@@ -35,14 +36,14 @@
       <div class="col">
         <h1 class="fw-bold">➕ Crear Nuevo Producto</h1>
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0">
             <li class="breadcrumb-item">
-              <a href="/admin" class="text-white text-decoration-none">Dashboard</a>
+              <a href="/admin" class="text-primary text-decoration-none">Dashboard</a>
             </li>
             <li class="breadcrumb-item">
-              <a href="/admin/media" class="text-white text-decoration-none">Productos</a>
+              <a href="/admin/media" class="text-primary text-decoration-none">Productos</a>
             </li>
-            <li class="breadcrumb-item active text-light" aria-current="page">Nuevo</li>
+            <li class="breadcrumb-item active text-secondary" aria-current="page">Nuevo</li>
           </ol>
         </nav>
       </div>

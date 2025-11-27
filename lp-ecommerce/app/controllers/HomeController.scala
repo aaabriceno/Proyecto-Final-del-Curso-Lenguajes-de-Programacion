@@ -46,21 +46,23 @@ object HomeController {
         
         Try(Source.fromFile(path, "UTF-8").mkString) match {
           case Success(html) =>
-            val navbarButtons = if (user.isAdmin) {
-              """<a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
-        <a class="btn btn-warning btn-sm" href="/admin">👨‍💼 Admin</a>
-        <a class="btn btn-info btn-sm text-white" href="/user/account">👤 Cuenta</a>
-        <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
-            } else {
-              """<a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
-        <a class="btn btn-info btn-sm text-white" href="/user/account">👤 Cuenta</a>
-        <a class="btn btn-success btn-sm" href="/cart">🛒 Carrito</a>
-        <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
-            }
-            
+            val navbarButtons =
+              if (user.isAdmin) {
+                """<a class="btn btn-primary btn-sm" href="/shop">🛍️ Tienda</a>
+        <a class="btn btn-primary btn-sm" href="/admin">👨‍💼 Admin</a>
+        <a class="btn btn-primary btn-sm" href="/user/account">👤 Cuenta</a>
+        <a class="btn btn-primary btn-sm" href="/logout">🚪 Salir</a>"""
+              } else {
+                """<a class="btn btn-primary btn-sm" href="/shop">🛍️ Tienda</a>
+        <a class="btn btn-primary btn-sm" href="/user/account">👤 Cuenta</a>
+        <a class="btn btn-primary btn-sm" href="/cart">🛒 Carrito</a>
+        <a class="btn btn-primary btn-sm" href="/logout">🚪 Salir</a>"""
+              }
+
+            // Reemplazar el bloque de navbar por uno adaptado al tipo de usuario
             val updatedHtml = html.replace(
-              """<a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
-        <a class="btn btn-outline-light btn-sm" href="/login">
+              """<a class="btn btn-primary btn-sm" href="/shop">🛍️ Tienda</a>
+        <a class="btn btn-primary btn-sm" href="/login">
           <i class="bi bi-box-arrow-in-right"></i> Login
         </a>
         <a class="btn btn-warning text-dark btn-sm" href="/register">
