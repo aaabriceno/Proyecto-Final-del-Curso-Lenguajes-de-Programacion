@@ -49,6 +49,15 @@ classDiagram
     +BigDecimal totalNet
   }
 
+  class OrderItem {
+    +Long mediaId
+    +String title
+    +Int quantity
+    +BigDecimal unitPrice
+    +BigDecimal discount
+    +BigDecimal netAmount
+  }
+
   class Transaction {
     +Long id
     +TransactionType transactionType
@@ -185,4 +194,5 @@ classDiagram
   Media "1" --> "*" Gift
   Media "1" --> "*" Rating
   Category "1" --> "*" Media
+  RankingSnapshot "1" --> "*" RankingEntry
 ```
