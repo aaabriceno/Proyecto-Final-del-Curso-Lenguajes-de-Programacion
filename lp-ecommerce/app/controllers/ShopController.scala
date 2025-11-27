@@ -199,6 +199,7 @@ object ShopController {
             Try(Source.fromFile(path, "UTF-8").mkString) match {
               case Success(html) =>
                 // Reemplazar navbar, botón de compra, datos del producto y previsualización
+                val errorMsgJs = request.queryParams.get("error").map(escapeJsString).getOrElse("")
                 val updatedHtml = html
                   .replace("<!-- NAVBAR_PLACEHOLDER -->", navbarButtons)
                   .replace("<!-- CTA_PLACEHOLDER -->", actionBlock)
@@ -207,6 +208,7 @@ object ShopController {
                   .replace("$99.99", priceDisplay)
                   .replace("Descripción detallada del producto. Aquí puedes incluir características, inspiración o información del autor.",
                            escapeHtml(media.description))
+                  .replace("__DETAIL_ERROR__", errorMsgJs)
                 
                 val response = HttpResponse.ok(updatedHtml)
                 if (request.cookies.contains("sessionId")) {
@@ -237,6 +239,9 @@ object ShopController {
     if (amount <= 0) "$0.00" else s"-${formatMoney(amount)}"
 
   private case class PricingResult(unitPrice: BigDecimal, discountPerUnit: BigDecimal)
+
+  private def escapeJsString(s: String): String =
+    s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ").replace("\r", " ")
 
   private def registerTransaction(
     transactionType: TransactionType,
@@ -358,7 +363,10 @@ object ShopController {
           .replace("__TOTAL__", formatMoney(totalToPay))
           .replace("__BALANCE__", formatMoney(user.balance))
 
-        HttpResponse(200, "OK", Map("Content-Type" -> "text/html; charset=UTF-8"), updatedHtml)
+        val errorMsgJs = request.queryParams.get("error").map(escapeJsString).getOrElse("")
+        val finalHtml = updatedHtml.replace("__CART_ERROR__", errorMsgJs)
+
+        HttpResponse(200, "OK", Map("Content-Type" -> "text/html; charset=UTF-8"), finalHtml)
       case Left(resp) => resp
     }
   }

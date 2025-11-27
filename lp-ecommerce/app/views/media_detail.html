@@ -40,6 +40,25 @@
       </ol>
     </nav>
 
+    <!-- Modal de error (stock, etc.) -->
+    <div class="modal fade" id="detailErrorModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">No se pudo completar la compra</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p id="detailErrorMessage" class="mb-0"></p>
+          </div>
+          <div class="modal-footer">
+            <a href="/shop" class="btn btn-primary">Ir a la Tienda</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver al producto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== PRODUCT DETAIL ===== -->
     <div class="row g-5 align-items-start">
       <!-- Previsualización principal -->
@@ -137,6 +156,20 @@
         alert(`❌ Error al agregar al carrito`);
       }
     }
+  </script>
+  <script>
+    (function () {
+      const errorMsg = "__DETAIL_ERROR__";
+      if (errorMsg && errorMsg.trim() !== "") {
+        const msgEl = document.getElementById('detailErrorMessage');
+        if (msgEl) msgEl.textContent = errorMsg;
+        const modalEl = document.getElementById('detailErrorModal');
+        if (modalEl && typeof bootstrap !== "undefined") {
+          const modal = new bootstrap.Modal(modalEl);
+          modal.show();
+        }
+      }
+    })();
   </script>
   <script src="/assets/javascripts/gifting.js"></script>
 </body>
