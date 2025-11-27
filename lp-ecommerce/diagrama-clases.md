@@ -195,4 +195,7 @@ classDiagram
   Media "1" --> "*" Rating
   Category "1" --> "*" Media
   RankingSnapshot "1" --> "*" RankingEntry
+  %% Nota: RankingEntry.referenceId apunta a Media (productos) o User (clientes)
+  RankingEntry "*" --> "0..1" Media
+  RankingEntry "*" --> "0..1" User
 ```
