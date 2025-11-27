@@ -88,6 +88,7 @@ lp-ecommerce/
 
 ---
 
+
 ## 3. Diagrama de Clases (vista simplificada)
 
 Diagrama textual (puedes pegarlo en un editor que soporte Mermaid):
