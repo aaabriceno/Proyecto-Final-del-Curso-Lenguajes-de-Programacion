@@ -2,7 +2,7 @@
 
 ## 1. Descripción General
 
-Este proyecto es un sistema de comercio electrónico implementado desde cero en **Scala 2.13**, sin frameworks web (no Play, no Spring, etc.).  
+Este proyecto es un sistema de comercio electrónico implementado desde cero en **Scala 2.13**
 El servidor HTTP está construido manualmente sobre `java.net.ServerSocket` y la persistencia se realiza en **MongoDB**.
 
 El proyecto soporta:
