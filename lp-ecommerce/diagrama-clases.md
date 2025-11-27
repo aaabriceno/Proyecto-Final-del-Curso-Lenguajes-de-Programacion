@@ -119,6 +119,53 @@ classDiagram
     +PasswordResetStatus status
   }
 
+  class Gift {
+    +Long id
+    +Long fromUserId
+    +Long toUserId
+    +Long mediaId
+    +BigDecimal originalPrice
+    +BigDecimal pricePaid
+    +BigDecimal discountApplied
+    +Option~String~ message
+    +LocalDateTime createdAt
+    +Boolean claimed
+    +Option~LocalDateTime~ claimedAt
+  }
+
+  class Rating {
+    +Long id
+    +Long userId
+    +Long mediaId
+    +Int score
+    +LocalDateTime createdAt
+    +LocalDateTime updatedAt
+  }
+
+  class Promotion {
+    +Long id
+    +String name
+    +String description
+    +Int discountPercent
+    +PromotionTarget targetType
+    +Vector~Long~ targetIds
+    +LocalDateTime startDate
+    +LocalDateTime endDate
+    +Boolean isActive
+  }
+
+  class RankingEntry {
+    +Long referenceId
+    +Int position
+  }
+
+  class RankingSnapshot {
+    +Long id
+    +RankingType rankingType
+    +LocalDateTime generatedAt
+    +Vector~RankingEntry~ entries
+  }
+
   User "1" --> "*" Order
   User "1" --> "*" Download
   User "1" --> "*" CartEntry
@@ -128,9 +175,14 @@ classDiagram
   User "1" --> "*" TopUp
   User "1" --> "*" Notification
   User "1" --> "*" PasswordResetCode
+  User "1" --> "*" Gift
+  User "1" --> "*" Rating
   Order "1" --> "*" OrderItem
   Order "1" --> "1" Receipt
   Media "1" --> "*" Download
   Media "1" --> "*" CartEntry
+  Media "*" --> "0..1" Promotion
+  Media "1" --> "*" Gift
+  Media "1" --> "*" Rating
   Category "1" --> "*" Media
 ```
