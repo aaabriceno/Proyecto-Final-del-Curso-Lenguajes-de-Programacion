@@ -61,6 +61,24 @@ classDiagram
     +BigDecimal netAmount
   }
 
+  class Notification {
+    +Long id
+    +Long userId
+    +String message
+    +NotificationType notificationType
+    +Boolean read
+    +LocalDateTime createdAt
+  }
+
+  class PasswordResetCode {
+    +Long id
+    +Long userId
+    +String code
+    +LocalDateTime createdAt
+    +LocalDateTime expiresAt
+    +Boolean used
+  }
+
   class Download {
     +Long id
     +Long userId
@@ -106,6 +124,10 @@ classDiagram
   User "1" --> "*" CartEntry
   User "1" --> "*" BalanceRequest
   User "1" --> "*" PasswordResetRequest
+  User "1" --> "*" Transaction
+  User "1" --> "*" TopUp
+  User "1" --> "*" Notification
+  User "1" --> "*" PasswordResetCode
   Order "1" --> "*" OrderItem
   Order "1" --> "1" Receipt
   Media "1" --> "*" Download
