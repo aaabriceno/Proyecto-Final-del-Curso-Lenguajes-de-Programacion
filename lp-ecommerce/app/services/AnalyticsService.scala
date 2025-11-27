@@ -36,4 +36,20 @@ object AnalyticsService {
       MediaRepo.find(mediaId).map(media => (media, qty, revenue))
     }
   }
+
+  /** Top usuarios por gasto total (solo compras) */
+  def topUsersBySpending(limit: Int = 5): Vector[(User, BigDecimal)] = {
+    val byUser = purchaseTransactions
+      .flatMap(tx => tx.fromUserId.map(_ -> tx.netAmount))
+      .groupBy(_._1)
+      .view
+      .mapValues(_.map(_._2).sum)
+      .toVector
+      .sortBy(-_._2)
+      .take(limit)
+
+    byUser.flatMap { case (userId, total) =>
+      UserRepo.findById(userId).map(user => (user, total))
+    }
+  }
 }

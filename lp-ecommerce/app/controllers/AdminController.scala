@@ -1,6 +1,8 @@
 package controllers
 
 import http.{HttpRequest, HttpResponse}
+import http.HttpServer
+import db.MongoConnection
 import models._
 import services.AnalyticsService
 import scala.util.{Try, Success, Failure}
@@ -198,8 +200,10 @@ object AdminController {
            |}""".stripMargin
       }.mkString(",\n")
       
-      val isAdminFlag = AuthController.getCurrentUser(request).flatMap(UserRepo.findByEmail).exists(_.isAdmin)
-      val json = s"""{"products": [\n$mediaJsonArray\n], "isAdmin": $isAdminFlag}"""
+      val currentUserOpt = AuthController.getCurrentUser(request).flatMap(UserRepo.findByEmail)
+      val isAdminFlag = currentUserOpt.exists(_.isAdmin)
+      val isLoggedInFlag = currentUserOpt.isDefined
+      val json = s"""{"products": [\n$mediaJsonArray\n], "isAdmin": $isAdminFlag, "isLoggedIn": $isLoggedInFlag}"""
       
       HttpResponse(
         status = 200,
@@ -256,6 +260,41 @@ object AdminController {
            |  <td><strong>$quantity</strong></td>
            |</tr>
          """.stripMargin
+      }.mkString
+    }
+  }
+
+  private def buildTopProductsRows(): String = {
+    val topProducts = AnalyticsService.topPurchasedMedia(5)
+    if (topProducts.isEmpty) {
+      """<tr><td colspan="4" class="text-center py-3 text-muted">Aún no hay compras registradas.</td></tr>"""
+    } else {
+      topProducts.zipWithIndex.map { case ((media, qty, revenue), idx) =>
+        s"""
+           |<tr>
+           |  <td>${idx + 1}</td>
+           |  <td>${escapeHtml(media.title)}</td>
+           |  <td class="text-center">$qty</td>
+           |  <td class="text-end">${formatMoney(revenue)}</td>
+           |</tr>
+           |""".stripMargin
+      }.mkString
+    }
+  }
+
+  private def buildTopUsersRows(): String = {
+    val topUsers = AnalyticsService.topUsersBySpending(5)
+    if (topUsers.isEmpty) {
+      """<tr><td colspan="3" class="text-center py-3 text-muted">Aún no hay clientes con compras.</td></tr>"""
+    } else {
+      topUsers.zipWithIndex.map { case ((user, total), idx) =>
+        s"""
+           |<tr>
+           |  <td>${idx + 1}</td>
+           |  <td>${escapeHtml(user.name)}<br><small class="text-muted">${escapeHtml(user.email)}</small></td>
+           |  <td class="text-end">${formatMoney(total)}</td>
+           |</tr>
+           |""".stripMargin
       }.mkString
     }
   }
@@ -461,41 +500,75 @@ object AdminController {
     }
   }
 
-  /** GET /api/categories - API JSON para obtener todas las categorías */
-  def categoriesJson(request: HttpRequest): HttpResponse = {
-    AuthController.requireAuth(request) match {
+  /** POST /admin/server/shutdown - Detiene el servidor de forma controlada */
+  def shutdownServer(request: HttpRequest): HttpResponse = {
+    AuthController.requireAdmin(request) match {
       case Right(_) =>
-        val allCategories = Try(CategoryRepo.all).getOrElse(Seq.empty)
-        println(s"[API] /api/categories - total: ${allCategories.size}")
-        // Generar JSON con breadcrumb (ruta completa) para cada categoría
-        val categoriesJsonArray = allCategories.map { cat =>
-          val breadcrumb = CategoryRepo.getBreadcrumb(cat.id)
-          val path = breadcrumb.map(_.name).mkString(" > ")
-          val level = breadcrumb.length - 1
-          
-          s"""{
-             |  \"id\": ${cat.id},
-             |  \"name\": \"${escapeJson(cat.name)}\",
-             |  \"parentId\": ${if (cat.parentId.isEmpty || cat.parentId.contains(0L)) "null" else cat.parentId.get},
-             |  \"description\": \"${escapeJson(cat.description)}\",
-             |  \"productType\": \"${escapeJson(cat.productType)}\",
-             |  \"path\": \"${escapeJson(path)}\",
-             |  \"level\": $level
-             |}""".stripMargin
-        }.mkString(",\n")
-        val json = s"""{"categories": [
-$categoriesJsonArray
-]}"""
-        println(s"[API] /api/categories JSON: $json")
-        
-        HttpResponse(
-          status = 200,
-          statusText = "OK",
-          headers = Map("Content-Type" -> "application/json; charset=UTF-8"),
-          body = json
+        // Lanzar el apagado en un hilo aparte para poder devolver respuesta HTTP
+        new Thread(() => {
+          try {
+            Thread.sleep(500)
+          } catch {
+            case _: InterruptedException => ()
+          }
+          HttpServer.stop()
+          MongoConnection.close()
+          System.exit(0)
+        }).start()
+
+        HttpResponse.ok(
+          """<!DOCTYPE html>
+            |<html lang="es">
+            |<head>
+            |  <meta charset="UTF-8">
+            |  <title>Servidor cerrándose...</title>
+            |  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+            |</head>
+            |<body class="bg-light text-dark d-flex align-items-center justify-content-center vh-100">
+            |  <div class="text-center">
+            |    <h1 class="mb-3">🔌 Servidor cerrándose...</h1>
+            |    <p class="text-muted">Puedes cerrar esta pestaña y la consola.</p>
+            |  </div>
+            |</body>
+            |</html>
+            |""".stripMargin
         )
       case Left(res) => res
     }
+  }
+
+  /** GET /api/categories - API JSON para obtener todas las categorías */
+  def categoriesJson(request: HttpRequest): HttpResponse = {
+    // Endpoint público (como /api/media) para que la tienda funcione también sin sesión
+    val allCategories = Try(CategoryRepo.all).getOrElse(Seq.empty)
+    println(s"[API] /api/categories - total: ${allCategories.size}")
+    // Generar JSON con breadcrumb (ruta completa) para cada categoría
+    val categoriesJsonArray = allCategories.map { cat =>
+      val breadcrumb = CategoryRepo.getBreadcrumb(cat.id)
+      val path = breadcrumb.map(_.name).mkString(" > ")
+      val level = breadcrumb.length - 1
+
+      s"""{
+         |  \"id\": ${cat.id},
+         |  \"name\": \"${escapeJson(cat.name)}\",
+         |  \"parentId\": ${if (cat.parentId.isEmpty || cat.parentId.contains(0L)) "null" else cat.parentId.get},
+         |  \"description\": \"${escapeJson(cat.description)}\",
+         |         \"productType\": \"${escapeJson(cat.productType)}\",
+         |  \"path\": \"${escapeJson(path)}\",
+         |  \"level\": $level
+         |}""".stripMargin
+    }.mkString(",\n")
+    val json = s"""{"categories": [
+$categoriesJsonArray
+]}"""
+    println(s"[API] /api/categories JSON: $json")
+
+    HttpResponse(
+      status = 200,
+      statusText = "OK",
+      headers = Map("Content-Type" -> "application/json; charset=UTF-8"),
+      body = json
+    )
   }
 
   /** POST /admin/categories */
@@ -530,12 +603,12 @@ $categoriesJsonArray
         val allPromotions = Try(PromotionRepo.all) match {
           case Success(promos) => promos
           case Failure(ex) =>
-            println(s"❌ ERROR al leer promociones de MongoDB:")
+            println(s"ERROR al leer promociones de MongoDB:")
             ex.printStackTrace()
             Seq.empty
         }
         
-        println(s"🔍 DEBUG: Encontradas ${allPromotions.size} promociones en MongoDB")
+        println(s"DEBUG: Encontradas ${allPromotions.size} promociones en MongoDB")
         allPromotions.foreach(p => println(s"  - ${p.name} (${p.discountPercent}% OFF) - targetIds: ${p.targetIds}"))
         
         // Calcular promociones por estado temporal
@@ -552,13 +625,13 @@ $categoriesJsonArray
           p.endDate.isBefore(now)
         }
         
-        println(s"📊 Activas: ${activePromotions.size} | Próximas: ${upcomingPromotions.size} | Inactivas: ${inactivePromotions.size}")
+        println(s"Activas: ${activePromotions.size} | Proximas: ${upcomingPromotions.size} | Inactivas: ${inactivePromotions.size}")
         
         // Generar HTML completo desde cero
         val promotionsRows = if (allPromotions.isEmpty) {
           """<tr>
                 <td colspan="6" class="text-center text-muted py-4">
-                  No hay promociones activas 😴
+                  No hay promociones activas
                 </td>
               </tr>"""
         } else {
@@ -820,7 +893,9 @@ $categoriesJsonArray
               "__STAT_TOTAL_SALES__" -> AnalyticsService.totalUnitsSold.toString,
               "__STAT_TOTAL_REVENUE__" -> formatMoney(AnalyticsService.totalRevenue),
               "__STAT_TOTAL_USERS__" -> UserRepo.all.size.toString,
-              "__STAT_TOTAL_PRODUCTS__" -> MediaRepo.all.size.toString
+              "__STAT_TOTAL_PRODUCTS__" -> MediaRepo.all.size.toString,
+              "<!-- TOP_PRODUCTS_ROWS -->" -> buildTopProductsRows(),
+              "<!-- TOP_USERS_ROWS -->" -> buildTopUsersRows()
             )
             val filled = replacePlaceholders(template, replacements)
             val response = HttpResponse.ok(filled)

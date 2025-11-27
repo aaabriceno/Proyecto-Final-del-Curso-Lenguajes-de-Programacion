@@ -5,7 +5,6 @@ import scala.util.Try
 
 /**
  * Router HTTP simple que redirige rutas hacia los controladores.
- * Inspirado en Play Framework, pero totalmente funcional sin él.
  */
 object Router {
 
@@ -20,6 +19,7 @@ object Router {
         case ("GET", "/") =>
           HomeController.index(request)
 
+
         // ---------- Autenticación ----------
         case ("GET", "/login")     => AuthController.loginForm(request)
         case ("POST", "/login")    => AuthController.login(request)
@@ -27,6 +27,7 @@ object Router {
         case ("POST", "/register") => AuthController.register(request)
         case ("GET", "/logout") | ("POST", "/logout") =>
           AuthController.logout(request)
+
 
         // ---------- Tienda ----------
         case ("GET", "/shop")           => ShopController.shop(request)
@@ -36,6 +37,7 @@ object Router {
         case ("POST", p) if p.startsWith("/shop/") && p.endsWith("/purchase") =>
           val id = Try(p.stripPrefix("/shop/").stripSuffix("/purchase").toLong).getOrElse(0L)
           ShopController.purchaseItem(id, request)
+
 
         // ---------- Carrito ----------
         case ("GET", "/cart")           => ShopController.viewCart(request)
@@ -53,9 +55,11 @@ object Router {
           val id = Try(p.stripPrefix("/cart/update/").toLong).getOrElse(0L)
           ShopController.updateCartQuantity(id, request)
 
+
         // ---------- Compras ----------
         case ("GET", "/purchase")  => ShopController.purchasePage(request)
         case ("POST", "/purchase") => ShopController.processPurchase(request)
+
 
         // ---------- Usuarios ----------
         case ("GET", "/user/account")     => UserController.account(request)
@@ -65,11 +69,16 @@ object Router {
         case ("POST", "/user/password")        => UserController.changePassword(request)
         case ("POST", "/user/password/request")=> UserController.requestPasswordChange(request)
         case ("GET", "/user/downloads")   => UserController.downloads(request)
+        
+
         // Recuperación de contraseña sin sesión
         case ("GET", "/forgot-password")  => UserController.forgotPasswordForm(request)
         case ("POST", "/forgot-password") => UserController.forgotPassword(request)
         case ("GET", "/reset-password")   => UserController.resetPasswordForm(request)
         case ("POST", "/reset-password")  => UserController.resetPassword(request)
+        // Solicitud de reactivación de cuenta (usuario desactivado, sin sesión)
+        case ("GET", "/reactivate-account")  => UserController.reactivateAccountForm(request)
+        case ("POST", "/reactivate-account") => UserController.requestAccountReactivation(request)
         case ("GET", "/user/notifications") => UserController.notificationsPage(request)
         case ("GET", "/api/users/search") => UserController.searchUsers(request)
         case ("GET", "/user/orders")      => UserController.orders(request)
@@ -89,11 +98,13 @@ object Router {
         case ("POST", p) if p.startsWith("/gifts/") && p.endsWith("/claim") =>
           val id = Try(p.split("/")(2).toLong).getOrElse(0L)
           GiftController.claim(id, request)
+        case ("POST", "/user/delete") => UserController.deleteAccount(request)
         case ("GET", "/notifications") => UserController.notificationsFeed(request)
         case ("POST", "/notifications/mark-all-read") => UserController.notificationsMarkAll(request)
         case ("POST", p) if p.startsWith("/notifications/") && p.endsWith("/read") =>
           val id = Try(p.stripPrefix("/notifications/").stripSuffix("/read").toLong).getOrElse(0L)
           UserController.notificationsMarkRead(id, request)
+
 
         // ---------- Administración ----------
         case ("GET", "/admin")              => AdminController.dashboard(request)
@@ -119,6 +130,7 @@ object Router {
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.deleteMedia(id, request)
 
+
         // ---------- Categorías ----------
         case ("GET", "/admin/categories")     => AdminController.categories(request)
         case ("POST", "/admin/categories")    => AdminController.createCategory(request)
@@ -126,6 +138,10 @@ object Router {
         case ("POST", p) if p.endsWith("/delete") && p.startsWith("/admin/categories/") =>
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.deleteCategory(id, request)
+
+        // ---------- Control del servidor ----------
+        case ("POST", "/admin/server/shutdown") => AdminController.shutdownServer(request)
+
 
         // ---------- Password reset requests ----------
         case ("GET", "/admin/password-requests") => AdminController.passwordResetRequests(request)
@@ -136,6 +152,7 @@ object Router {
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.rejectPasswordReset(id, request)
 
+
         // ---------- Promociones ----------
         case ("GET", "/admin/promotions")      => AdminController.promotions(request)
         case ("GET", "/admin/promotions/new")  => AdminController.newPromotionForm(request)
@@ -143,6 +160,7 @@ object Router {
         case ("POST", p) if p.endsWith("/delete") && p.startsWith("/admin/promotions/") =>
           val id = Try(p.split("/")(3).toLong).getOrElse(0L)
           AdminController.deletePromotion(id, request)
+
 
         // ---------- Solicitudes de saldo ----------
         case ("GET", "/admin/balance/requests") => AdminController.balanceRequests(request)
@@ -155,12 +173,14 @@ object Router {
           val id = Try(parts(4).toLong).getOrElse(0L)
           AdminController.rejectBalanceRequest(id, request)
 
+
         // ---------- Estadísticas ----------
         case ("GET", "/admin/statistics") => AdminController.statistics(request)
         case ("POST", "/admin/rankings/generate") => RankingController.generateSnapshots(request)
         case ("GET", "/api/rankings/top-products") => RankingController.topProducts(request)
         case ("GET", "/api/rankings/top-rated") => RankingController.topRated(request)
         case ("GET", "/get_downloads_ranking") => RankingController.topUsers(request)
+
 
         // ---------- Archivos estáticos ----------
         case ("GET", p) if p.startsWith("/assets/") =>

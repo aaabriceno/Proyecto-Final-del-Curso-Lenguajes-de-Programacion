@@ -75,6 +75,16 @@
     background: #1976d2 !important;
     color: #fff !important;
   }
+  .shutdown-btn {
+    background: #d32f2f !important;
+    border-color: #d32f2f !important;
+    color: #fff !important;
+  }
+  .shutdown-btn:hover {
+    background: #b71c1c !important;
+    border-color: #b71c1c !important;
+    color: #fff !important;
+  }
 </style>
 </head>
 
@@ -83,12 +93,14 @@
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar border-bottom shadow-sm">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="/" style="color: #1976d2 !important;">LP Studios</a>
+      <a class="navbar-brand fw-semibold" href="/admin" style="color: #1976d2 !important;">LP Studios</a>
       <div class="ms-auto d-flex gap-2">
         <a class="btn btn-outline-light btn-sm" href="/shop" style="background: #1976d2; color: #fff; border-color: #1976d2;">🛒 Tienda</a>
+        <a id="notificationBtn" class="btn btn-outline-warning btn-sm position-relative" href="/user/notifications" title="Notificaciones">
+          <i class="bi bi-bell-fill"></i>
+        </a>
         <a class="btn btn-outline-danger btn-sm position-relative" href="/admin/balance/requests" style="background: #d32f2f; color: #fff; border-color: #d32f2f;">
-          <i class="bi bi-bell-fill"></i> Solicitudes
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">5</span>
+          <i class="bi bi-cash-coin me-1"></i>Solicitudes de saldo
         </a>
         <a class="btn btn-outline-danger btn-sm" href="/admin" style="background: #d32f2f; color: #fff; border-color: #d32f2f;">👨‍💼 Admin</a>
         <a class="btn btn-outline-light btn-sm" href="/logout" style="background: #1976d2; color: #fff; border-color: #1976d2;">
@@ -215,6 +227,22 @@
           </div>
         </div>
 
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white">
+              <h5 class="mb-0">🔌 Servidor</h5>
+            </div>
+            <div class="card-body">
+              <p>Detener el servidor HTTP de manera controlada.</p>
+              <form method="POST" action="/admin/server/shutdown" onsubmit="return confirm('¿Seguro que deseas detener el servidor?');">
+                <button type="submit" class="btn btn-danger shutdown-btn">
+                  <i class="bi bi-power me-2"></i>Detener servidor
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
         <div class="col-md-12">
           <div class="card shadow-sm border-0">
             <div class="card-header bg-dark text-white">
@@ -228,30 +256,11 @@
         </div>
       </div>
 
-      <!-- ===== Productos más comprados ===== -->
-      <div class="row mt-5">
-        <div class="col">
-          <h3 class="fw-bold">⭐ Productos más comprados</h3>
-          <div class="table-responsive">
-            <table class="table align-middle" style="background: #e3eaf2; color: #222b45;">
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Tipo</th>
-                  <th>Precio</th>
-                  <th>Rating</th>
-                  <th>Compras</th>
-                </tr>
-              </thead>
-              <tbody><!-- TOP_PURCHASES_ROWS --></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
   </main>
 
   <!-- ===== SCRIPTS ===== -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/javascripts/notifications.js"></script>
 </body>
 </html>

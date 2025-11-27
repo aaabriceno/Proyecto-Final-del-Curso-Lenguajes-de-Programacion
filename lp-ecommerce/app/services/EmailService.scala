@@ -41,7 +41,7 @@ object EmailService {
   def send(to: String, subject: String, htmlBody: String, attachment: Option[java.nio.file.Path] = None): Unit = {
     loadConfig() match {
       case None =>
-        println("📧 [EMAIL DEMO] No hay configuración SMTP. Imprimiendo correo simulado:")
+        println("[EMAIL DEMO] No hay configuración SMTP. Imprimiendo correo simulado:")
         println(s"  Para: $to")
         println(s"  Asunto: $subject")
         println("  Contenido (HTML):")
@@ -90,12 +90,12 @@ object EmailService {
               message.setContent(htmlBody, "text/html; charset=UTF-8")
           }
 
-          println(s"📧 [EMAIL] Enviando correo real a $to usando ${cfg.host}:${cfg.port} como ${cfg.username}")
+          println(s"[EMAIL] Enviando correo real a $to usando ${cfg.host}:${cfg.port} como ${cfg.username}")
           Transport.send(message)
         } catch {
           case e: Exception =>
-            println(s"⚠️ Error enviando correo real: ${e.getMessage}")
-            println("   Volviendo a modo DEMO (solo consola).")
+            println(s"Error enviando correo real: ${e.getMessage}")
+            println("Volviendo a modo DEMO (solo consola).")
             println(s"[EMAIL FALLBACK] Para: $to, Asunto: $subject")
             println(htmlBody.take(500) + (if (htmlBody.length > 500) "..." else ""))
         }

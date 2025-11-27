@@ -12,58 +12,65 @@
   <!-- ===== Estilos locales ===== -->
   <link rel="stylesheet" href="/assets/stylesheets/fearless.css">
   <style>
+    /* Fondo general coherente con el resto del sitio */
     body.bg-light {
-      background: #f6eee3 !important;
+      background: var(--color-bg-main, #e3eaf2) !important;
     }
-    .card.bg-dark, .card-header.bg-primary, .card-body, .border-secondary, .card {
-      background: #f3e3c3 !important;
-      color: #5a3e1b !important;
-      border-color: #e0c9a6 !important;
+
+    /* Sidebar de filtros */
+    .shop-sidebar.card {
+      background: #ffffff !important;
+      color: #222 !important;
+      border-color: var(--color-border, #b6c3d1) !important;
     }
-    .card-header.bg-primary {
-      background: #d2b48c !important;
-      color: #5a3e1b !important;
-    }
-    .form-label, .category-link, .text-light, .card-title.text-white {
-      color: #5a3e1b !important;
-    }
-    .btn-primary, .btn-outline-info {
-      background: #b6894a !important;
-      border-color: #b6894a !important;
+    .shop-sidebar .card-header {
+      background: var(--color-primary, #1976d2) !important;
       color: #fff !important;
     }
-    .btn-primary:hover, .btn-outline-info:hover {
-      background: #a6783a !important;
-      border-color: #a6783a !important;
+    .shop-sidebar .form-label,
+    .shop-sidebar .category-link {
+      color: #222 !important;
     }
-    .list-group-item {
-      background: #f3e3c3 !important;
-      color: #5a3e1b !important;
-      border: none !important;
+    .shop-sidebar .btn-outline-secondary {
+      background: #ffffff !important;
+      color: var(--color-primary, #1976d2) !important;
+      border-color: var(--color-primary, #1976d2) !important;
     }
-    .list-group-item.active {
-      background: #b6894a !important;
+    .shop-sidebar .btn-outline-secondary:hover {
+      background: var(--color-primary, #1976d2) !important;
       color: #fff !important;
     }
+
+    /* Cards de productos */
+    .product-card.card {
+      background: #ffffff !important;
+      color: #222 !important;
+      border-color: var(--color-border, #b6c3d1) !important;
+    }
+    .product-card .card-title {
+      color: #222 !important;
+    }
+
+    /* Badges y alerts con paleta azul/verde */
     .badge.bg-info {
-      background: #b6894a !important;
+      background: var(--color-primary, #1976d2) !important;
       color: #fff !important;
     }
     .badge.bg-success {
-      background: #7c9a5b !important;
+      background: #2e7d32 !important;
     }
     .badge.bg-danger {
-      background: #c97a5a !important;
+      background: #c62828 !important;
     }
     .alert-info {
-      background: #f6eee3 !important;
-      color: #5a3e1b !important;
-      border-color: #e0c9a6 !important;
+      background: #e3f2fd !important;
+      color: #0d47a1 !important;
+      border-color: #bbdefb !important;
     }
     .alert-danger {
-      background: #fbeee6 !important;
-      color: #a94442 !important;
-      border-color: #e0c9a6 !important;
+      background: #ffebee !important;
+      color: #b71c1c !important;
+      border-color: #ffcdd2 !important;
     }
   </style>
 </head>
@@ -71,14 +78,11 @@
 <body class="bg-light text-dark">
 
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+  <nav class="navbar bg-white border-bottom shadow-sm">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="/">LP Studios</a>
+      <a class="navbar-brand fw-semibold" href="/" style="color: #1976d2 !important;">LP Studios</a>
       <div class="ms-auto d-flex gap-2">
-        <a class="btn btn-outline-light btn-sm" href="/shop">🛍️ Tienda</a>
-        <a id="notificationBtn" class="btn btn-outline-warning btn-sm position-relative" href="/user/notifications" title="Notificaciones">
-          <i class="bi bi-bell-fill"></i>
-        </a>
+        <a class="btn btn-primary btn-sm" href="/shop">🛍️ Tienda</a>
         <!-- NAVBAR_BUTTONS -->
       </div>
     </div>
@@ -86,13 +90,13 @@
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="container py-5">
-    <h1 class="text-center mb-5">🎬 Catálogo de Medios</h1>
+    <h1 class="text-center mb-5">🎬 Catálogo de productos</h1>
 
     <div class="row">
       <!-- ===== SIDEBAR: FILTROS ===== -->
       <aside class="col-md-3 mb-4">
-        <div class="card bg-dark border-secondary shadow-sm">
-          <div class="card-header bg-primary text-white">
+        <div class="card shop-sidebar shadow-sm">
+          <div class="card-header text-white">
             <h5 class="mb-0">🔍 Filtros</h5>
           </div>
           <div class="card-body">
@@ -179,7 +183,7 @@
 
   <!-- ===== FOOTER ===== -->
   <footer class="text-center text-muted py-4 mt-5 border-top">
-    <small>© 2025 LP Studios — Fearless Design. Timeless Sound.</small>
+    <small>© 2025 LP Studios — Tecnología, música y entretenimiento en un solo lugar.</small>
   </footer>
 
   <!-- ===== SCRIPTS ===== -->
@@ -222,7 +226,13 @@
     async function loadCategories() {
       try {
         const response = await fetch('/api/categories');
-        if (!response.ok) throw new Error('No se pudo cargar categorías');
+        if (!response.ok) {
+          throw new Error('No se pudo cargar categorías (HTTP ' + response.status + ')');
+        }
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          throw new Error('Respuesta de categorías no es JSON válido');
+        }
         const data = await response.json();
         console.log('Respuesta de /api/categories:', data); // DEBUG
         categories = Array.isArray(data.categories) ? data.categories : [];
@@ -278,6 +288,7 @@
         const data = await response.json();
         let products = data.products || [];
         const isAdmin = data.isAdmin || false;
+        const isLoggedIn = data.isLoggedIn || false;
         const query = document.getElementById('search-input').value.toLowerCase();
         // Filtrar productos por búsqueda
         if (query) {
@@ -322,13 +333,19 @@
           const stockLabel = isHardware
             ? (isOutOfStock ? '❌ Agotado' : `✅ Disponible (${product.stock})`)
             : '⚡ Entrega inmediata';
-          const adminAction = isAdmin
-            ? `<a class="btn btn-warning btn-sm" href="/admin/media/${product.id}/edit" title="Editar producto">✏️</a>`
-            : `<button class="btn btn-primary btn-sm ${isOutOfStock ? 'disabled' : ''}" 
-                      onclick="addToCart(${product.id})">🛒</button>`;
+
+          let actionHtml;
+          if (isAdmin) {
+            actionHtml = `<a class="btn btn-warning btn-sm" href="/admin/media/${product.id}/edit" title="Editar producto">✏️</a>`;
+          } else if (!isLoggedIn) {
+            actionHtml = `<a class="btn btn-primary btn-sm" href="/login" title="Inicia sesión para comprar">🔑</a>`;
+          } else {
+            actionHtml = `<button class="btn btn-primary btn-sm ${isOutOfStock ? 'disabled' : ''}" 
+                              onclick="addToCart(${product.id})">🛒</button>`;
+          }
           return `
           <div class="col-12 col-sm-6 col-lg-4">
-            <div class="card bg-dark border-secondary h-100 shadow-sm position-relative">
+            <div class="card product-card h-100 shadow-sm position-relative">
               ${product.hasPromotion ? `
                 <div class="position-absolute top-0 end-0 m-2">
                   <span class="badge bg-danger fs-6 shadow">
@@ -341,7 +358,7 @@
                    alt="${product.title}"
                    style="height: 200px; object-fit: cover;">
               <div class="card-body">
-                <h5 class="card-title text-white">${product.title}</h5>
+                <h5 class="card-title">${product.title}</h5>
                 <p class="card-text small text-muted">${product.description.substring(0, 50)}${product.description.length > 50 ? '...' : ''}</p>
                 <div class="mb-2">
                   <span class="badge ${stockBadgeClass}">
@@ -360,7 +377,7 @@
                   `}
                    <div class="btn-group">
                      <a class="btn btn-outline-info btn-sm" href="/shop/${product.id}" title="Ver detalles">👁️</a>
-                      ${adminAction}
+                      ${actionHtml}
                     </div>
                 </div>
               </div>

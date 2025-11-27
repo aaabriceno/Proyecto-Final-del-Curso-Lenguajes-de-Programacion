@@ -1,11 +1,18 @@
-table {
-  background: #fff !important;
-  color: #222 !important;
-}
-th, td {
-  color: #222 !important;
-}
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
+/* Tablas: por defecto claras, respetando variantes oscuras de Bootstrap */
+table {
+  background: #fff;
+  color: #222;
+}
+.table-dark {
+  background-color: #212529;
+  color: #fff !important;
+}
+.table-dark th,
+.table-dark td {
+  color: #fff !important;
+}
 
 html, body { 
   height: 100%;
@@ -63,7 +70,7 @@ body {
   box-shadow: 0 2px 8px #b6c3d133;
 }
 
-/* Tablas */
+/* Botones base */
 .btn, button, input[type="submit"] {
   background: var(--color-primary) !important;
   color: var(--color-text-light) !important;
@@ -73,6 +80,32 @@ body {
 }
 .btn:hover, button:hover, input[type="submit"]:hover {
   background: var(--color-accent) !important;
+}
+/* Respetar estilo de botones de contorno,
+   útiles sobre fondos claros y oscuros */
+.btn-outline-light,
+.btn-outline-warning,
+.btn-outline-danger,
+.btn-outline-secondary,
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-info {
+  background: transparent !important;
+  color: var(--color-primary) !important;
+  border-width: 1px !important;
+}
+.btn-outline-light {
+  color: #fff !important;
+  border-color: #fff !important;
+}
+.btn-outline-light:hover {
+  background: rgba(255,255,255,0.12) !important;
+  color: #fff !important;
+}
+.navbar-dark .btn-outline-light,
+.navbar-dark .btn-outline-light:hover {
+  color: #fff !important;
+  border-color: #fff !important;
 }
 
 /* Enlaces */

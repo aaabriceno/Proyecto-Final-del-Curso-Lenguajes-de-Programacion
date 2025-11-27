@@ -12,7 +12,7 @@ import scala.jdk.CollectionConverters._
  */
 object HttpServer {
 
-  /** Puerto donde escuchará el servidor */
+  /** Puerto*/
   private val PORT = 9000
 
   /** Estado de ejecución del servidor */
@@ -39,14 +39,13 @@ object HttpServer {
    */
   def start(): Unit = {
     println(s"Iniciando servidor HTTP en puerto $PORT...")
-    println(s"Servidor SIN frameworks (implementación manual).")
     println(s"Acceso LOCAL: http://localhost:$PORT")
     
     // Mostrar todas las IPs para acceso en red
     val localIPs = getLocalIPs
     if (localIPs.nonEmpty) {
       println(s"Acceso en RED LOCAL:")
-      localIPs.foreach(ip => println(s"   http://$ip:$PORT"))
+      localIPs.foreach(ip => println(s"http://$ip:$PORT"))
     }
     println()
 

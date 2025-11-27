@@ -7,7 +7,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 /**
- * Conexión a MongoDB
+ * Conexion a MongoDB
  * Base de datos: lp_ecommerce
  */
 object MongoConnection {
@@ -20,7 +20,7 @@ object MongoConnection {
     def isDisabled: Boolean = !seedExamples && !runSchemaFixes && !seedPromotions
   }
 
-  // URI de conexión (cambiar si usas MongoDB Atlas o servidor remoto)
+  // URI de conexion (cambiar si usas MongoDB Atlas o servidor remoto)
 
   private val uriLocal = "mongodb://localhost:27017"
   private val uriAtlas = "mongodb+srv://anthonybriceno_db_user:VvOjX7zqYxNULOZH@lp-ecommerce-cluster.cmr7cbl.mongodb.net/lp_ecommerce?authSource=admin"
@@ -54,7 +54,7 @@ object MongoConnection {
   }
   
   /**
-   * Verifica la conexión a MongoDB
+   * Verifica la conexion a MongoDB
    */
   def testConnection(): Boolean = {
     try {
@@ -62,8 +62,8 @@ object MongoConnection {
         database.listCollectionNames().toFuture(),
         10.seconds
       )
-      println(" Conexión a MongoDB exitosa")
-      println(s" Colecciones existentes: ${result.mkString(", ")}")
+      println("Conexion a MongoDB exitosa")
+      println(s"Colecciones existentes: ${result.mkString(", ")}")
       true
     } catch {
       case e: Exception =>
@@ -75,33 +75,33 @@ object MongoConnection {
   }
   
   /**
-   * Cierra la conexión
+   * Cierra la conexion
    */
   def close(): Unit = {
     client.close()
-    println("🔌 Conexión a MongoDB cerrada")
+    println("Conexion a MongoDB cerrada")
   }
   
   /**
-   * Migración: Renombrar colección 'media' a 'productos' y limpiar campos obsoletos
+   * Migracion: Renombrar coleccion 'media' a 'productos' y limpiar campos obsoletos
    */
   private def migrateMediaToProductos(): Unit = {
     try {
-      // Verificar si existe la colección 'media' (vieja)
+      // Verificar si existe la coleccion 'media' (vieja)
       val collections = Await.result(database.listCollectionNames().toFuture(), 5.seconds)
       
       if (collections.contains("media")) {
-        println("Migrando colección 'media' → 'productos'...")
+        println("Migrando coleccion 'media' → 'productos'...")
         
-        // Renombrar colección
+        // Renombrar coleccion
         val mediaCollection = database.getCollection("media")
         Await.result(
           mediaCollection.renameCollection(MongoNamespace("lp_ecommerce", "productos")).toFuture(),
           5.seconds
         )
-        println("Colección renombrada: 'media' → 'productos'")
+        println("Coleccion renombrada: 'media' → 'productos'")
         
-        // Ahora trabajar con la colección 'productos'
+        // Ahora trabajar con la coleccion 'productos'
         val productosCollection = database.getCollection("productos")
         
         // 1. Eliminar campos obsoletos (mtype, coverImage)
@@ -127,10 +127,10 @@ object MongoConnection {
           5.seconds
         )
         
-        println("Migración completada exitosamente")
+        println("Migracion completada exitosamente")
         
       } else if (collections.contains("productos")) {
-        println("Colección 'productos' ya existe (migración previa)")
+        println("Coleccion 'productos' ya existe (migracion previa)")
         
         // Verificar si hay campos obsoletos y eliminarlos
         val productosCollection = database.getCollection("productos")
@@ -174,8 +174,8 @@ object MongoConnection {
       
     } catch {
       case e: Exception =>
-        println(s"Error durante migración: ${e.getMessage}")
-        // No detener la aplicación, solo advertir
+        println(s"Error durante migracion: ${e.getMessage}")
+        // No detener la aplicacion, solo advertir
     }
   }
   
@@ -184,17 +184,17 @@ object MongoConnection {
    */
   def initializeData(options: BootstrapOptions = BootstrapOptions()): Unit = {
     if (options.isDisabled) {
-      println("BootstrapOptions desactivado: no se ejecutarán tareas de inicialización.")
+      println("BootstrapOptions desactivado: no se ejecutarán tareas de inicializacion.")
       return
     }
 
     println("Verificando si hay datos iniciales...")
 
     if (options.runSchemaFixes) {
-      // ========= MIGRACIÓN: Renombrar colección 'media' a 'productos' =========
+      // ========= MIGRACIoN: Renombrar coleccion 'media' a 'productos' =========
       migrateMediaToProductos()
     } else {
-      println("⏭️  Migraciones legacy desactivadas (LP_RUN_SCHEMA_FIXES=false)")
+      println("Migraciones legacy desactivadas (LP_RUN_SCHEMA_FIXES=false)")
     }
 
     if (options.seedExamples) {
@@ -223,7 +223,7 @@ object MongoConnection {
         }
       }
     } else {
-      println("⏭️  Inserción de datos de ejemplo desactivada (LP_SEED_SAMPLE_DATA=false)")
+      println("Insercion de datos de ejemplo desactivada (LP_SEED_SAMPLE_DATA=false)")
     }
 
     if (options.runSchemaFixes) {
@@ -241,14 +241,14 @@ object MongoConnection {
           Document("_id" -> 4L, "name" -> "LoFi", "parentId" -> 1L, "description" -> "Música LoFi y chill", "isActive" -> true),
           Document("_id" -> 5L, "name" -> "Rock", "parentId" -> 1L, "description" -> "Rock y metal", "isActive" -> true),
           Document("_id" -> 6L, "name" -> "Cortos", "parentId" -> 2L, "description" -> "Cortometrajes", "isActive" -> true),
-          Document("_id" -> 7L, "name" -> "Pósters", "parentId" -> 3L, "description" -> "Pósters y carteles", "isActive" -> true)
+          Document("_id" -> 7L, "name" -> "Posters", "parentId" -> 3L, "description" -> "Posters y carteles", "isActive" -> true)
         )
 
         Await.result(
           Collections.categories.insertMany(moreCategories).toFuture(),
           5.seconds
         )
-        println(" Categorías adicionales insertadas")
+        println("Categorías adicionales insertadas")
       }
 
       // Actualizar documentos de media que no tienen isActive/promotionId
@@ -316,7 +316,7 @@ object MongoConnection {
       )
 
       if (categoryCountForUpdate > 0) {
-        println(s" Verificando estructura de $categoryCountForUpdate categorías...")
+        println(s"Verificando estructura de $categoryCountForUpdate categorías...")
         val allCategories = Await.result(Collections.categories.find().toFuture(), 5.seconds)
 
         allCategories.foreach { doc =>
@@ -328,12 +328,12 @@ object MongoConnection {
               ).toFuture(),
               5.seconds
             )
-            println(s"   Actualizada categoría ID ${doc.getLong("_id")}")
+            println(s"Actualizada categoría ID ${doc.getLong("_id")}")
           }
         }
       }
     } else {
-      println("⏭️  Normalización de categorías/productos desactivada (LP_RUN_SCHEMA_FIXES=false)")
+      println("Normalizacion de categorías/productos desactivada (LP_RUN_SCHEMA_FIXES=false)")
     }
 
     if (options.seedPromotions) {
@@ -377,12 +377,12 @@ object MongoConnection {
           Collections.promotions.insertMany(Seq(promo1, promo2)).toFuture(),
           5.seconds
         )
-        println("✅ 2 promociones insertadas (Black Friday 30%, Videos 20%)")
+        println("2 promociones insertadas (Black Friday 30%, Videos 20%)")
       } else {
-        println(s"✅ Ya existen $promotionCount promociones en la base de datos")
+        println(s"Ya existen $promotionCount promociones en la base de datos")
       }
     } else {
-      println("⏭️  Inserción automática de promociones desactivada (LP_SEED_PROMOTIONS=false)")
+      println("Insercion automática de promociones desactivada (LP_SEED_PROMOTIONS=false)")
     }
   }
   
@@ -394,7 +394,7 @@ object MongoConnection {
     import java.time.Instant
     import models.UserRepo
     
-    // ⚠️ IMPORTANTE: Usar UserRepo.add() para hashear contraseñas automáticamente
+    // IMPORTANTE: Usar UserRepo.add() para hashear contraseñas automáticamente
     // (No insertar directamente con Document, sino usar el método del modelo)
     
     // Admin user - La contraseña se hasheará automáticamente
@@ -415,7 +415,7 @@ object MongoConnection {
       isAdmin = false
     )
     
-    println("✅ 2 usuarios iniciales creados (contraseñas hasheadas)")
+    println("2 usuarios iniciales creados (contraseñas hasheadas)")
     
     // Solo insertar categorías y productos si es la primera vez (no al recrear usuarios)
     if (onlyUsers) {
@@ -425,7 +425,7 @@ object MongoConnection {
     // Categoría ejemplo
     val categoryDoc = Document(
       "_id" -> 1L,
-      "name" -> "Música Electrónica",
+      "name" -> "Música Electronica",
       "description" -> "Beats y sonidos modernos",
       "isActive" -> true
     )
@@ -442,7 +442,7 @@ object MongoConnection {
       Document("_id" -> 4L, "name" -> "LoFi", "parentId" -> 1L, "description" -> "Música LoFi y chill", "isActive" -> true),
       Document("_id" -> 5L, "name" -> "Rock", "parentId" -> 1L, "description" -> "Rock y metal", "isActive" -> true),
       Document("_id" -> 6L, "name" -> "Cortos", "parentId" -> 2L, "description" -> "Cortometrajes", "isActive" -> true),
-      Document("_id" -> 7L, "name" -> "Pósters", "parentId" -> 3L, "description" -> "Pósters y carteles", "isActive" -> true)
+      Document("_id" -> 7L, "name" -> "Posters", "parentId" -> 3L, "description" -> "Posters y carteles", "isActive" -> true)
     )
     
     Await.result(
@@ -504,7 +504,7 @@ object MongoConnection {
       5.seconds
     )
     
-    println("✅ Datos iniciales insertados correctamente")
+    println("Datos iniciales insertados correctamente")
     println("   - 2 usuarios (1 admin)")
     println("   - 7 categorías (3 raíz + 4 subcategorías)")
     println("   - 3 productos")

@@ -6,8 +6,6 @@ import java.nio.charset.Charset
 
 /**
  * E-Commerce Manual HTTP Server
- * 
- * Sistema de comercio electrónico SIN frameworks + MongoDB
  */
 object Main {
 
@@ -26,9 +24,7 @@ object Main {
     println("Conectando a MongoDB...")
     if (!MongoConnection.testConnection()) {
       println("\n No se pudo conectar a MongoDB")
-      println("Asegúrate de que MongoDB esté corriendo:")
       println("PowerShell: Start-Service MongoDB")
-      println("O instala MongoDB siguiendo: INSTALACION_MONGODB.md")
       System.exit(1)
     }
 
@@ -40,7 +36,7 @@ object Main {
     )
 
     if (bootstrapOptions.isDisabled) {
-      println("\nModo producción: se omiten tareas automáticas de inicialización.")
+      println("\nModo produccion: se omiten tareas automáticas de inicialización.")
     } else {
       // Inicializar datos de ejemplo o aplicar migraciones si corresponde
       MongoConnection.initializeData(bootstrapOptions)
@@ -60,7 +56,7 @@ object Main {
       println("\nLimpiando solicitudes de balance (LP_PURGE_BALANCE_REQUESTS=true)...")
       models.BalanceRequestRepo.deleteAll()
     } else {
-      println("\nSolicitudes de balance se conservarán (LP_PURGE_BALANCE_REQUESTS=false).")
+      println("\nSolicitudes de balance se conservaran (LP_PURGE_BALANCE_REQUESTS=false).")
     }
     
     // Cierre limpio al presionar Ctrl+C
@@ -99,7 +95,7 @@ object Main {
     if (isUtf8) {
       println(
         s"""
-           =====================================================
+           -----------------------------------------------------
                                                                                
               $title                                                         
                                                                                
@@ -107,24 +103,20 @@ object Main {
               Base de datos: MongoDB                                          
               $subtitle                                                        
                                                                                
-           ======================================================
+           -----------------------------------------------------
            """.stripMargin)
     } else {
       // Fallback limpio para terminales sin soporte UTF-8
       println(
         s"""
-           |======================================================================
-           |                         $title
-           |======================================================================
-           |  * Servidor HTTP sin frameworks
-           |  * Implementación desde cero con Scala + java.net.*
-           |  * $subtitle
-           |----------------------------------------------------------------------
-           |  NO frameworks web (Play, http4s, Akka HTTP)
-           |  NO librerías HTTP externas
-           |  SOLO Scala stdlib + java.net.ServerSocket
-           |======================================================================
-           |""".stripMargin)
+           ----------------------------------------------------------------------
+                                    $title
+           ----------------------------------------------------------------------
+               Servidor HTTP sin frameworks
+               Implementación desde cero con Scala + java.net.*
+               $subtitle
+           ----------------------------------------------------------------------
+           """.stripMargin)
     }
   }
 }

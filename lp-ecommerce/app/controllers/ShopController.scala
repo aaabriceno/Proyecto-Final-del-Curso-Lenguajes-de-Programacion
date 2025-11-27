@@ -36,62 +36,59 @@ object ShopController {
 
   /** GET /shop */
   def shop(request: HttpRequest): HttpResponse = {
-    //  DEBUG: Ver qué cookie recibimos
-    println(s"🔍 [SHOP] Cookies recibidas: ${request.cookies}")
-    val sessionId = request.cookies.get("sessionId")
-    println(s"🔍 [SHOP] SessionID: $sessionId")
-    sessionId.foreach(sid => println(s"🔍 [SHOP] Sesión válida: ${SessionManager.isValidSession(sid)}"))
-    
-    AuthController.requireAuth(request) match {
-      case Right(user) =>
-        val allMedia = MediaRepo.all
-        val categories = CategoryRepo.all
+    // Permitir que la tienda sea pública (usuario opcional)
+    val maybeUser = AuthController.getCurrentUser(request).flatMap(UserRepo.findByEmail)
 
-        val categoryId = request.queryParams.get("category").flatMap(_.toLongOption)
-        val filteredMedia = categoryId match {
-          case Some(catId) => allMedia.filter(_.categoryId.contains(catId))
-          case None => allMedia
-        }
+    // Generar navbar dinámico según el estado de sesión
+    val navbarButtons: String = maybeUser match {
+      case Some(user) if user.isAdmin =>
+        """
+          |<a class="btn btn-primary btn-sm" href="/admin">👨‍💼 Admin</a>
+          |<a class="btn btn-primary btn-sm position-relative" href="/user/notifications" title="Notificaciones">
+          |  <i class="bi bi-bell-fill"></i>
+          |</a>
+          |<a class="btn btn-primary btn-sm" href="/user/account">👤 Cuenta</a>
+          |<a class="btn btn-primary btn-sm" href="/logout">🚪 Salir</a>
+          |""".stripMargin
+      case Some(_) =>
+        """
+          |<a class="btn btn-primary btn-sm position-relative" href="/user/notifications" title="Notificaciones">
+          |  <i class="bi bi-bell-fill"></i>
+          |</a>
+          |<a class="btn btn-primary btn-sm" href="/cart">🛒 Carrito</a>
+          |<a class="btn btn-primary btn-sm" href="/user/account">👤 Cuenta</a>
+          |<a class="btn btn-primary btn-sm" href="/logout">🚪 Salir</a>
+          |""".stripMargin
+      case None =>
+        """
+          |<a class="btn btn-primary btn-sm" href="/login">Login</a>
+          |<a class="btn btn-warning btn-sm text-dark" href="/register">Registro</a>
+          |""".stripMargin
+    }
 
-        // Generar navbar dinámico según el usuario
-        val navbarButtons = if (user.isAdmin) {
-          """<a class="btn btn-warning btn-sm" href="/admin">👨‍💼 Admin</a>
-             <a class="btn btn-info btn-sm text-white" href="/user/account">👤 Cuenta</a>
-             <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
+    val projectDir = System.getProperty("user.dir")
+    val path = s"$projectDir/app/views/media_list.html"
+
+    Try(Source.fromFile(path, "UTF-8").mkString) match {
+      case Success(html) =>
+        val updatedHtml = html.replace("<!-- NAVBAR_BUTTONS -->", navbarButtons)
+
+        val response = HttpResponse.ok(updatedHtml)
+        if (request.cookies.contains("sessionId")) {
+          response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
         } else {
-          """<a class="btn btn-info btn-sm text-white" href="/user/account">👤 Cuenta</a>
-             <a class="btn btn-success btn-sm" href="/cart">🛒 Carrito</a>
-             <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
+          response
         }
-
-        val projectDir = System.getProperty("user.dir")
-        val path = s"$projectDir/app/views/media_list.html"
-        
-        Try(Source.fromFile(path, "UTF-8").mkString) match {
-          case Success(html) =>
-            val updatedHtml = html.replace("<!-- NAVBAR_BUTTONS -->", navbarButtons)
-            
-            val response = HttpResponse.ok(updatedHtml)
-            if (request.cookies.contains("sessionId")) {
-              response.withCookie("sessionId", request.cookies("sessionId"), maxAge = Some(86400))
-            } else {
-              response
-            }
-          case Failure(e) =>
-            HttpResponse.notFound(s"Error cargando tienda: ${e.getMessage}")
-        }
-        
-      case Left(resp) => 
-        println(s" [SHOP] requireAuth FALLÓ, redirigiendo a login")
-        resp
+      case Failure(e) =>
+        HttpResponse.notFound(s"Error cargando tienda: ${e.getMessage}")
     }
   }
 
   /** GET /shop/:id */
   def detail(id: Long, request: HttpRequest): HttpResponse = {
-    AuthController.requireAuth(request) match {
-      case Right(user) =>
-        MediaRepo.find(id) match {
+    val maybeUser = AuthController.getCurrentUser(request).flatMap(UserRepo.findByEmail)
+
+    MediaRepo.find(id) match {
           case Some(media) =>
             // Buscar promoción activa para este producto (por producto O por categoría)
             import java.time.LocalDateTime
@@ -125,25 +122,42 @@ object ShopController {
                 (media.price, s"""<span class="text-success fw-bold" style="font-size: 2rem;">$$${media.price}</span>""")
             }
             
-            // Generar navbar dinámico
-            val navbarButtons = if (user.isAdmin) {
-              """<a class="btn btn-warning btn-sm" href="/admin">👨‍💼 Admin</a>
-                 <a class="btn btn-info btn-sm text-white" href="/user/account">👤 Cuenta</a>
-                 <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
-            } else {
-              """<a class="btn btn-info btn-sm text-white" href="/user/account">👤 Cuenta</a>
-                 <a class="btn btn-success btn-sm" href="/cart">🛒 Carrito</a>
-                 <a class="btn btn-danger btn-sm" href="/logout">🚪 Salir</a>"""
+            // Generar navbar dinámico según sesión
+            val navbarButtons: String = maybeUser match {
+              case Some(user) if user.isAdmin =>
+                """
+                  |<a class="btn btn-primary btn-sm" href="/admin">👨‍💼 Admin</a>
+                  |<a class="btn btn-primary btn-sm position-relative" href="/user/notifications" title="Notificaciones">
+                  |  <i class="bi bi-bell-fill"></i>
+                  |</a>
+                  |<a class="btn btn-primary btn-sm" href="/user/account">👤 Cuenta</a>
+                  |<a class="btn btn-primary btn-sm" href="/logout">🚪 Salir</a>
+                  |""".stripMargin
+              case Some(_) =>
+                """
+                  |<a class="btn btn-primary btn-sm position-relative" href="/user/notifications" title="Notificaciones">
+                  |  <i class="bi bi-bell-fill"></i>
+                  |</a>
+                  |<a class="btn btn-primary btn-sm" href="/cart">🛒 Carrito</a>
+                  |<a class="btn btn-primary btn-sm" href="/user/account">👤 Cuenta</a>
+                  |<a class="btn btn-primary btn-sm" href="/logout">🚪 Salir</a>
+                  |""".stripMargin
+              case None =>
+                """
+                  |<a class="btn btn-primary btn-sm" href="/login">Login</a>
+                  |<a class="btn btn-warning btn-sm text-dark" href="/register">Registro</a>
+                  |""".stripMargin
             }
-            
-            val actionBlock =
-              if (user.isAdmin) {
+
+            // Bloque de acciones según rol / invitado
+            val actionBlock: String = maybeUser match {
+              case Some(user) if user.isAdmin =>
                 s"""
                 <a href="/admin/media/${media.id}/edit" class="btn btn-warning w-100 mb-3">
                   <i class="bi bi-pencil-square me-2"></i>Editar producto
                 </a>
                 """
-              } else {
+              case Some(_) =>
                 s"""
                 <form method="POST" action="/shop/${media.id}/purchase" class="mb-3">
                   <button type="submit" class="btn btn-primary btn-lg w-100 ${if (media.isOutOfStock) "disabled" else ""}">
@@ -157,7 +171,16 @@ object ShopController {
                   <i class="bi bi-cart me-2"></i>Agregar al carrito
                 </button>
                 """
-              }
+              case None =>
+                s"""
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Para comprar o regalar este producto debes
+                  <a href="/login" class="alert-link">iniciar sesión</a> o
+                  <a href="/register" class="alert-link">crear una cuenta</a>.
+                </div>
+                """
+            }
 
             val projectDir = System.getProperty("user.dir")
             val path = s"$projectDir/app/views/media_detail.html"
@@ -221,8 +244,6 @@ object ShopController {
             }
           case None => HttpResponse.notFound("<h1>Producto no encontrado</h1>")
         }
-      case Left(resp) => resp
-    }
   }
   
   /** Escapa HTML para prevenir XSS */

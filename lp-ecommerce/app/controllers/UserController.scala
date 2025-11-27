@@ -187,6 +187,57 @@ object UserController {
     }
   }
 
+  /** GET /reactivate-account - formulario para solicitar reactivación de cuenta */
+  def reactivateAccountForm(request: HttpRequest): HttpResponse = {
+    val projectDir = System.getProperty("user.dir")
+    val path = s"$projectDir/app/views/reactivate_account.html"
+    val sessionId = request.cookies.getOrElse("sessionId", session.SessionManager.createSession("anonymous"))
+    val csrfField = session.CsrfProtection.hiddenFieldHtml(sessionId)
+
+    Try(Source.fromFile(path, "UTF-8").mkString) match {
+      case Success(html) =>
+        val updated = html.replace("<!-- CSRF_TOKEN_PLACEHOLDER -->", csrfField)
+        val response = HttpResponse.ok(updated)
+        if (!request.cookies.contains("sessionId"))
+          response.withCookie("sessionId", sessionId, maxAge = Some(86400))
+        else response
+      case Failure(e) =>
+        HttpResponse.notFound(s"No se pudo cargar la página de reactivación: ${e.getMessage}")
+    }
+  }
+
+  /** POST /reactivate-account - notifica al admin para reactivar una cuenta desactivada */
+  def requestAccountReactivation(request: HttpRequest): HttpResponse = {
+    val data = request.formData
+    val email = data.getOrElse("email", "").trim.toLowerCase
+    val csrfToken = data.getOrElse("csrfToken", "")
+    val sessionId = request.cookies.getOrElse("sessionId", "")
+
+    if (!session.CsrfProtection.validateToken(sessionId, csrfToken))
+      return HttpResponse.redirect("/reactivate-account?error=Token+CSRF+inv%C3%A1lido")
+
+    UserRepo.findByEmail(email) match {
+      case Some(user) if !user.isActive =>
+        // Notificar a todos los administradores que este usuario desea reactivar su cuenta
+        UserRepo.all.filter(_.isAdmin).foreach { adminUser =>
+          NotificationRepo.create(
+            adminUser.id,
+            s"El usuario ${user.email} ha solicitado reactivar su cuenta.",
+            NotificationType.Info
+          )
+        }
+      case _ =>
+        () // No revelar si el correo existe o si está activo
+    }
+
+    HttpResponse.redirect(
+      "/login?success=" + URLEncoder.encode(
+        "Si tu cuenta existe y está desactivada, el administrador ha sido notificado para revisarla.",
+        "UTF-8"
+      )
+    )
+  }
+
   /** GET /user/info */
   def info(request: HttpRequest): HttpResponse = {
     AuthController.requireAuth(request) match {
@@ -227,6 +278,36 @@ object UserController {
         HttpResponse.redirect(
           "/user/info?success=" + URLEncoder.encode("Información actualizada", "UTF-8")
         )
+
+      case Left(resp) => resp
+    }
+  }
+
+  /** POST /user/delete - desactiva la cuenta del usuario actual y cierra sesión */
+  def deleteAccount(request: HttpRequest): HttpResponse = {
+    AuthController.requireAuth(request) match {
+      case Right(user) =>
+        // Marcar usuario como inactivo (soft delete)
+        UserRepo.toggleActive(user.id)
+
+        // Notificar al propio usuario
+        NotificationRepo.create(
+          user.id,
+          "Tu cuenta ha sido desactivada. Si deseas reactivarla, contacta al administrador.",
+          NotificationType.Info
+        )
+
+        // Destruir sesión y token CSRF como en logout
+        request.cookies.get("sessionId") match {
+          case Some(sessionId) =>
+            session.SessionManager.destroySession(sessionId)
+            session.CsrfProtection.removeToken(sessionId)
+          case None => ()
+        }
+
+        HttpResponse
+          .redirect("/login?success=" + URLEncoder.encode("Tu cuenta ha sido desactivada correctamente.", "UTF-8"))
+          .deleteCookie("sessionId")
 
       case Left(resp) => resp
     }

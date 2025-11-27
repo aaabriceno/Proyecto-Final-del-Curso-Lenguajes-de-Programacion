@@ -41,7 +41,7 @@ object SessionManager {
   def createSession(email: String): String = synchronized {
     val sessionId = generateSessionId()
     sessions(sessionId) = email
-    log(s"🟢 Sesión creada: $email (${short(sessionId)})")
+    log(s"Sesión creada: $email (${short(sessionId)})")
     sessionId
   }
 
@@ -59,7 +59,7 @@ object SessionManager {
   def destroySession(sessionId: String): Boolean = synchronized {
     sessions.remove(sessionId) match {
       case Some(email) =>
-        log(s"🔴 Sesión destruida: $email (${short(sessionId)})")
+        log(s"Sesión destruida: $email (${short(sessionId)})")
         true
       case None => false
     }
@@ -75,14 +75,14 @@ object SessionManager {
   def clearAllSessions(): Unit = synchronized {
     val count = sessions.size
     sessions.clear()
-    log(s"⚠️  Todas las sesiones eliminadas ($count).")
+    log(s"Todas las sesiones eliminadas ($count).")
   }
 
   /** Actualiza el email asociado a una sesión. */
   def updateSessionEmail(sessionId: String, newEmail: String): Boolean = synchronized {
     if (sessions.contains(sessionId)) {
       sessions(sessionId) = newEmail
-      log(s"🟡 Sesión actualizada: ${short(sessionId)} -> $newEmail")
+      log(s"Sesión actualizada: ${short(sessionId)} -> $newEmail")
       true
     } else false
   }
@@ -91,7 +91,7 @@ object SessionManager {
   def destroyAllSessionsForUser(email: String): Int = synchronized {
     val ids = sessions.filter(_._2 == email).keys.toList
     ids.foreach(sessions.remove)
-    log(s"🔴 ${ids.size} sesión(es) cerradas para $email")
+    log(s"${ids.size} sesión(es) cerradas para $email")
     ids.size
   }
 

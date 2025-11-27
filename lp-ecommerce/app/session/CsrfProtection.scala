@@ -95,7 +95,7 @@ object CsrfProtection {
   def activeTokensCount(): Int = synchronized(csrfTokens.size)
 
   // =============================================================
-  // 🔒 Métodos privados auxiliares
+  // Métodos privados auxiliares
   // =============================================================
 
   /** Comparación segura contra ataques de tiempo. */

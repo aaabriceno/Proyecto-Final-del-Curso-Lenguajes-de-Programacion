@@ -13,7 +13,7 @@ import scala.concurrent.duration._
 object UpdateProductsAndPromotions {
   
   def run(): Unit = {
-    println("🔧 Actualizando productos y promociones...")
+    println("Actualizando productos y promociones...")
     
     // Actualizar categoryId de productos existentes
     updateProducts()
@@ -21,11 +21,11 @@ object UpdateProductsAndPromotions {
     // Actualizar targetIds de promociones existentes
     updatePromotions()
     
-    println("✅ Productos y promociones actualizados!")
+    println("Productos y promociones actualizados!")
   }
   
   private def updateProducts(): Unit = {
-    println("\n📦 Actualizando categorías de productos...")
+    println("\nActualizando categorias de productos...")
     
     val mediaCollection = MongoConnection.Collections.media
     
@@ -37,7 +37,7 @@ object UpdateProductsAndPromotions {
       ).toFuture(),
       5.seconds
     )
-    println("  ✅ Summer Vibes → Rock (111)")
+    println("Summer Vibes → Rock (111)")
     
     // Producto 2: Neon Dreams → Electrónica (ID: 112)
     Await.result(
@@ -47,7 +47,7 @@ object UpdateProductsAndPromotions {
       ).toFuture(),
       5.seconds
     )
-    println("  ✅ Neon Dreams → Electrónica (112)")
+    println("Neon Dreams → Electrónica (112)")
     
     // Producto 3: Cyberpunk 2077 → Películas (ID: 21)
     Await.result(
@@ -57,7 +57,7 @@ object UpdateProductsAndPromotions {
       ).toFuture(),
       5.seconds
     )
-    println("  ✅ Cyberpunk 2077 → Películas (21)")
+    println("Cyberpunk 2077 → Películas (21)")
     
     // Producto 4: jajajaja → LoFi (ID: 113) - asumiendo que es música
     Await.result(
@@ -67,11 +67,11 @@ object UpdateProductsAndPromotions {
       ).toFuture(),
       5.seconds
     )
-    println("  ✅ jajajaja → LoFi (113)")
+    println("jajajaja → LoFi (113)")
   }
   
   private def updatePromotions(): Unit = {
-    println("\n🔥 Actualizando targetIds de promociones...")
+    println("\nActualizando targetIds de promociones...")
     
     val promotionsCollection = MongoConnection.Collections.promotions
     
@@ -83,7 +83,7 @@ object UpdateProductsAndPromotions {
       ).toFuture(),
       5.seconds
     )
-    println("  ✅ Black Friday Música → Categoría Música (11)")
+    println("Black Friday Música → Categoría Música (11)")
     
     // Promoción 2: "Lanzamiento Videos" → categoría Video (ID: 20)
     Await.result(
@@ -93,9 +93,9 @@ object UpdateProductsAndPromotions {
       ).toFuture(),
       5.seconds
     )
-    println("  ✅ Lanzamiento Videos → Categoría Video (20)")
+    println("Lanzamiento Videos → Categoría Video (20)")
     
     // Las promociones 4 y 6 ya son de productos específicos, no necesitan actualización
-    println("  ℹ️  Promociones de productos (4, 6) no requieren cambios")
+    println("Promociones de productos (4, 6) no requieren cambios")
   }
 }

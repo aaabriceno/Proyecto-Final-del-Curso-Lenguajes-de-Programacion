@@ -86,7 +86,17 @@
   // Verificar nuevas notificaciones + actualizar saldo
   function checkNotifications() {
     fetch('/notifications')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status);
+        }
+        const ct = res.headers.get('content-type') || '';
+        if (!ct.includes('application/json')) {
+          // Probablemente respuesta HTML (por ejemplo, redirect a login cuando no hay sesión)
+          throw new Error('Respuesta de /notifications no es JSON (¿usuario no logueado?)');
+        }
+        return res.json();
+      })
       .then(data => {
         const notifications = Array.isArray(data.notifications) ? data.notifications : [];
         const currentCount = data.count ?? notifications.length;
@@ -124,7 +134,17 @@
   // Actualizar saldo + total gastado + VIP
   function updateBalance() {
     fetch('/user/balance')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status);
+        }
+        const ct = res.headers.get('content-type') || '';
+        if (!ct.includes('application/json')) {
+          // Si no es JSON, seguramente no hay sesión iniciada; salimos silenciosamente
+          throw new Error('Respuesta de /user/balance no es JSON (probablemente sin sesión)');
+        }
+        return res.json();
+      })
       .then(data => {
         if (!data || typeof data.balance === 'undefined') return;
 

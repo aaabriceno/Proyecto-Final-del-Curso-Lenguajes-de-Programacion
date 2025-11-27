@@ -145,7 +145,7 @@ object GiftController {
       |  </main>
       |
       |  <footer class="text-center text-muted py-4 mt-5 border-top">
-      |    <small>© 2025 LP Studios — Fearless Design. Timeless Sound.</small>
+      |    <small>© 2025 LP Studios — Tecnología, música y entretenimiento en un solo lugar.</small>
       |  </footer>
       |  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
       |  <script src="/assets/javascripts/notifications.js"></script>
