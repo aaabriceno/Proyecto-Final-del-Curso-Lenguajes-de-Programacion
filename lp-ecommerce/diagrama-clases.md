@@ -199,3 +199,4 @@ classDiagram
   RankingEntry "*" --> "0..1" Media
   RankingEntry "*" --> "0..1" User
 ```
+

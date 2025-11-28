@@ -557,12 +557,3 @@ App en: `http://localhost:9000`
 
 ---
 
-## 8. Resumen para tu documento Word
-
-Con este `DOCUMENTACION.md` puedes:
-- Copiar la **descripción general** y la **arquitectura** como capítulos de introducción.
-- Usar el **diagrama Mermaid** para generar un diagrama de clases visual.
-- Explicar los **flujos** (compra, recarga, contraseña, boletas) como secciones de casos de uso.
-- Detallar los **módulos/ficheros clave** (Controllers, Models, Services) con sus responsabilidades.
-
-Esto cubre la parte técnica principal del proyecto y te sirve como base para redactar la memoria final en Word. 
