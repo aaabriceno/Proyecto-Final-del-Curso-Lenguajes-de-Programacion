@@ -1,70 +1,99 @@
-# 🛍️ Proyecto Final – Lenguajes de Programación  
-### E-commerce desarrollado en **Scala** con **Play Framework**
+# 🛍️ LP E‑Commerce en Scala
+
+Proyecto final del curso **Lenguajes de Programación (CCOMP7‑1, UCSP 2025)**.  
+Es una tienda en línea implementada en **Scala 2.13** sin framework web, usando:
+
+- Servidor HTTP propio (`ServerSocket`) y router manual.
+- **MongoDB** (local o Atlas) para persistencia.
+- Frontend con **HTML + Bootstrap 5 + JavaScript**.
+- Panel de administración completo (usuarios, productos, categorías, promociones, recargas, estadísticas).
 
 ---
 
-## 👨‍💻 Integrantes
-- **Anthony Briceño**
-- **Alexander Carpio**
-- **Paolo Mostajo**
+## 👥 Equipo
+
+- **Anthony Briceño** – Desarrollo backend / base de datos / despliegue.
+- **Paolo Mostajo** – Frontend, vistas y experiencia de usuario.
+
+> El proyecto fue iniciado también con la participación de Alexander Carpio.
 
 ---
 
-## 📘 Descripción del Proyecto
+## ⚙️ Tecnologías principales
 
-Este proyecto es un **E-commerce completo** desarrollado en el lenguaje de programación **Scala** utilizando el framework **Play Framework**.  
-El propósito principal es aplicar los conocimientos aprendidos en el curso de **Lenguajes de Programación**, explorando el paradigma funcional y su integración en entornos web modernos.
+- **Scala 2.13**
+- **SBT** como build tool
+- **MongoDB** (Atlas o instancia local)
+- **Jakarta Mail** para envío de correos (boletas)
+- **Bootstrap 5** + JavaScript para el frontend
 
-El sistema busca ofrecer una experiencia sencilla pero funcional para la venta y visualización de **productos multimedia**, tales como **imágenes, audios y videos**, permitiendo al usuario:
-
-- Registrarse e iniciar sesión.  
-- Visualizar el catálogo de productos disponibles.  
-- Agregar productos a su carrito.  
-- Consultar su cuenta y cerrar sesión.  
-
-A nivel académico, el proyecto refuerza conceptos de:
-- Programación funcional con **Scala**.  
-- Arquitectura basada en **MVC (Model–View–Controller)**.  
-- Generación dinámica de vistas mediante **Twirl Templates**.  
-- Manejo de sesiones y seguridad con **CSRF Tokens** y **BCrypt**.  
-- Uso de **SBT** como herramienta de construcción, ejecución y gestión de dependencias.  
+La estructura completa del código y módulos se detalla en `DOCUMENTACION.md`.
 
 ---
 
-## 🧱 Arquitectura del Proyecto
-
-La aplicación está organizada de forma modular, respetando la estructura típica de un proyecto Play Framework:
-
-
-
-## ⚙️ Tecnologías y Herramientas
-
-| Componente | Descripción |
-|-------------|-------------|
-| **Lenguaje** | Scala 2.13 |
-| **Framework** | Play Framework |
-| **Gestor de dependencias** | SBT |
-| **Motor de plantillas** | Twirl |
-| **Base de datos** | Repositorios en memoria (estructuras mutables en Scala) |
-| **Seguridad** | BCrypt (hash de contraseñas) y protección CSRF |
-| **Frontend** | HTML5, CSS3 (Bootstrap 5), JavaScript |
-
----
-
-## 🚀 Ejecución del Proyecto
+## 🚀 Cómo ejecutar el proyecto
 
 ### 1. Requisitos
-- **Java 11+**
-- **SBT 1.8+**
 
-### 2. Clonar el repositorio
+- **Java 11+** instalado (`java -version`).
+- **SBT 1.8+** instalado (`sbt about`).
+- Una instancia de **MongoDB** accesible (local o Atlas).
+
+### 2. Configurar la base de datos
+
+En `app/db/MongoConnection.scala` se define la URI que se usará:
+
+- `uriLocal` → `mongodb://localhost:27017`
+- `uriAtlas` → URI de tu cluster de Atlas
+
+Por defecto el código usa `uriAtlas`. Ajusta esa constante o cambia a `uriLocal`
+según dónde tengas MongoDB.
+
+La base de datos utilizada se llama `lp_ecommerce` y las colecciones se crean
+automáticamente al iniciar la aplicación.
+
+### 3. Arrancar el servidor
+
 ```bash
-git clone https://github.com/tuusuario/lp-ecommerce.git
-cd lp-ecommerce
+sbt run
+```
+
+El servidor HTTP se levanta en `http://localhost:9000`.
+
+---
+
+## 🔐 Credenciales iniciales
+
+Si el sistema detecta que no hay usuarios, crea dos cuentas de ejemplo
+(ver `MongoConnection.insertInitialData`):
+
+- **Admin**
+  - Email: `admin@lpstudios.com`
+  - Contraseña: `admin123`
+- **Usuario ejemplo**
+  - Email: `user@example.com`
+  - Contraseña: `user123`
+
+Con la cuenta de administrador puedes entrar al panel `/admin` y gestionar
+usuarios, productos, categorías, promociones, recargas, etc.
+
+---
+
+## 📧 Envío de correos (opcional)
+
+Para que el sistema envíe boletas por correo de forma real, configura estas
+variables de entorno antes de ejecutar `sbt run`:
+
+- `SMTP_HOST` – host del servidor SMTP
+- `SMTP_PORT` – puerto (típicamente `587`) (opcional)
+- `SMTP_USER` – usuario/cuenta SMTP
+- `SMTP_PASS` – contraseña o token SMTP
+- `SMTP_FROM` – correo remitente (si se omite, usa `SMTP_USER`)
+- `SMTP_TLS` – `true`/`false` (por defecto `true`)
+
+Si no se configuran, el sistema entra en **modo demo** y solo imprime el
+contenido del correo en la consola.
+
+---
 
 
-## Proyecto Final desarrollado como parte del curso:
-📚 Lenguajes de Programación – CCOMP7-1
-Universidad Católica San Pablo (UCSP) – 2025
-
-## Docente responsable: MSc. Yesenia Deysi Yari Ramos
