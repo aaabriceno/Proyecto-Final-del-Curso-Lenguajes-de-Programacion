@@ -85,7 +85,7 @@ Para que el sistema envíe boletas por correo de forma real, configura estas
 variables de entorno antes de ejecutar `sbt run`:
 
 - `SMTP_HOST` – host del servidor SMTP
-- `SMTP_PORT` – puerto (típicamente `587`)
+- `SMTP_PORT` – puerto (típicamente `587`) (opcional)
 - `SMTP_USER` – usuario/cuenta SMTP
 - `SMTP_PASS` – contraseña o token SMTP
 - `SMTP_FROM` – correo remitente (si se omite, usa `SMTP_USER`)
