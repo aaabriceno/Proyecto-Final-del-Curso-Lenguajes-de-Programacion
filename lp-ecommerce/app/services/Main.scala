@@ -30,9 +30,9 @@ object Main {
 
     // Configuración para tareas opcionales de bootstrap/mantenimiento
     val bootstrapOptions = MongoConnection.BootstrapOptions(
-      seedExamples = envFlag("LP_SEED_SAMPLE_DATA", default = true),
+      seedExamples = envFlag("LP_SEED_SAMPLE_DATA", default = false),
       runSchemaFixes = envFlag("LP_RUN_SCHEMA_FIXES", default = true),
-      seedPromotions = envFlag("LP_SEED_PROMOTIONS", default = true)
+      seedPromotions = envFlag("LP_SEED_PROMOTIONS", default = false)
     )
 
     if (bootstrapOptions.isDisabled) {

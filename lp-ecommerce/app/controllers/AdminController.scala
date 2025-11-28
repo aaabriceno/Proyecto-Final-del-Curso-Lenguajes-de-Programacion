@@ -611,18 +611,18 @@ $categoriesJsonArray
         println(s"DEBUG: Encontradas ${allPromotions.size} promociones en MongoDB")
         allPromotions.foreach(p => println(s"  - ${p.name} (${p.discountPercent}% OFF) - targetIds: ${p.targetIds}"))
         
-        // Calcular promociones por estado temporal
+        // Calcular promociones por estado temporal usando isActive + fechas
         import java.time.LocalDateTime
         val now = LocalDateTime.now()
         
         val activePromotions = allPromotions.filter { p =>
-          !p.startDate.isAfter(now) && !p.endDate.isBefore(now)
+          p.isActive && !p.startDate.isAfter(now) && !p.endDate.isBefore(now)
         }
         val upcomingPromotions = allPromotions.filter { p =>
-          p.startDate.isAfter(now)
+          p.isActive && p.startDate.isAfter(now)
         }
         val inactivePromotions = allPromotions.filter { p =>
-          p.endDate.isBefore(now)
+          !p.isActive || p.endDate.isBefore(now)
         }
         
         println(s"Activas: ${activePromotions.size} | Proximas: ${upcomingPromotions.size} | Inactivas: ${inactivePromotions.size}")
@@ -639,14 +639,17 @@ $categoriesJsonArray
             val mediaNames = promo.targetIds.flatMap(id => MediaRepo.find(id)).map(_.title).mkString(", ")
             val targetDisplay = if (mediaNames.isEmpty) "Todos los productos" else mediaNames
             
-            // Determinar estado de la promoción
-            val (statusBadge, statusClass) = if (promo.startDate.isAfter(now)) {
-              ("⏰ Próxima", "bg-info")
-            } else if (promo.endDate.isBefore(now)) {
-              ("❌ Inactiva", "bg-secondary")
-            } else {
-              ("✅ Activa", "bg-success")
-            }
+            // Determinar estado de la promoción combinando isActive + fechas
+            val (statusBadge, statusClass) =
+              if (!promo.isActive) {
+                ("❌ Inactiva", "bg-secondary")
+              } else if (promo.startDate.isAfter(now)) {
+                ("⏰ Próxima", "bg-info")
+              } else if (promo.endDate.isBefore(now)) {
+                ("❌ Inactiva", "bg-secondary")
+              } else {
+                ("✅ Activa", "bg-success")
+              }
             
             s"""<tr>
               <td>${escapeHtml(targetDisplay)}</td>
@@ -918,14 +921,15 @@ $categoriesJsonArray
         
         val allPromotions = Try(PromotionRepo.all).getOrElse(Seq.empty)
         
+        // Mantener consistencia con la lógica de /admin/promotions
         val active = allPromotions.count { p =>
-          !p.startDate.isAfter(now) && !p.endDate.isBefore(now)
+          p.isActive && !p.startDate.isAfter(now) && !p.endDate.isBefore(now)
         }
         val upcoming = allPromotions.count { p =>
-          p.startDate.isAfter(now)
+          p.isActive && p.startDate.isAfter(now)
         }
         val inactive = allPromotions.count { p =>
-          p.endDate.isBefore(now)
+          !p.isActive || p.endDate.isBefore(now)
         }
         
         val json = s"""{

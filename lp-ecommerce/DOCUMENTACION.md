@@ -38,6 +38,78 @@ lp-ecommerce/
 └── build.sbt               # Dependencias y configuración de compilación
 ```
 
+#### Archivos de código por carpeta (resumen)
+
+- `app/controllers/`
+  - `AuthController.scala` – login, registro, logout, protección CSRF y middleware `requireAuth/requireAdmin`.
+  - `HomeController.scala` – página principal (`/`) con navbar dinámica según sesión.
+  - `ShopController.scala` – tienda (`/shop`), detalle, carrito, compras y stock.
+  - `UserController.scala` – cuenta, datos básicos, descargas, pedidos, transacciones, saldo y contraseñas.
+  - `AdminController.scala` – dashboard admin, gestión de usuarios, productos, categorías, promociones, estadísticas y solicitudes de saldo.
+  - `GiftController.scala` – envío y canje de regalos digitales.
+  - `RatingController.scala` – calificaciones de contenidos y estadísticas de rating.
+  - `ReceiptController.scala` – descarga/visualización de boletas.
+  - `RankingController.scala` – rankings de productos y usuarios.
+
+- `app/db/`
+  - `MongoConnection.scala` – conexión MongoDB, colecciones, bootstrap de datos y migraciones/esquema.
+
+- `app/http/`
+  - `HttpRequest.scala` – modelo de request HTTP + parser desde el socket.
+  - `HttpResponse.scala` – modelo de response HTTP y utilidades (`ok`, `redirect`, `json`, `serveStaticFile`, etc.).
+  - `HttpServer.scala` – servidor HTTP manual con `ServerSocket`, manejo concurrente de clientes y cierre limpio.
+  - `Router.scala` – tabla de rutas `(method, path)` → controlador/método.
+
+- `app/models/`
+  - `User.scala` – `User`, `UserRepo` (autenticación, saldo, total gastado, activación/desactivación).
+  - `Media.scala` – `Media`, `MediaRepo` (productos digitales/hardware, stock, covers).
+  - `Category.scala` – `Category`, `CategoryRepo` (categorías jerárquicas y breadcrumbs).
+  - `Cart.scala` – `CartEntry`, `CartRepo` (carrito por usuario).
+  - `Order.scala` – `Order`, `OrderItem`, `OrderRepo`.
+  - `Transaction.scala` – `Transaction`, `TransactionType`, `TransactionRepo`.
+  - `Download.scala` – `Download`, `DownloadRepo` (historial de descargas).
+  - `Notification.scala` – `NotificationType`, `Notification`, `NotificationRepo` (notificaciones en memoria).
+  - `BalanceRequest.scala` – `BalanceRequest`, `BalanceRequestRepo` (solicitudes de recarga).
+  - `TopUp.scala` – `TopUp`, `TopUpRepo` (recargas aprobadas).
+  - `Receipt.scala` – `Receipt`, `ReceiptRepo`.
+  - `Promotion.scala` – `Promotion`, `PromotionRepo` (descuentos por producto/categoría).
+  - `Ranking.scala` – modelos de rankings.
+  - `Rating.scala` – `Rating`, `RatingRepo` (calificaciones).
+  - `PasswordResetRequest.scala` – solicitudes de cambio de contraseña mediadas por admin.
+  - `PasswordResetCode.scala` – códigos de 6 dígitos para “olvidé mi contraseña”.
+
+- `app/services/`
+  - `Main.scala` – punto de entrada, conexión a Mongo, bootstrap de datos y arranque de `HttpServer`.
+  - `EmailService.scala` – envío de correos vía SMTP real o modo demo.
+  - `ReceiptService.scala` – generación de boletas HTML/PDF y coordinación con `ReceiptRepo` y `EmailService`.
+  - `AnalyticsService.scala` – métricas de ventas, ingresos y rankings top.
+  - `RankingService.scala` – generación y almacenamiento de snapshots de rankings.
+  - `UserService.scala` – lógica de registro de usuarios (envolviendo a `UserRepo`).
+
+- `app/session/`
+  - `SessionManager.scala` – creación, validación y destrucción de sesiones (cookie `sessionId`).
+  - `CsrfProtection.scala` – tokens CSRF ligados a sesión y helpers para formularios.
+
+- `app/scripts/`
+  - `ReorganizeCategories.scala` – script puntual para reorganizar categorías a la nueva estructura jerárquica.
+  - `UpdateProductsAndPromotions.scala` – script para mapear productos/promociones a nuevas categorías.
+
+- `app/views/` (plantillas HTML principales)
+  - Públicas/shop: `index.html`, `media_list.html`, `media_detail.html`, `cart.html`, `login.html`, `register.html`, `forgot_password.html`, `reset_password.html`, `reactivate_account.html`.
+  - Cuenta de usuario: `user_account.html`, `user_info.html`, `user_change_password.html`, `user_downloads.html`, `user_orders.html`, `user_notifications.html`.
+  - Admin: `admin_dashboard.html`, `admin_users.html`, `admin_media.html`, `addContent.html` (nuevo producto), `admin_media_form.html` (plantilla alternativa), `admin_categories.html`, `admin_promotions.html`, `admin_promotion_form.html`, `admin_statistics.html`, `admin_balance_requests.html`, `admin_password_resets.html`.
+  - Componentes y vistas auxiliares: `navbar.html`, `item_view.html`, `item_view_admi.html`, `item_shop.html`, `item_info_edit.html`, `purchase_page.html`, `transacciones.html`, `user_view.html`, `main.html`, `main_view.html`, `addContent.html`.
+
+- `public/javascripts/`
+  - Lógica de frontend para distintas pantallas:  
+    `addContent.js`, `item_shop.js`, `item_view.js`, `item_info_edit.js`, `gifting.js`, `notifications.js`,  
+    `user_account.js`, `user_info.js`, `login.js`, `register.js`, `navbar.js`, `navbar_admi.js`, `navbar_user.js`, etc.
+
+- `public/stylesheets/`
+  - `fearless.css` – hoja de estilos principal (paleta azul, botones, tipografía).
+  - Hojas específicas: `addContent.css`, `admi_view.css`, `main.css`, `main_view.css`, `navbar.css`,  
+    `recargas_admi.css`, `register.css`, `transaccion.css`, `user_account.css`, `item_view.css`, etc.
+
 ### 2.2. Componentes principales
 
 - `http/HttpServer.scala`  
@@ -317,6 +389,50 @@ classDiagram
    - Descargar el PDF desde “Mis compras” (`ReceiptController.download`).
    - Ver boleta en línea (HTML público).
 
+### 4.7. Desactivación y reactivación de cuentas
+
+- **Desactivación voluntaria (usuario dentro de sesión)**  
+  - En `/user/account` el usuario tiene un botón “Desactivar mi cuenta”.  
+  - `POST /user/delete` → `UserController.deleteAccount`:
+    - Marca el usuario como inactivo (`UserRepo.toggleActive`, `isActive = false`).
+    - Cierra la sesión actual (borra `sessionId` y token CSRF).
+    - Redirige a `/login` con un mensaje de confirmación.
+  - A partir de ese momento `AuthController.requireAuth` ya no permite iniciar sesión con esa cuenta.
+
+- **Reactivación (flujo con administrador)**  
+  - Desde el login, el usuario puede ir a `/reactivate-account`:
+    - Formulario donde ingresa el correo de su cuenta.
+    - `POST /reactivate-account` → `UserController.requestAccountReactivation`:
+      - Si existe un usuario con ese correo y está inactivo, se crean notificaciones `NotificationType.Info` para todos los administradores:
+        - “El usuario `<email>` ha solicitado reactivar su cuenta.”
+  - El administrador ve estas solicitudes como notificaciones:
+    - Icono de campana en el panel `/admin` (gestionado por `notifications.js` y `NotificationRepo`).
+    - Lista completa en `/user/notifications`.
+  - La reactivación efectiva se hace en `/admin/users`:
+    - `AdminController.toggleUserActive` usa `UserRepo.toggleActive(id)` para volver a poner `isActive = true`.
+
+### 4.8. Tienda para invitados y usuarios autenticados
+
+- **Invitado (sin sesión)**  
+  - `/shop` y `/shop/:id` son accesibles sin iniciar sesión:
+    - `ShopController.shop` ya no exige `requireAuth`; usa `AuthController.getCurrentUser` opcional.
+    - El catálogo muestra productos, categorías, precios, stock y promociones.
+  - Restricciones:
+    - En el catálogo, el botón de acción en cada card:
+      - Admin → ✏️ edición.
+      - Invitado → icono de llave 🔑 que redirige a `/login` (“inicia sesión para comprar”).
+      - Usuario normal → botón 🛒 que llama a `/cart/add`.
+    - En el detalle `/shop/:id`:
+      - Usuario logueado ve “Comprar ahora”, “Regalar”, “Agregar al carrito”.
+      - Invitado ve un `alert-info` que dice que debe iniciar sesión o registrarse para comprar/regalar.
+
+- **Usuario autenticado (normal o admin)**  
+  - La home `/` construye la barra superior dinámicamente (`HomeController.index`):
+    - Invitado → Tienda, Login, Registro.
+    - Usuario normal → Tienda, Cuenta, Carrito, Salir.
+    - Admin → Tienda, Admin, Cuenta, Salir.
+  - Esto se hace reemplazando el bloque de navbar de `index.html` según el tipo de usuario detectado mediante `AuthController.requireAuth`.
+
 ---
 
 ## 5. Módulos y funciones importantes
@@ -382,16 +498,16 @@ classDiagram
 
 - Carga configuración SMTP desde variables de entorno (`SMTP_HOST`, `SMTP_USER`, etc.).
 - Modo demo si faltan datos (imprime en consola).
-- Envía correos HTML; si hay `attachment`, adjunta el archivo (PDF de boleta).
+  - Envía correos HTML; si hay `attachment`, adjunta el archivo (PDF de boleta).
 
-### 5.7. `HttpServer.scala` + `Router.scala`
+### 5.8. `HttpServer.scala` + `Router.scala`
 
 - `HttpServer.start()`:
   - Abre socket en puerto 9000.
   - Acepta conexiones y parsea requests con `HttpRequest.parse`.
   - Pasa el request a `Router.route` y escribe la respuesta (`HttpResponse.toHttpString` + `binaryBody`).
 
-- `Router.route(request)`:
+  - `Router.route(request)`:
   - Tiene un `match` con todas las rutas (GET/POST + path).
   - Llama al controlador y método correspondiente.
 
@@ -402,7 +518,7 @@ classDiagram
 Colecciones principales (según `MongoConnection.Collections`):
 
 - `users`, `productos` (media), `categories`, `carts`, `downloads`  
-- `promotions`, `ratings`, `gifts`, `rankings`  
+- `promotions`, `gifts`, `password_reset_code`
 - `transactions`, `topups`, `orders`, `receipts`  
 - `balance_requests`, `password_reset_requests`
 
