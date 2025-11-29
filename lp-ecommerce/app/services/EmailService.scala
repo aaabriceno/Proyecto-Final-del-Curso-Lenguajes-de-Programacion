@@ -68,8 +68,10 @@ object EmailService {
             props.put("mail.smtp.ssl.protocols", "TLSv1.2")
             props.put("mail.smtp.ssl.trust", cfg.host)
           }
-          props.put("mail.smtp.connectiontimeout", "10000")
-          props.put("mail.smtp.timeout", "10000")
+          // Usa timeouts m�s holgados para evitar cortes en AUTH/RESPUESTAS en redes lentas
+          props.put("mail.smtp.connectiontimeout", "30000")
+          props.put("mail.smtp.timeout", "30000")
+          props.put("mail.smtp.writetimeout", "30000")
           val debug = sys.env.get("SMTP_DEBUG").exists(_.trim.toLowerCase == "true")
           if (debug) props.put("mail.debug", "true")
 
