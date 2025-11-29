@@ -1,0 +1,10 @@
+$env:SMTP_HOST="smtp.gmail.com"
+$env:SMTP_PORT="465"                # o 587 si quieres STARTTLS
+$env:SMTP_USER="anthony.briceno@ucsp.edu.pe"
+$env:SMTP_PASS="mhdbcfnjvfcwgymn"   # sin espacios
+$env:SMTP_FROM="LP STUDIOS <anthony.briceno@ucsp.edu.pe>"
+$env:SMTP_SSL="true"                # true para 465, false si usas 587
+$env:SMTP_TLS="false"               # false para 465, true si usas 587
+$env:SMTP_HELO="laptop-anthony"     # sin acentos/espacios
+$env:SMTP_DEBUG="true"
+sbt run

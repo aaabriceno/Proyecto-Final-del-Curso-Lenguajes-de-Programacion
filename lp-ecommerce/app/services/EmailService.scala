@@ -13,7 +13,8 @@ object EmailService {
     username: String,
     password: String,
     from: String,
-    useTls: Boolean
+    useTls: Boolean,
+    useSsl: Boolean
   )
 
   /** Lee configuración SMTP desde variables de entorno.
@@ -26,9 +27,10 @@ object EmailService {
     val pass = sys.env.getOrElse("SMTP_PASS", "")
     val from = sys.env.getOrElse("SMTP_FROM", user)
     val useTls = sys.env.get("SMTP_TLS").forall(_.trim.toLowerCase != "false")
+    val useSsl = sys.env.get("SMTP_SSL").exists(_.trim.toLowerCase == "true") || port == 465
 
     if (host.nonEmpty && user.nonEmpty && pass.nonEmpty && from.nonEmpty)
-      Some(EmailConfig(host, port, user, pass, from, useTls))
+      Some(EmailConfig(host, port, user, pass, from, useTls, useSsl))
     else
       None
   }
@@ -50,12 +52,26 @@ object EmailService {
       case Some(cfg) =>
         try {
           val props = new Properties()
+          // Evita problemas con EHLO que incluya caracteres no ASCII en el hostname del equipo
+          val heloHost = sys.env.getOrElse("SMTP_HELO", "localhost")
           props.put("mail.smtp.host", cfg.host)
           props.put("mail.smtp.port", cfg.port.toString)
           props.put("mail.smtp.auth", "true")
-          if (cfg.useTls) {
+          props.put("mail.smtp.localhost", heloHost)
+          if (cfg.useSsl) {
+            props.put("mail.smtp.ssl.enable", "true")
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2")
+            props.put("mail.smtp.ssl.trust", cfg.host)
+          } else if (cfg.useTls) {
             props.put("mail.smtp.starttls.enable", "true")
+            props.put("mail.smtp.starttls.required", "true")
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2")
+            props.put("mail.smtp.ssl.trust", cfg.host)
           }
+          props.put("mail.smtp.connectiontimeout", "10000")
+          props.put("mail.smtp.timeout", "10000")
+          val debug = sys.env.get("SMTP_DEBUG").exists(_.trim.toLowerCase == "true")
+          if (debug) props.put("mail.debug", "true")
 
           val auth = new Authenticator {
             override def getPasswordAuthentication: PasswordAuthentication =
@@ -63,6 +79,7 @@ object EmailService {
           }
 
           val session = Session.getInstance(props, auth)
+          if (debug) session.setDebug(true)
           val message = new MimeMessage(session)
           message.setFrom(new InternetAddress(cfg.from))
           message.setRecipients(Message.RecipientType.TO, to)
@@ -94,7 +111,9 @@ object EmailService {
           Transport.send(message)
         } catch {
           case e: Exception =>
-            println(s"Error enviando correo real: ${e.getMessage}")
+            println(s"Error enviando correo real: ${Option(e.getMessage).getOrElse(e.toString)}")
+            val cause = Option(e.getCause).map(_.toString).getOrElse("-")
+            println(s"Causa interna: $cause")
             println("Volviendo a modo DEMO (solo consola).")
             println(s"[EMAIL FALLBACK] Para: $to, Asunto: $subject")
             println(htmlBody.take(500) + (if (htmlBody.length > 500) "..." else ""))
